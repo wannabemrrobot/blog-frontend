@@ -1,0 +1,23 @@
+<div class="postpage">
+    <div class="postpage__header">
+
+    </div>
+    <div class="postpage__body">
+        <markdown emoji class="postpage__body__title">{{postObj.title}}</markdown>
+        <div class="postpage__body__meta">
+            <div class="postpage__body__meta__date">
+                <!-- <i data-eva="calendar-outline" data-eva-fill="#FF1E56" data-eva-height="20" data-eva-width="20"></i> -->
+                {{postObj.date}}
+            </div>
+            <span class="postpage__body__meta__num">{{postObj.postno}}</span>
+        </div>
+        <div class="postpage__body__tags">
+            <!-- <i data-eva="pricetags-outline" data-eva-fill="#FF1E56" data-eva-height="20" data-eva-width="20"></i>&nbsp;&nbsp; -->
+            <a class="postpage__body__singletags" [routerLink]="['/tags/' + tag]" *ngFor="let tag of postObj.tags">#{{tag}}</a>
+        </div>
+        <hr>
+        <div class="postpage__body__contentcontainer">
+            <markdown class="postpage__body__content" emoji [src]="postObj.url"></markdown>
+        </div>
+    </div>
+</div>

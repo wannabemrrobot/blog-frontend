@@ -1,0 +1,186 @@
+.home {
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        flex: 1 auto;
+        align-items: center;
+        text-align: center;
+        margin: 5% auto; 
+        margin-top: 130px; 
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    &__banner {
+        img {
+            // width: 200px;
+            width: calc((0.8px + 0.05335vmin) * 170);
+        }
+        user-select: none;
+        pointer-events: none;
+        -webkit-filter: drop-shadow(1px 1px 1px var(--drop-shadow));
+        filter: drop-shadow(1px 1px 1px var(--drop-shadow));
+    }
+
+    &__name {
+        margin: 30px auto 10px auto;
+        font-family: 'Roboto' !important;
+        font-weight: 700;
+        // font-size: 40px;
+        font-size: calc((0.8px + 0.04335vmin) * 36);
+        user-select: none;
+        pointer-events: none;
+        -webkit-filter: drop-shadow(0.7px 0.7px 0.7px var(--drop-shadow));
+        filter: drop-shadow(0.7px 0.7px 0.7px var(--drop-shadow));
+
+        #atsign {
+            font-family: 'Inter' !important;
+            color: var(--accent-primary);
+            margin-right: 4px;
+        }
+
+        #name1 {
+            color: var(--home-heading);
+        }
+
+        #name2 {
+            color: var(--accent-primary);
+        }
+    }
+
+    &__quote {
+        color: var(--text-primary);
+        margin-bottom: 10px;
+
+        & > h5 {
+            margin-top: 10px;
+
+            & > br {
+                display: none;
+            }
+        }
+
+        & > p {
+            font-size: 18px;
+        }
+
+        hr {
+            height: 1.5px;
+            border-top: 1px solid var(--border);
+        }
+    }
+
+    &__social {
+        display: flex;
+        position: relative;
+
+        a {
+            // position: relative;
+
+            &[data-title]:hover::after {
+                content: attr(data-title);
+                position: absolute;
+                top: 150%; left: 12.5px; bottom: 0; right: 0;
+                color: var(--text-primary);
+                background-color: var(--tagcount-bg);
+                border-radius: 5px;
+                font-size: 14px;
+                padding: 0px;
+                padding-left: 5px;
+                padding-right: 5px;
+                top: 150%;
+                width: fit-content;
+                height: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        &__svg, &__svg2 {
+            margin: auto 10px;
+            transition: all 0.3s ease;
+
+            & path {
+                fill: var(--icons-social);
+                transition: all 0.3s ease;
+            }
+
+            &:hover {
+                animation: crescendo 0.4s alternate 2 ease-in-out;
+                & path {
+                    fill: var(--accent-primary);
+                }
+
+                @keyframes crescendo {
+                    0%   {transform: scale(1);}
+                    100% {transform: scale(1.20);}
+                    0% {transform: scale(1);}
+                }
+            }
+        }
+
+        &__svg2 {
+            & .tryhackmepath {
+                stroke: var(--icons-social);
+            }
+
+            &:hover {
+                & .tryhackmepath {
+                    stroke: var(--accent-primary);
+                }
+            }
+        }
+    }
+
+    &__footer {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        left: 0;
+        bottom: 0;
+        height: auto;
+        width: 100%;
+        padding-top: 15px;
+        background-color: var(--header-bg);
+        color: var(--heading-primary);
+        text-align: center;
+        transition: all 0.2s ease;
+
+        & > p > a {
+            text-decoration: none;
+            color: var(--heading-primary);
+            transition: all 0.5s ease;
+        }
+
+        &-icon {
+            fill: var(--accent-primary);
+            margin: -2px 5px auto 2px;
+
+            &:hover {
+                animation: crescendo 0.4s alternate ease-in-out infinite;
+                & path {
+                    fill: var(--accent-primary);
+                }
+
+                @keyframes crescendo {
+                    0%   {transform: scale(1);}
+                    100% {transform: scale(1.20);}
+                    0% {transform: scale(1);}
+                }
+            }
+        }
+    }
+}
+
+.animate {
+    &-constant {
+        color: var(--accent-primary) !important;
+    }
+    &-variables {
+        color: var(--accent-primary) !important;
+    }
+}
+
+// -----------------------------------------------

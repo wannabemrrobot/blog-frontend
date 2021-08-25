@@ -1,0 +1,299 @@
+/* smartphones, iPhone, portrait 480x320 phones */
+@media (min-width:320px) and (max-width:480px) {
+    .posts {
+        &__header {
+            height: 130px;
+            width: 90%;
+            &__text {
+                font-size: 20px;
+                margin: auto;
+                padding-left: 30px;
+            }
+        }
+
+        &__body {
+            margin-top: 40px;
+            padding-left: 15px;
+            padding-right: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
+
+            &__title {
+                font-size: 2rem;
+                line-height: 45px;
+            }
+        }
+
+        &__minifiedcontainer {
+            padding-top: 15px;
+
+            &__body {
+                margin-top: 10px;
+                padding-bottom: 0;
+                border-bottom: 0.7px solid var(--border);
+
+                &__wrapper {
+                    width: 95%;
+                }
+
+                &__num {
+                    margin-top: 5.5px;
+                }
+
+                &__title {
+                    font-size: 1.5rem;
+                    line-height: 35px;
+                }
+
+                &__meta {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+@media (min-width:481px) and (max-width: 640px) {
+    .posts {
+        &__subheader {
+            top: 65px;
+        }
+    }
+}
+
+/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+@media (min-width:641px) and (max-width: 991px) {
+    .posts {
+        &__subheader {
+            top: 70px;
+        }
+    }
+}
+
+
+@media (min-width: 769px) and (max-width: 963px) {
+    .posts {
+
+        &__subheader {
+            top: 52px;
+        }
+    }
+}
+
+@media (max-width: 360px) {
+    .posts {
+        &__subheader {
+            &__mobile {
+                display: unset;
+                position: sticky !important;
+                align-items: center;
+                height: auto;
+                width: 100%;
+                z-index: 1000;
+                top: 20px;
+                background-color: var(--background);
+                transition: background 0.2s ease;
+                user-select: none;
+
+                &__sortButton {
+                    width: 32%;
+                    font-size: 0;
+                }
+
+                &__viewButton {
+                    width: 32%;
+                    font-size: 0;
+                }
+
+                &__pagedown, &__pageup {
+                    width: 15%;
+                }
+            }
+
+            &__desktop {
+                display: none;
+            }
+        }
+    }
+}
+
+// -----------------------------
+@media (max-width: 800px) {
+    .posts {
+        &__subheader {
+            &__mobile {
+                display: flex;
+                flex-direction: column;
+            }
+
+            &__desktop {
+                display: none;
+            }
+        }
+
+        &__taginfo {
+            margin-left: 18px;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Mobile devices
+// @media (max-width: 768px) {
+//     .posts {
+//         &__container {
+//             margin: auto auto auto 15px;
+//         }
+
+//         &__header {
+//             height: 110px;
+
+//             &__text {
+//                 font-family: 'Roboto';
+//                 font-weight: 700;
+//                 font-size: 23px !important;
+//                 color: #757575;
+//                 margin: 30px 12px auto -5px;
+//             }
+//         }
+
+//         &__subheader {
+//             position: sticky;
+//             align-items: center;
+//             height: 110px;
+//             z-index: 1000;
+//             top: 52px;
+//             display: block;
+//             padding-top: 10px;
+//             margin-left: 0;
+
+//             &__searchbar {
+//                 margin-bottom: 8px;
+//                 margin-left: 5px;
+//                 margin-right: 10px;
+
+//                 &__searchicon {
+//                     left: 15px;
+//                 }
+
+//                 &__closeicon {
+//                     left: 320px;
+//                 }
+
+//                 &__searchbox {
+//                     width: 85vw;
+//                 }
+//             }
+
+//             &__sortButton {
+//                 font-size: 0;
+//                 margin-left: 5px;
+//                 margin-right: 8px;
+//                 width: 20vw;
+//             }
+
+//             &__viewButton {
+//                 font-size: 0;
+//                 margin-right: 8px;
+//                 width: 20vw;
+//             }
+
+//             &__pageup, &__pagedown {
+//                 font-size: 0;
+//                 margin-right: 8px;
+//                 width: 19vw;
+//             }
+
+//         }
+
+//         &__body {
+//             margin-right: 15px;
+//             margin-left: 0px;
+
+//             &__title {
+//                 font-family: 'Roboto';
+//                 font-size: 2rem;
+//                 line-height: 40px;
+//             }
+
+//             &__meta {
+//                 &__date {
+//                     font-size: .85rem;
+//                 }
+
+//                 &__num {
+//                     font-size: .85rem;
+//                 }
+
+//                 &__new {
+//                     position: absolute;
+//                     left: 100px;
+//                     font-size: .85rem;
+//                     background-color: var(--accent-primary);
+//                     color: var(--badge-text);
+//                     padding: 1px 8px 0 6px;
+//                 }
+//             }
+
+//             &__tags {
+//                 font-size: 1rem;
+//                 display: block;
+                
+//                 & > a {
+//                     display: inline-block;
+//                 }
+//             }
+//         }
+
+//         &__minifiedcontainer {
+//             padding-top: 20px;
+
+//             &__body {
+//                 margin-top: 10px;
+//                 margin-left: -5px;
+//                 margin-right: 10px;
+//                 padding-bottom: 0px;
+//                 border-bottom: 1px solid #d1d1d1;
+
+//                 &__wrapper {
+//                     width: 100%;
+//                 }
+
+//                 &__title {
+//                     font-size: 1.5rem;
+//                     line-height: 35px;
+//                 }
+
+//                 &__num {
+//                     margin-top: 2px;
+//                     margin-right: 15px;
+//                 }
+
+//                 &__meta {
+//                     display: none;
+//                 }
+//             }
+//         }
+//     }
+// }

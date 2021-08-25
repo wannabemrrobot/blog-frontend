@@ -1,0 +1,81 @@
+/* smartphones, iPhone, portrait 480x320 phones */
+@media (min-width:320px) and (max-width:480px) {
+    .home {
+
+        &__container {
+            margin-bottom: 0;
+            margin-top: 30%;
+        }
+
+        &__quote {
+            width: 80%;
+        }
+
+        &__social {
+            margin-bottom: 40px;
+        }
+
+        &__footer {
+            position: unset;
+            background-color: var(--background);
+        }
+    }
+}
+
+/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+@media (min-width:481px) and (max-width: 640px) {
+    .home {
+
+        &__container {
+            margin-bottom: 0;
+            margin-top: 25%;
+        }
+
+        &__quote {
+            width: 80%;
+        }
+
+        &__social {
+            margin-bottom: 40px;
+        }
+
+        &__footer {
+            position: unset;
+            background-color: var(--background);
+        }
+    }
+}
+
+/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+@media (min-width:641px) and (max-width: 991px) {
+    .home {
+
+        &__container {
+            margin-bottom: 0;
+            margin-top: 20%;
+        }
+
+        &__quote {
+            width: 80%;
+        }
+
+        &__social {
+            margin-bottom: 40px;
+        }
+
+        &__footer {
+            position: unset;
+            background-color: var(--background);
+        }
+    }
+}
+
+// check heights to enable footer stickiness and bg-color
+@media (max-height: 682px) {
+    .home {
+        &__footer {
+            position: unset;
+            background-color: var(--background);
+        }
+    }
+}

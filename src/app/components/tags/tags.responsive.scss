@@ -1,0 +1,148 @@
+/* smartphones, iPhone, portrait 480x320 phones */
+@media (min-width:320px) and (max-width:480px) {
+
+}
+
+/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+@media (min-width:481px) and (max-width: 640px) {
+
+}
+
+/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+@media (min-width:641px) and (max-width: 991px) {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Mobile devices
+@media (max-width: 768px) {
+    .tags {
+        &__container {
+            margin: auto auto auto 15px;
+        }
+
+        &__header {
+            height: 110px;;
+
+            &__text {
+                font-family: 'Roboto';
+                font-weight: 700;
+                font-size: 20px;
+                color: var(--animation-text);
+                margin: 30px 12px auto 10px;
+            }
+        }
+
+        &__info {
+            & > p {
+                font-size: 1.3rem;
+                font-weight: normal;
+            }
+
+            &__tagicon {
+                width: 22px;
+                height: 22px;
+            }
+
+            &__hashicon {
+                width: 30px;
+                height: 30px;
+            }
+
+            #tagname {
+                font-size: 2rem;
+            }
+
+            #break {
+                display: unset;
+            }
+        }
+
+        &__alltags {
+            &__subheader {
+                margin-bottom: 30px;
+                
+                #info {
+                    display: none;
+                }
+            }
+
+            &__body {
+                &__singletag {
+                    padding: 0 5px 2px 5px;
+    
+                    & > a {
+                        color: var(--tag-text);
+                        text-decoration: none;
+                        font-size: 18px;
+                        transition: all 0.5s ease;
+
+                        & > svg {
+                            height: 22px;
+                            width: 22px;
+                        }
+        
+                        &:hover {
+                            color: var(--accent-primary)
+                        }
+                    }
+                }
+            }
+        }
+
+        &__body {
+            margin-right: 15px;
+            margin-left: 0px;
+
+            &__title {
+                font-family: 'Roboto';
+                font-size: 2rem;
+                line-height: 40px;
+            }
+
+            &__meta {
+                &__date {
+                    font-size: .85rem;
+                }
+
+                &__num {
+                    font-size: .85rem;
+                }
+            }
+
+            &__tags {
+                font-size: 1rem;
+                display: block;
+                
+                & > a{
+                    display: inline-block;
+                }
+            }
+        }
+    }
+}

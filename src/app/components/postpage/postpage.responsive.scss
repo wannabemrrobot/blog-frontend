@@ -1,0 +1,50 @@
+// Mobile devices
+@media (max-width: 768px) {
+    .postpage {
+        margin: auto auto auto 15px;
+
+        // &__header {
+        //     height: 110px;;
+
+        //     &__text {
+        //         font-family: 'Roboto';
+        //         font-weight: 700;
+        //         font-size: 23px !important;
+        //         color: #757575;
+        //         margin: 30px 12px auto -5px;
+        //     }
+        // }
+
+        &__body {
+            margin-right: 15px;
+            margin-left: 0;
+            margin-top: 90px;
+            padding-left: 5px;
+            padding-right: 5px;
+
+            &__title {
+                font-family: 'Roboto';
+                font-size: 2rem;
+                line-height: 40px;
+            }
+
+            &__meta {
+                &__date {
+                    font-size: .9rem;
+                }
+
+                &__num {
+                    font-size: .85rem;
+                }
+            }
+
+            &__tags {
+                font-size: 1rem;
+             
+                & > p {
+                margin-right: 15px;
+                }
+            }
+        }
+    }
+}
