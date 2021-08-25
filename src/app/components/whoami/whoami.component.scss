@@ -1,0 +1,36 @@
+.whoami {
+    &__container {
+        margin-top: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        & > svg {
+            & > path {
+                fill: var(--accent-primary);
+            }
+
+            -webkit-animation: rotating 2s linear infinite;
+            -moz-animation: rotating 2s linear infinite;
+            -ms-animation: rotating 2s linear infinite;
+            -o-animation: rotating 2s linear infinite;
+            animation: rotating 2s linear infinite;
+        }
+
+        & > p {
+            font-size: 25px;
+            margin-top: 30px;
+            color: var(--animation-text);
+        }
+    }
+}
+
+@keyframes rotating {
+    from{
+        -webkit-transform: rotate(0deg);
+    }
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,108 @@
+<!-- The main parent container  -->
+<div class="tags__container">
+
+    <!-- Header for the text scrambling animation -->
+    <div class="tags__header">
+        <div class="tags__header__text"></div>
+    </div>
+
+    <!-- Page for /tags path. Display all the tags -->
+    <div class="tags__alltags" *ngIf="tagID == null && postWithTags.length == 0">
+
+        <!-- Info about the tags on all-tags page  -->
+        <div class="tags__alltags__subheader">
+            <p id='info'>
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M13.29 9.29l-4 4a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4-4a1 1 0 0 0-1.42-1.42z"></path>
+                    <path d="M12.28 17.4L11 18.67a4.2 4.2 0 0 1-5.58.4 4 4 0 0 1-.27-5.93l1.42-1.43a1 1 0 0 0 0-1.42 1 1 0 0 0-1.42 0l-1.27 1.28a6.15 6.15 0 0 0-.67 8.07 6.06 6.06 0 0 0 9.07.6l1.42-1.42a1 1 0 0 0-1.42-1.42z"></path>
+                    <path d="M19.66 3.22a6.18 6.18 0 0 0-8.13.68L10.45 5a1.09 1.09 0 0 0-.17 1.61 1 1 0 0 0 1.42 0L13 5.3a4.17 4.17 0 0 1 5.57-.4 4 4 0 0 1 .27 5.95l-1.42 1.43a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l1.42-1.42a6.06 6.06 0 0 0-.6-9.06z"></path>
+                </svg>
+                Get a quick reference to the topics you are interested in. 
+            </p>
+            <p id='info'>
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M13.29 9.29l-4 4a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4-4a1 1 0 0 0-1.42-1.42z"></path>
+                    <path d="M12.28 17.4L11 18.67a4.2 4.2 0 0 1-5.58.4 4 4 0 0 1-.27-5.93l1.42-1.43a1 1 0 0 0 0-1.42 1 1 0 0 0-1.42 0l-1.27 1.28a6.15 6.15 0 0 0-.67 8.07 6.06 6.06 0 0 0 9.07.6l1.42-1.42a1 1 0 0 0-1.42-1.42z"></path>
+                    <path d="M19.66 3.22a6.18 6.18 0 0 0-8.13.68L10.45 5a1.09 1.09 0 0 0-.17 1.61 1 1 0 0 0 1.42 0L13 5.3a4.17 4.17 0 0 1 5.57-.4 4 4 0 0 1 .27 5.95l-1.42 1.43a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l1.42-1.42a6.06 6.06 0 0 0-.6-9.06z"></path>
+                </svg>
+                Find all the blog posts related to the tags with ease.
+            </p>
+        </div>
+
+        <div class="tags__alltags__body">
+            <p>Tags</p>
+            <div class="tags__alltags__body__singletag" *ngFor="let tag of tagsDict | keyvalue">
+                <a [routerLink]="['/tags/' + tag.key]">
+                    <svg class="tags__info__hashicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 1 24 24" fill="inherit">
+                        <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"></path>
+                    </svg>&nbsp;{{tag.key}}
+                    <span class="tags__alltags__body__count">
+                        {{tag.value}}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+        <!-- Info about the selected tag -->
+    <!-- * - Display when the user clicks on specific tags, the posts tagged with the keywords are shown -->
+    <div class="tags__info" *ngIf="tagID != undefined && postWithTags.length > 0">
+        <p>
+            <svg class="tags__info__tagicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 1 24 24" fill="inherit">
+                <path d="M12.87 22a1.84 1.84 0 0 1-1.29-.53l-6.41-6.42a1 1 0 0 1-.29-.61L4 5.09a1 1 0 0 1 .29-.8 1 1 0 0 1 .8-.29l9.35.88a1 1 0 0 1 .61.29l6.42 6.41a1.82 1.82 0 0 1 0 2.57l-7.32 7.32a1.82 1.82 0 0 1-1.28.53zm-6-8.11l6 6 7.05-7.05-6-6-7.81-.73z"></path>
+                <circle cx="10.5" cy="10.5" r="1.5"></circle>
+            </svg>
+             posts tagged as <br id='break'>
+            <span id='tagname'>
+                <svg class="tags__info__hashicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 1 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"></path>
+                </svg>{{tagID}}
+            </span>
+        </p>
+    </div>
+
+    <!-- body containing the tagged posts -->
+    <!-- * - Display only when user clicks on specific tags -->
+    <div class="tags__postsbody" *ngIf="tagID != null && postWithTags.length > 0">
+        <div class="tags__body" *ngFor="let post of sortPostList(); let first = first; let last = last">
+            <a [routerLink]="['/posts/'+ post.postno]">
+                <markdown emoji class="tags__body__title">{{post.title}}</markdown>
+            </a>
+            <div class="tags__body__meta">
+                <div class="tags__body__meta__date">
+                    {{post.date}}
+                </div>
+                <span class="tags__body__meta__num">{{post.postno}}</span>
+            </div>
+            <div class="tags__body__tags">
+                <a class="tags__body__tags__tags" [routerLink]="['/tags/' + tag]" *ngFor="let tag of post.tags" [ngClass]="{ 'activeTag': tag == tagID }">#{{tag}}</a>
+            </div>
+            <div class="tags__body__contentcontainer">
+                <markdown class="tags__body__content" emoji>{{post.description}}</markdown>
+            </div>
+            <a class="readmore" [routerLink]="['/posts/'+ post.postno]">Read more 
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" 
+                    width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M5 13h11.86l-3.63 4.36a1 1 0 0 0 1.54 1.28l5-6a1.19 1.19 0 0 0 .09-.15c0-.05.05-.08.07-.13A1 1 0 0 0 20 12a1 1 0 0 0-.07-.36c0-.05-.05-.08-.07-.13a1.19 1.19 0 0 0-.09-.15l-5-6A1 1 0 0 0 14 5a1 1 0 0 0-.64.23 1 1 0 0 0-.13 1.41L16.86 11H5a1 1 0 0 0 0 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+
+        <br>
+
+        <!-- footer containing all the tags for quick navigation -->
+        <div class="tags__alltags__body__singletag" *ngFor="let tag of tagsDict | keyvalue">
+            <a [routerLink]="['/tags/' + tag.key]">
+                <svg class="tags__info__hashicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 1 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z" fill="#FF1E56"></path>
+                </svg>&nbsp;{{tag.key}}
+                <span class="tags__alltags__body__count">
+                    {{tag.value}}
+                </span>
+            </a>
+        </div>
+        <hr style="height: 1.5px;">
+        <br>
+    </div>
+</div>

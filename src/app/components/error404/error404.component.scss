@@ -1,0 +1,112 @@
+.page404 {
+    background: all 0.2s ease;
+
+    &__container {
+        max-width: 790px;
+        margin: auto;
+        margin-top: 60px;
+    }
+
+    &__header {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-bottom: 10px;
+        height: 150px;
+        width: 100%;
+        background-image: linear-gradient(to right, rgba(0,0,0,0), var(--header-bg), rgba(0,0,0,0));
+        transition: background 0.2s ease;
+        user-select: none;
+
+        &__text {
+            font-family: 'Roboto';
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--animation-text);
+            margin: auto 100px auto 80px;
+        }
+    }
+
+    &__body {
+        &__scrambler {
+            text-align: center;
+
+            &__heading {
+                font-family: 'Roboto';
+                font-weight: 700;
+                font-size: 60px;
+                color: var(--accent-primary);
+            }
+
+            &__text {
+                font-family: 'Roboto';
+                font-weight: 700;
+                font-size: 28px;
+                color: var(--text-secondary);
+            }
+        }
+
+        &__navigate {
+            width: fit-content;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 20px;
+            row-gap: 20px;
+            align-items: center;
+            text-align: center;
+            margin: 40px auto;
+
+            &__cells {
+                color: var(--accent-primary);
+                border: 3px solid var(--border);
+                border-radius: 10px;
+                text-decoration: none;
+                cursor: pointer;
+
+                & > h3 {
+                    font-size: 18px;
+                    width: 100%;
+                    padding: 8px 8px 0px 8px;
+                    border-top: 2px solid var(--border);
+                    text-decoration: none;
+
+                }
+
+                &__icon {
+
+                    & > svg {
+                        width: 55px;
+                        height: 55px;
+                        margin: 10px;
+
+
+                        & > path, circle {
+                            fill: var(--animation-text);
+                        }
+                    }
+                }
+
+                &:hover {
+                    transition: all 0.5s ease;
+                    border: 2px solid var(--accent-primary);
+                    background: var(--tagbg-hover);
+
+                    & > h3 {
+                        transition: all 0.5s ease;
+                        color: var(--text-primary);
+                        border-top: 2px solid var(--accent-primary);
+                    }
+                    
+                    & > span {
+                        & > svg {
+                            & > path, circle {
+                                transition: all 0.5s ease;
+                                fill: var(--accent-primary);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

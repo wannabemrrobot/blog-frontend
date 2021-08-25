@@ -1,0 +1,198 @@
+<div class="posts__container">
+    <div class="posts__header">
+        <div class="posts__header__text"></div>
+    </div>
+
+    <div class="posts__subheader__desktop">
+        <div class="posts__subheader__desktop__searchbar">
+            <svg class="posts__subheader__desktop__searchbar__searchicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                <path d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8 7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"></path>
+            </svg>
+            <input #searchbar class="posts__subheader__desktop__searchbar__searchbox" type="text" name="searchpost" id="searchpost" (input)="searchPost($event)" placeholder="search keywords / tags">
+            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" 
+                *ngIf="searchToggle" (click)="clearSearch()"
+                width="28" height="26" viewBox="0 1.5 24 24" 
+                class="posts__subheader__desktop__searchbar__closeicon">
+                <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
+            </svg>
+        </div>
+        
+        <button class="posts__subheader__desktop__sortButton" (click)="changeSort()">
+            {{sortButtonText}}
+            <svg class="posts__subheader__desktop__sortButton__icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"></rect>
+                <path d="M4 9h13l-1.6 1.2a1 1 0 0 0-.2 1.4 1 1 0 0 0 .8.4 1 1 0 0 0 .6-.2l4-3a1 1 0 0 0 0-1.59l-3.86-3a1 1 0 0 0-1.23 1.58L17.08 7H4a1 1 0 0 0 0 2z"></path>
+                <path d="M20 16H7l1.6-1.2a1 1 0 0 0-1.2-1.6l-4 3a1 1 0 0 0 0 1.59l3.86 3a1 1 0 0 0 .61.21 1 1 0 0 0 .79-.39 1 1 0 0 0-.17-1.4L6.92 18H20a1 1 0 0 0 0-2z"></path>
+            </svg>
+        </button>
+
+        <button class="posts__subheader__desktop__viewButton" (click)="changeView()">
+            <span>{{viewButtonText}}&nbsp;</span>
+
+            <svg class="posts__subheader__desktop__viewButton-icon" *ngIf="viewMode" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                <path d="M17.81 13.39A8.93 8.93 0 0 0 21 7.62a1 1 0 1 0-2-.24 7.07 7.07 0 0 1-14 0 1 1 0 1 0-2 .24 8.93 8.93 0 0 0 3.18 5.77l-2.3 2.32a1 1 0 0 0 1.41 1.41l2.61-2.6a9.06 9.06 0 0 0 3.1.92V19a1 1 0 0 0 2 0v-3.56a9.06 9.06 0 0 0 3.1-.92l2.61 2.6a1 1 0 0 0 1.41-1.41z"></path>
+            </svg>
+
+            <svg class="posts__subheader__desktop__viewButton-icon" *ngIf="!viewMode" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                <path d="M21.87 11.5c-.64-1.11-4.16-6.68-10.14-6.5-5.53.14-8.73 5-9.6 6.5a1 1 0 0 0 0 1c.63 1.09 4 6.5 9.89 6.5h.25c5.53-.14 8.74-5 9.6-6.5a1 1 0 0 0 0-1zM12.22 17c-4.31.1-7.12-3.59-8-5 1-1.61 3.61-4.9 7.61-5 4.29-.11 7.11 3.59 8 5-1.03 1.61-3.61 4.9-7.61 5z"></path>
+                <path d="M12 8.5a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 8.5zm0 5a1.5 1.5 0 1 1 1.5-1.5 1.5 1.5 0 0 1-1.5 1.5z"></path>
+            </svg>
+        </button>
+
+        <button class="posts__subheader__desktop__pageup" (click)="scrollPage('pageup')">
+            <svg class="posts__subheader__desktop__pageup-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                <path d="M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z"></path>
+                <path d="M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z"></path>
+            </svg>
+        </button>
+        
+        <button class="posts__subheader__desktop__pagedown" (click)="scrollPage('pagedown')">
+            <svg class="posts__subheader__desktop__pagedown-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                <path d="M17.37 12.39L12 16.71l-5.36-4.48a1 1 0 1 0-1.28 1.54l6 5a1 1 0 0 0 1.27 0l6-4.83a1 1 0 0 0 .15-1.41 1 1 0 0 0-1.41-.14z"></path>
+                <path d="M11.36 11.77a1 1 0 0 0 1.27 0l6-4.83a1 1 0 0 0 .15-1.41 1 1 0 0 0-1.41-.15L12 9.71 6.64 5.23a1 1 0 0 0-1.28 1.54z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="posts__subheader__mobile">
+        <div class="posts__subheader__mobile__searchbar">
+            <svg class="posts__subheader__mobile__searchbar__searchicon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                <path d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8 7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"></path>
+            </svg>
+            <input #searchbarmobile class="posts__subheader__mobile__searchbar__searchbox" type="text" name="searchpost" id="searchpostmobile" (input)="searchPost($event)" placeholder="search keywords / tags">
+            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" 
+                *ngIf="searchToggle" (click)="clearSearch()"
+                width="28" height="26" viewBox="0 1.5 24 24" 
+                class="posts__subheader__mobile__searchbar__closeicon">
+                <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
+            </svg>
+        </div>
+        
+        <div class="posts__subheader__mobile__secondrow">
+            <button class="posts__subheader__mobile__sortButton" (click)="changeSort()">
+                {{sortButtonText}}
+                <svg class="posts__subheader__mobile__sortButton__icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"></rect>
+                    <path d="M4 9h13l-1.6 1.2a1 1 0 0 0-.2 1.4 1 1 0 0 0 .8.4 1 1 0 0 0 .6-.2l4-3a1 1 0 0 0 0-1.59l-3.86-3a1 1 0 0 0-1.23 1.58L17.08 7H4a1 1 0 0 0 0 2z"></path>
+                    <path d="M20 16H7l1.6-1.2a1 1 0 0 0-1.2-1.6l-4 3a1 1 0 0 0 0 1.59l3.86 3a1 1 0 0 0 .61.21 1 1 0 0 0 .79-.39 1 1 0 0 0-.17-1.4L6.92 18H20a1 1 0 0 0 0-2z"></path>
+                </svg>
+            </button>
+    
+            <button class="posts__subheader__mobile__viewButton" (click)="changeView()">
+                <span>{{viewButtonText}}&nbsp;</span>
+    
+                <svg class="posts__subheader__mobile__viewButton-icon" *ngIf="viewMode" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M17.81 13.39A8.93 8.93 0 0 0 21 7.62a1 1 0 1 0-2-.24 7.07 7.07 0 0 1-14 0 1 1 0 1 0-2 .24 8.93 8.93 0 0 0 3.18 5.77l-2.3 2.32a1 1 0 0 0 1.41 1.41l2.61-2.6a9.06 9.06 0 0 0 3.1.92V19a1 1 0 0 0 2 0v-3.56a9.06 9.06 0 0 0 3.1-.92l2.61 2.6a1 1 0 0 0 1.41-1.41z"></path>
+                </svg>
+    
+                <svg class="posts__subheader__mobile__viewButton-icon" *ngIf="!viewMode" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M21.87 11.5c-.64-1.11-4.16-6.68-10.14-6.5-5.53.14-8.73 5-9.6 6.5a1 1 0 0 0 0 1c.63 1.09 4 6.5 9.89 6.5h.25c5.53-.14 8.74-5 9.6-6.5a1 1 0 0 0 0-1zM12.22 17c-4.31.1-7.12-3.59-8-5 1-1.61 3.61-4.9 7.61-5 4.29-.11 7.11 3.59 8 5-1.03 1.61-3.61 4.9-7.61 5z"></path>
+                    <path d="M12 8.5a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 8.5zm0 5a1.5 1.5 0 1 1 1.5-1.5 1.5 1.5 0 0 1-1.5 1.5z"></path>
+                </svg>
+            </button>
+    
+            <button class="posts__subheader__mobile__pageup" (click)="scrollPage('pageup')">
+                <svg class="posts__subheader__mobile__pageup-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z"></path>
+                    <path d="M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z"></path>
+                </svg>
+            </button>
+            
+            <button class="posts__subheader__mobile__pagedown" (click)="scrollPage('pagedown')">
+                <svg class="posts__subheader__mobile__pagedown-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M17.37 12.39L12 16.71l-5.36-4.48a1 1 0 1 0-1.28 1.54l6 5a1 1 0 0 0 1.27 0l6-4.83a1 1 0 0 0 .15-1.41 1 1 0 0 0-1.41-.14z"></path>
+                    <path d="M11.36 11.77a1 1 0 0 0 1.27 0l6-4.83a1 1 0 0 0 .15-1.41 1 1 0 0 0-1.41-.15L12 9.71 6.64 5.23a1 1 0 0 0-1.28 1.54z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="posts__taginfo">
+        <p>
+            <svg class="posts__taginfo-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 26" fill="inherit">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
+                <circle cx="12" cy="8" r="1"></circle>
+                <path d="M12 10a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"></path>
+            </svg>
+            Looking for 
+            <svg class="posts__taginfo-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="inherit">
+                <path d="M12.87 22a1.84 1.84 0 0 1-1.29-.53l-6.41-6.42a1 1 0 0 1-.29-.61L4 5.09a1 1 0 0 1 .29-.8 1 1 0 0 1 .8-.29l9.35.88a1 1 0 0 1 .61.29l6.42 6.41a1.82 1.82 0 0 1 0 2.57l-7.32 7.32a1.82 1.82 0 0 1-1.28.53zm-6-8.11l6 6 7.05-7.05-6-6-7.81-.73z"></path>
+                <circle cx="10.5" cy="10.5" r="1.5"></circle>
+            </svg>
+            <a [routerLink]="['/tags']"> tags?</a>
+        </p>
+    </div>
+
+    <div class="posts__searchcontainer" *ngIf="searchToggle">
+        <div class="posts__body" *ngFor="let post of searchResults; let first = first; let last = last">
+            <a [routerLink]="['/posts/'+ post.postno]">
+                <markdown emoji class="posts__body__title">{{post.title}}</markdown>
+            </a>
+            <div class="posts__body__meta">
+                <div class="posts__body__meta__date">
+                    {{post.date}}
+                </div>
+                <span class="posts__body__meta__new" *ngIf="first">new</span>
+                <span class="posts__body__meta__num">{{post.postno}}</span>
+            </div>
+            <div class="posts__body__tags">
+                <a class="posts__body__singletags" [routerLink]="['/tags/' + tag]" *ngFor="let tag of post.tags">#{{tag}}</a>
+            </div>
+            <div class="posts__body__contentcontainer">
+                <markdown class="posts__body__content" emoji>{{post.description}}</markdown>
+            </div>
+            <a class="readmore" [routerLink]="['/posts/'+ post.postno]">Read more 
+                <svg class="readmore-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" 
+                    width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M5 13h11.86l-3.63 4.36a1 1 0 0 0 1.54 1.28l5-6a1.19 1.19 0 0 0 .09-.15c0-.05.05-.08.07-.13A1 1 0 0 0 20 12a1 1 0 0 0-.07-.36c0-.05-.05-.08-.07-.13a1.19 1.19 0 0 0-.09-.15l-5-6A1 1 0 0 0 14 5a1 1 0 0 0-.64.23 1 1 0 0 0-.13 1.41L16.86 11H5a1 1 0 0 0 0 2z"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="posts__detailedcontainer" *ngIf="!searchToggle && !viewMode">
+        <div class="posts__body" *ngFor="let post of sortPostList(); let first = first; let last = last">
+            <a [routerLink]="['/posts/'+ post.postno]">
+                <markdown emoji class="posts__body__title">{{post.title}}</markdown>
+            </a>
+            <div class="posts__body__meta">
+                <div class="posts__body__meta__date">
+                    {{post.date}}
+                </div>
+                <span class="posts__body__meta__new" *ngIf="(first && !sortMode) || (last && sortMode)">new</span>
+                <span class="posts__body__meta__num">{{post.postno}}</span>
+            </div>
+            <div class="posts__body__tags">
+                <a class="posts__body__singletags" [routerLink]="['/tags/' + tag]" *ngFor="let tag of post.tags">#{{tag}}</a>
+            </div>
+            <div class="posts__body__contentcontainer">
+                <markdown class="posts__body__content" emoji>{{post.description}}</markdown>
+            </div>
+            <a class="readmore" [routerLink]="['/posts/'+ post.postno]">Read more 
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" 
+                    width="26" height="26" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M5 13h11.86l-3.63 4.36a1 1 0 0 0 1.54 1.28l5-6a1.19 1.19 0 0 0 .09-.15c0-.05.05-.08.07-.13A1 1 0 0 0 20 12a1 1 0 0 0-.07-.36c0-.05-.05-.08-.07-.13a1.19 1.19 0 0 0-.09-.15l-5-6A1 1 0 0 0 14 5a1 1 0 0 0-.64.23 1 1 0 0 0-.13 1.41L16.86 11H5a1 1 0 0 0 0 2z" 
+                        fill="#FF1E56">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="posts__minifiedcontainer" *ngIf="!searchToggle && viewMode">
+        <div class="posts__minifiedcontainer__body" *ngFor="let post of sortPostList(); let first = first; let last = last">
+            <div class="posts__minifiedcontainer__body__wrapper">
+                <span class="posts__minifiedcontainer__body__num">{{post.postno}}</span>
+                <a [routerLink]="['/posts/'+ post.postno]">
+                    <markdown emoji class="posts__minifiedcontainer__body__title">{{post.title}}</markdown>
+                </a>
+            </div>
+            <div class="posts__minifiedcontainer__body__meta">
+                <span class="posts__minifiedcontainer__body__meta__new" *ngIf="(first && !sortMode) || (last && sortMode)"><p>new</p></span>
+                <div class="posts__minifiedcontainer__body__meta__date">
+                    {{post.date}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

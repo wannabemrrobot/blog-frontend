@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap');
+
+@font-face {
+    font-family: "Inter-Medium";
+    src: url("./assets/fonts/Inter/Inter-Medium.ttf");
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--background) !important;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-family: 'Inter-Medium' !important;
+    font-weight: normal;
+    font-feature-settings: "liga", "tnum", "case", "calt", "zero", "ss01", "locl" !important;
+}
+// ---------------------------------------------------------
