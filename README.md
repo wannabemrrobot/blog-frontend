@@ -1,27 +1,17 @@
-# Wannabemrrobot
+# @Wannabemrrobot
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.2.
+This repository contains the frontend source code for my personal timeline, security blog and portfolio. 
 
-## Development server
+[This](https://wannabemrrobot.web.app) blog is written in `Angular`, which fetches contents like [timeline](https://wannabemrrobot.web.app/crondaily), [blog](https://wannabemrrobot.web.app/posts) and [porfolio](https://wannabemrrobot.web.app/whoami) from the github repository - [daily-progress](https://github.com/wannabemrrobot/daily-progress).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+The [repository](https://github.com/wannabemrrobot/daily-progress) basically acts as a static backend for the app.
 
-## Code scaffolding
+`Github Actions` is setup on this repository, for CI/CD process. Github Actions will take of the deployment to the `Firebase`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## SCREENSHOTS
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+![home page](https://github.com/wannabemrrobot/daily-progress/raw/main/preview/home.png)
+![cron@daily page](https://github.com/wannabemrrobot/daily-progress/raw/main/preview/crondaily.png)
+![posts page](https://github.com/wannabemrrobot/daily-progress/raw/main/preview/posts.png)
+![post](https://github.com/wannabemrrobot/daily-progress/raw/main/preview/postpage.png)
+![theme example](https://github.com/wannabemrrobot/daily-progress/raw/main/preview/crondaily.png)
