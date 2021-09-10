@@ -66,20 +66,19 @@ export class CronComponent implements OnInit {
 
 
   // calculate the learning streak
-  calculateStreak(list: any) {
+  calculateStreak(dailyProgressList: any) {
 
-    let dailyProgressList = [...list]
-    dailyProgressList.reverse()
-
+    // today and the last commited date
     let today = new Date().getTime()
-    let lastCommit = new Date(dailyProgressList[dailyProgressList.length-1].date).getTime()
+    let lastCommit = new Date(dailyProgressList[0].date).getTime()
 
-    for(let i=1; i<dailyProgressList.length; i++) {
-      
-      let prevDate = new Date(dailyProgressList[i-1].date).getTime()
+    for(let i=dailyProgressList.length-2; i>=0; i--) {
+      // iterating with 2 consecutive elements
+      let prevDate = new Date(dailyProgressList[i+1].date).getTime()
       let curDate = new Date(dailyProgressList[i].date).getTime()
-
-      if(Math.abs(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24)) == 1 || Math.abs(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24)) == 0) {
+      // check if the consecutive array elements are consecutive days by looking for the difference 
+      // (1-consecutive) 
+      if(Math.abs(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24)) == 1) {
         this.streak = this.streak + 1
       } else {
         this.streak = 0
