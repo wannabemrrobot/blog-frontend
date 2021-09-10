@@ -17,7 +17,7 @@ export class CronComponent implements OnInit {
     "it is to destabilize his timeline.",
     "If there's one way to disrupt a man's plan, it is to destabilize his timeline."
   ]
-  streak: number = 0;
+  streak: any = 0;
 
   constructor(
     private __githubService: GithubService
@@ -90,6 +90,14 @@ export class CronComponent implements OnInit {
       this.streak = 0
     } else {
       this.streak = this.streak + 1;
+    }
+
+    if(this.streak.toString().length == 1) {
+      this.streak = "000" + this.streak
+    } else if(this.streak.toString().length == 2) {
+      this.streak = "00" + this.streak
+    }else if(this.streak.toString().length == 3) {
+      this.streak = "0" + this.streak
     }
   }
 
