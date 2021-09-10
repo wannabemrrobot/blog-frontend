@@ -76,8 +76,7 @@ export class CronComponent implements OnInit {
       // iterating with 2 consecutive elements
       let prevDate = new Date(dailyProgressList[i-1].date).getTime()
       let curDate = new Date(dailyProgressList[i].date).getTime()
-
-      console.log(dailyProgressList[i-1].date, dailyProgressList[i].date)
+      
       // check if the consecutive array elements are consecutive days by looking for the difference 
       // (1-consecutive) 
       if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1) {
