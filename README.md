@@ -6,7 +6,7 @@ This repository contains the frontend source code for my personal timeline, secu
 
 The [repository](https://github.com/wannabemrrobot/daily-progress) basically acts as a static backend for the app.
 
-`Github Actions` is setup on this repository, for CI/CD process. Github Actions will take of the deployment to the `Firebase`.
+`Github Actions` is setup on this repository, for CI/CD process. Github Actions will take care of the deployment to the `Firebase`.
 
 ## SCREENSHOTS
 
