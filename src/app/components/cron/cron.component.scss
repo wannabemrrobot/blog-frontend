@@ -27,6 +27,28 @@
         }
     }
 
+    &__days {
+        margin: 20px auto 40px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-count {
+            font-family: 'Roboto';
+            font-weight: 700;
+            font-size: 60px;
+            color: var(--accent-primary);
+            margin: auto;
+        }
+
+        &-text {
+            font-family: 'Roboto';
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin: auto;
+        }
+    }
+
     &__info {
         margin: auto 10px auto 8px;
         &-text {
