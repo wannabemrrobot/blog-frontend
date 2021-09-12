@@ -78,7 +78,7 @@ export class CronComponent implements OnInit {
       let curDate = new Date(dailyProgressList[i].date).getTime()
       
       // check if the consecutive array elements are consecutive days by looking for the difference 
-      // (1-consecutive) 
+      // (1-consecutive)
       if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1) {
         // console.log("on streak")
         this.streak = this.streak + 1
@@ -95,13 +95,7 @@ export class CronComponent implements OnInit {
       this.streak = this.streak + 1;
     }
 
-    if(this.streak.toString().length == 1) {
-      this.streak = "000" + this.streak
-    } else if(this.streak.toString().length == 2) {
-      this.streak = "00" + this.streak
-    }else if(this.streak.toString().length == 3) {
-      this.streak = "0" + this.streak
-    }
+    this.streak = "0".repeat(4 - this.streak.toString().length) + this.streak;
   }
 
 
