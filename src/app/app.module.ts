@@ -13,6 +13,7 @@ import { Error404Component } from './components/error404/error404.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { PostpageComponent } from './components/postpage/postpage.component';
 import { TagsComponent } from './components/tags/tags.component';
+import { ParticlesModule } from 'ngx-particle';
 
 @NgModule({
   declarations: [
@@ -23,12 +24,13 @@ import { TagsComponent } from './components/tags/tags.component';
     Error404Component,
     PostsComponent,
     PostpageComponent,
-    TagsComponent
+    TagsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ParticlesModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
     RouterModule.forRoot([
       {

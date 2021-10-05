@@ -7,7 +7,10 @@
         <div class="cron__days-count">{{streak}}</div>
         <p class="cron__days-text">CONSECUTIVE DAYS</p>
 
-        <div class='orb-wrap'>
+        <particles [style]="myStyle" [width]="width" [height]="height" [params]="myParams"></particles>
+        
+        <!-- uncomment if you want the orb-animation -->
+        <!-- <div class='orb-wrap'>
             <div class='c'></div>
             <div class='c'></div>
             <div class='c'></div>
@@ -308,7 +311,7 @@
             <div class='c'></div>
             <div class='c'></div>
             <div class='c'></div>
-        </div>
+        </div> -->
     </div>
       
 

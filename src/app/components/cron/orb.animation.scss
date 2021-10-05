@@ -3,12 +3,14 @@ $total: 350; // total particles
 $orb-size: 80px;
 $particle-size: 2px;
 $time: 14s; 
-$base-hue: 90; // change for diff colors (180 is nice)
+$base-hue: 330; // change for diff colors (180 is nice)
+// 90 for hacker bleed
+// 345 for dark knight
 
 
 .orb-wrap {
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 49%;
   width: 0; 
   height: 0; 
