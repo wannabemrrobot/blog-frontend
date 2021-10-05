@@ -6,7 +6,7 @@ declare var callScramblerAnimation: any;
 @Component({
   selector: 'app-cron',
   templateUrl: './cron.component.html',
-  styleUrls: ['./cron.component.scss', './cron.responsive.scss']
+  styleUrls: ['./cron.component.scss', './cron.responsive.scss', './orb.animation.scss']
 })
 export class CronComponent implements OnInit {
 
