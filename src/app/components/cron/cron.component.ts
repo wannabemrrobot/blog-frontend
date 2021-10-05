@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
+import * as particleConfig from '../../../assets/data/particle-config.json';
 
 declare var callScramblerAnimation: any;
 
@@ -11,8 +12,9 @@ declare var callScramblerAnimation: any;
 export class CronComponent implements OnInit {
 
   // particles in cron streak
-  myStyle: any = {};
-  myParams: any = {};
+  particleStyle: any = {};
+  particleParams: any = {};
+  particleConfig: any = (particleConfig as any).default;
   width: number = 100;
   height: number = 100;
 
@@ -130,8 +132,10 @@ export class CronComponent implements OnInit {
     }, 500)
 
 
-
-    this.myStyle = {
+    // assign particleJS parameters
+    this.particleConfig.particles.color.value = localStorage.getItem("@themeAccent");
+    this.particleParams = this.particleConfig;
+    this.particleStyle = {
       'position': 'absolute',
       'width': '100%',
       'height': '100%',
@@ -140,117 +144,6 @@ export class CronComponent implements OnInit {
       'left': 0,
       'right': 0,
       'bottom': 0,
-    };
-
-    this.myParams = {
-        particles: {
-          "number": {
-            "value": 99,
-            "density": {
-              "enable": false,
-              "value_area": 800
-            }
-          },
-          "color": {
-            "value": "#9fef00"
-          },
-          "shape": {
-            "type": "circle",
-            "stroke": {
-              "width": 0,
-              "color": "#000000"
-            },
-            "polygon": {
-              "nb_sides": 9
-            },
-            "image": {
-              "src": "img/github.svg",
-              "width": 100,
-              "height": 100
-            }
-          },
-          "opacity": {
-            "value": 1,
-            "random": true,
-            "anim": {
-              "enable": true,
-              "speed": 0.48691418137553294,
-              "opacity_min": 0.1,
-              "sync": false
-            }
-          },
-          "size": {
-            "value":10,
-            "random": true,
-            "anim": {
-              "enable": false,
-              "speed": 63.29884357881928,
-              "size_min": 5.680665449381218,
-              "sync": false
-            }
-          },
-          "line_linked": {
-            "enable": false,
-            "distance": 0,
-            "color": "#ffffff",
-            "opacity": 0,
-            "width": 1
-          },
-          "move": {
-            "enable": true,
-            "speed": 2,
-            "direction": "left",
-            "random": false,
-            "straight": false,
-            "out_mode": "out",
-            "bounce": false,
-            "attract": {
-              "enable": false,
-              "rotateX": 600,
-              "rotateY": 1200
-            }
-          }
-        },
-        "interactivity": {
-          "detect_on": "canvas",
-          "events": {
-            "onhover": {
-              "enable": false,
-              "mode": "repulse"
-            },
-            "onclick": {
-              "enable": false,
-              "mode": "push"
-            },
-            "resize": true
-          },
-          "modes": {
-            "grab": {
-              "distance": 400,
-              "line_linked": {
-                "opacity": 1
-              }
-            },
-            "bubble": {
-              "distance": 400,
-              "size": 40,
-              "duration": 2,
-              "opacity": 8,
-              "speed": 3
-            },
-            "repulse": {
-              "distance": 200,
-              "duration": 0.4
-            },
-            "push": {
-              "particles_nb": 4
-            },
-            "remove": {
-              "particles_nb": 2
-            }
-          }
-        },
-        "retina_detect": false
-    };
+    };     
   }
 }
