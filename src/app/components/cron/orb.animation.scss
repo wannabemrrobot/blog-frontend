@@ -1,15 +1,15 @@
 // best in chrome
-$total: 300; // total particles
-$orb-size: 100px;
+$total: 350; // total particles
+$orb-size: 80px;
 $particle-size: 2px;
 $time: 14s; 
-$base-hue: 150; // change for diff colors (180 is nice)
+$base-hue: 90; // change for diff colors (180 is nice)
 
 
 .orb-wrap {
   position: absolute;
-  top: 43%;
-  left: 50%;
+  top: 40%;
+  left: 49%;
   width: 0; 
   height: 0; 
   transform-style: preserve-3d;
