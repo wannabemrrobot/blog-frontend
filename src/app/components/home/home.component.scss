@@ -52,6 +52,7 @@
     &__quote {
         color: var(--text-primary);
         margin-bottom: 10px;
+        user-select: none;
 
         & > h5 {
             margin-top: 10px;
@@ -89,7 +90,7 @@
                 padding: 0px;
                 padding-left: 5px;
                 padding-right: 5px;
-                top: 150%;
+                top: 120%;
                 width: fit-content;
                 height: fit-content;
                 margin-left: auto;
@@ -147,6 +148,7 @@
         color: var(--heading-primary);
         text-align: center;
         transition: all 0.2s ease;
+        user-select: none;
 
         & > p > a {
             text-decoration: none;

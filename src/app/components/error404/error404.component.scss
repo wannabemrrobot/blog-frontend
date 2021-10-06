@@ -1,6 +1,6 @@
 .page404 {
     background: all 0.2s ease;
-
+    
     &__container {
         max-width: 790px;
         margin: auto;
@@ -24,12 +24,14 @@
             font-size: 28px;
             color: var(--animation-text);
             margin: auto 100px auto 80px;
+            user-select: none;
         }
     }
 
     &__body {
         &__scrambler {
             text-align: center;
+            user-select: none;
 
             &__heading {
                 font-family: 'Roboto';
@@ -55,6 +57,7 @@
             align-items: center;
             text-align: center;
             margin: 40px auto;
+            user-select: none;
 
             &__cells {
                 color: var(--accent-primary);

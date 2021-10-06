@@ -24,6 +24,7 @@
             font-size: 28px;
             color: var(--animation-text);
             margin: auto 100px auto 80px;
+            user-select: none;
         }
 
     }
@@ -37,6 +38,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        user-select: none;
 
         &-count {
             font-family: 'Roboto';
@@ -44,6 +46,7 @@
             font-size: 60px;
             color: var(--accent-primary);
             margin-left: -10px;
+            user-select: none;
         }
 
         &-text {
@@ -52,14 +55,17 @@
             font-size: 18px;
             color: var(--text-secondary);
             margin-left: -10px;
+            user-select: none;
         }
     }
 
     &__info {
         margin: auto 10px auto 8px;
+        user-select: none;
         &-text {
             font-size: 1.05rem;
             color: var(--heading-primary);
+            
             
             & > span {
                 color: var(--accent-primary);
@@ -83,6 +89,7 @@
             display: flex;
             align-items: center;
             margin-left: 18px;
+            user-select: none;
 
             &-text {
                 margin: 7.6px auto auto 5px  ;
@@ -120,6 +127,7 @@
         margin: auto;
         margin-left: 14px;
         margin-bottom: 20px;
+        user-select: none;
 
         &-item {
             padding: 3em 2em 2em;
