@@ -1,11 +1,29 @@
+<!-- cron@daily container -->
 <div class="cron__container">
+
+    <!-- cron@daily header text -->
     <div class="cron__header">
         <div class="cron__header__text"></div>
     </div>
 
+    <!-- cron@daily streak -->
     <div class="cron__days">
         <div class="cron__days-count">{{streak}}</div>
         <p class="cron__days-text">CONSECUTIVE DAYS</p>
+
+        <div class="cron__days-beststreak">
+            <div class="-text">
+                <svg class="-streak-icon" 
+                xmlns="http://www.w3.org/2000/svg" 
+                xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
+                    <path d="M24 44c8.235 0 15-6.526 15-14.902c0-2.056-.105-4.26-1.245-7.686c-1.14-3.426-1.369-3.868-2.574-5.984c-.515 4.317-3.27 6.117-3.97 6.655c0-.56-1.666-6.747-4.193-10.45C24.537 8 21.163 5.617 19.185 4c0 3.07-.863 7.634-2.1 9.96c-1.236 2.325-1.468 2.41-3.013 4.14c-1.544 1.73-2.253 2.265-3.545 4.365C9.236 24.565 9 27.362 9 29.418C9 37.794 15.765 44 24 44z" stroke-width="4" stroke-linejoin="round"/>
+                </svg>
+                <p class="-streak-text">Best :</p>
+            </div>
+            <div class="-num">
+                <p class="-streak-num">{{bestStreak}} days</p>
+            </div>
+        </div>
 
         <particles [style]="particleStyle" [width]="width" [height]="height" [params]="particleParams"></particles>
         
@@ -314,13 +332,14 @@
         </div> -->
     </div>
       
-
+    <!-- cron@daily info about cron -->
     <div class="cron__info">
         <p class="cron__info-text">
             Watch this <span>Script Kiddie</span> turning into <span>Omniscient!</span> Know my daily progress.
         </p>
     </div>
 
+    <!-- cron@daily subheader -->
     <div class="cron__subheader">
         <div class="cron__subheader__hintwrapper">
             <svg class="cron__subheader__hintwrapper-icon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 25 25" fill="inherit">
@@ -339,7 +358,33 @@
         </div> 
     </div>
 
+    <!-- cron@daily tabs -->
+    <div class="cron__tabcontainer">
+        <input type="radio" id="dailyprogress" name="tabs" checked/>
+		<label class="tab" for="dailyprogress">Daily Progress
+            <span class="-tab-icon">
+                <svg class="-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <rect width="24" height="24" opacity="0"/>
+                    <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                    <circle cx="8" cy="16" r="1"/>
+                    <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+                </svg>
+            </span>
+        </label>
 
+		<input type="radio" id="milestones" name="tabs" />
+		<label class="tab" for="milestones">Milestones
+            <span class="-tab-icon">
+                <svg class="-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <rect width="20" height="20" opacity="0"/><path d="M19 20.75l-2.31-9A5.94 5.94 0 0 0 18 8 6 6 0 0 0 6 8a5.94 5.94 0 0 0 1.34 3.77L5 20.75a1 1 0 0 0 1.48 1.11l5.33-3.13 5.68 3.14A.91.91 0 0 0 18 22a1 1 0 0 0 1-1.25zM12 4a4 4 0 1 1-4 4 4 4 0 0 1 4-4zm.31 12.71a1 1 0 0 0-1 0l-3.75 2.2L9 13.21a5.94 5.94 0 0 0 5.92 0L16.45 19z"/>
+                </svg>
+            </span>
+        </label>
+
+		<span class="-glider"></span>
+    </div>
+
+    <!-- cron@daily timeline container -->
     <div class="cron__timeline">
         <div *ngFor="let dailyProgress of sortDateList(); let first = first; let last = last">
             <div class="cron__timeline-item" [ngClass]="{'cron__timeline-item__last': last, 'cron__timeline-item__first': first}">

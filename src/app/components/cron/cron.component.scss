@@ -55,6 +55,63 @@
             margin-left: -10px;
             user-select: none;
         }
+
+        &-beststreak {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+
+            & .-text {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 5px 8px;
+                border-radius: 6px;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                background-color: var(--tagbg-opaq);
+                transform: translateX(-45px);
+                transition: 0.5s ease;
+            }
+            & .-num {
+                display: flex;
+                justify-content: end;
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 5px 8px;
+                border-radius: 6px;
+                min-width: 100px;
+                max-width: 100px;
+                white-space: nowrap;
+                background-color: var(--tagbg-opaq);
+            }
+
+            & .-streak-icon {
+                fill: none;
+                stroke: var(--accent-primary);
+            }
+            & .-streak-text {
+                margin: 0;
+                font-size: 16px;
+                color: var(--heading-primary);
+            }
+            & .-streak-num {
+                margin: 0;
+                font-size: 16px;
+                color: var(--heading-primary);
+            }
+            &:hover {
+                transition: 0.5s;
+                & .-text {
+                    transform: translateX(-92px);
+                }
+                & .-streak-num {
+                    color: var(--accent-primary);
+                }
+            }
+        }
     }
 
     &__info {
@@ -119,6 +176,94 @@
                     fill: var(--accent-primary)
                 }
             }
+        }
+    }
+    
+    &__tabcontainer {
+        display: flex;
+        gap: 20px;
+        position: relative;
+        padding: 5px;
+        margin-bottom: 20px;
+        background-color: var(--tagbg-hover);
+        border-radius: 10px;
+
+        * {
+            z-index: 2;
+        }
+
+        & input[type="radio"] {
+            display: none;
+        }
+
+        & .tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 5px;
+            margin: 0;
+            width: 200px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.15s ease-in;
+            color: var(--heading-primary);
+        }
+        & .-tab-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            transition: 0.15s ease-in;
+            & .-icon {
+                width: 22px;
+                height: 22px;
+                fill: var(--background);
+            }
+        }
+
+        & input[type="radio"] {
+            &:checked {
+                & + label {
+                    color: var(--badge-text);
+                    & > .-tab-icon {
+                        background-color: var(--background);
+                        & .-icon {
+                            fill: var(--accent-primary);
+                        }
+                    }
+                }
+            }
+        }
+
+        & input[id="dailyprogress"] {
+            &:checked {
+                & ~ .-glider {
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        & input[id="milestones"] {
+            &:checked {
+                & ~ .-glider {
+                    transform: translateX(110%);
+                }
+            }
+        }
+
+        & .-glider {
+            position: absolute;
+            display: flex;
+            padding: 22px;
+            width: 200px;
+            background-color: var(--accent-primary);
+            z-index: 1;
+            border-radius: 10px;
+            transition: 0.25s ease-out;
         }
     }
 
