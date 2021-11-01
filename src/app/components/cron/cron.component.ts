@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+  import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
 import * as particleConfig from '../../../assets/data/particle-config.json';
 
@@ -26,6 +26,7 @@ export class CronComponent implements OnInit {
     "If there's one way to disrupt a man's plan, it is to destabilize his timeline."
   ]
   streak: any = 0;
+  bestStreak: any = 0
 
   constructor(
     private __githubService: GithubService
@@ -90,6 +91,9 @@ export class CronComponent implements OnInit {
       if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1) {
         // console.log("on streak")
         this.streak = this.streak + 1
+        if(this.streak > this.bestStreak) {
+          this.bestStreak = this.streak;
+        }
         // console.log("streak: ", this.streak)
       } else {
         // console.log("streak failed")
@@ -101,9 +105,11 @@ export class CronComponent implements OnInit {
       this.streak = 0
     } else {
       this.streak = this.streak + 1;
+      this.bestStreak = this.streak;
     }
 
     this.streak = "0".repeat(4 - this.streak.toString().length) + this.streak;
+    this.bestStreak = "0".repeat(4 - this.bestStreak.toString().length) + this.bestStreak;
   }
 
 
