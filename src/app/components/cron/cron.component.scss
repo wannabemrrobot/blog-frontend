@@ -181,7 +181,7 @@
     
     &__tabcontainer {
         display: flex;
-        gap: 20px;
+        gap: 15px;
         position: relative;
         padding: 5px;
         margin-bottom: 20px;
@@ -196,14 +196,17 @@
             display: none;
         }
 
+        & .cron__tab {
+            position: relative;
+        }
+
         & .tab {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 5px;
+            padding: 5px 20px;
             margin: 0;
-            width: 200px;
             font-size: 16px;
             cursor: pointer;
             transition: color 0.15s ease-in;
@@ -242,7 +245,8 @@
         & input[id="dailyprogress"] {
             &:checked {
                 & ~ .-glider {
-                    transform: translateX(0);
+                    opacity: 1;
+                    transform: scale3d(1, 1, 1);
                 }
             }
         }
@@ -250,20 +254,25 @@
         & input[id="milestones"] {
             &:checked {
                 & ~ .-glider {
-                    transform: translateX(110%);
+                    opacity: 1;
+                    transform: scale3d(1, 1, 1);
                 }
             }
         }
 
-        & .-glider {
+        .-glider {
             position: absolute;
+            top: 0;
+            left: 0;
             display: flex;
             padding: 22px;
-            width: 200px;
+            width: 100%;
             background-color: var(--accent-primary);
-            z-index: 1;
+            z-index: -100;
             border-radius: 10px;
-            transition: 0.25s ease-out;
+            transform: scale3d(0, 0 , 0);
+            opacity: 0;
+            transition: transform 0.25s ease-out, opacity 0.1s ease-in-out;
         }
     }
 
@@ -317,8 +326,17 @@
                 position: absolute;
                 left: 2em;
                 top: 1em;
-                display: block;
+                display: flex;
+                align-items: center;
+                gap: 15px;
                 font-size: .867rem;
+                & .-flag {
+                    fill: var(--accent-primary);
+                    stroke: var(--accent-primary);
+                    stroke-width: 0.5;
+                    height: 20px;
+                    width: 20px;
+                }
             }
         
             &::after {
@@ -334,11 +352,11 @@
                 background: var(--accent-primary);
             }
 
-            &__first {
+            &:first-child {
                 border-image: linear-gradient(to top, rgba(97, 97, 97, 0.6) 60%, rgba(97, 97, 97, 0)) 1 100%;  
             }
         
-            &__last {
+            &:last-child {
             	border-image: linear-gradient(to bottom, rgb(97, 97, 97, 0.6) 60%, rgb(97, 97, 97, 0)) 1 100%
             	;
             }

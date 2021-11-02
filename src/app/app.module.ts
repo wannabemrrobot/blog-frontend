@@ -14,6 +14,7 @@ import { PostsComponent } from './components/posts/posts.component';
 import { PostpageComponent } from './components/postpage/postpage.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { ParticlesModule } from 'ngx-particle';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ParticlesModule } from 'ngx-particle';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule,
     ParticlesModule,
