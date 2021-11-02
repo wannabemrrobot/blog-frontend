@@ -27,6 +27,8 @@ export class CronComponent implements OnInit {
   ]
   streak: any = 0;
   bestStreak: any = 0
+  tabSelected: string = "dailyProgress";
+  dailyProgressTab: boolean = true;
 
   constructor(
     private __githubService: GithubService
@@ -61,6 +63,16 @@ export class CronComponent implements OnInit {
     }
   }
 
+  // change tab on click
+  changeTab(event: any) {
+    if(event.target.value == "dailyProgress") {
+      this.dailyProgressTab = true;
+      this.tabSelected = "dailyProgress";
+    } else if(event.target.value == "milestone") {
+      this.dailyProgressTab = false;
+      this.tabSelected = "milestone";
+    }
+  }
 
   // sort list based on time(date)
   sortDateList() {
@@ -72,7 +84,6 @@ export class CronComponent implements OnInit {
 
     return sortedList;
   }
-
 
   // calculate the learning streak
   calculateStreak(dailyProgressList: any) {
@@ -112,7 +123,6 @@ export class CronComponent implements OnInit {
     this.bestStreak = "0".repeat(4 - this.bestStreak.toString().length) + this.bestStreak;
   }
 
-
   // angular life cycle hook, when the component gets loaded
   ngOnInit(): void {
     // get timelineJSON and populate the dailyprogresslist
@@ -123,6 +133,7 @@ export class CronComponent implements OnInit {
         let dailyProgressObj = {
           date: file.date,
           title: file.title,
+          milestone: file.milestone,
           url: file.url,
         }
         this.dailyProgressList.push(dailyProgressObj)
@@ -150,6 +161,6 @@ export class CronComponent implements OnInit {
       'left': 0,
       'right': 0,
       'bottom': 0,
-    };     
+    };
   }
 }
