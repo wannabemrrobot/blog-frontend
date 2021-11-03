@@ -108,7 +108,7 @@ export class CronComponent implements OnInit {
       this.streak = 0
     } else {
       this.streak = this.streak + 1;
-      this.bestStreak = this.streak;
+      this.bestStreak = this.streak + 1;
     }
 
     this.streak = "0".repeat(4 - this.streak.toString().length) + this.streak;
