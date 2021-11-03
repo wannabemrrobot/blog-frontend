@@ -1,22 +1,14 @@
-  import { Component, OnDestroy, OnInit } from '@angular/core';
+  import { Component, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
-import * as particleConfig from '../../../assets/data/particle-config.json';
 
 declare var callScramblerAnimation: any;
 
 @Component({
   selector: 'app-cron',
   templateUrl: './cron.component.html',
-  styleUrls: ['./cron.component.scss', './cron.responsive.scss']
+  styleUrls: ['./cron.component.scss', './cron.responsive.scss'],
 })
 export class CronComponent implements OnInit {
-
-  // particles in cron streak
-  particleStyle: any = {};
-  particleParams: any = {};
-  particleConfig: any = (particleConfig as any).default;
-  width: number = 100;
-  height: number = 100;
 
   dailyProgressFiles: any;
   dailyProgressList: any = []
@@ -31,7 +23,7 @@ export class CronComponent implements OnInit {
   dailyProgressTab: boolean = true;
 
   constructor(
-    private __githubService: GithubService
+    private __githubService: GithubService,
     ) {}
 
   // expand Accordion
@@ -147,20 +139,5 @@ export class CronComponent implements OnInit {
       // animate text in the header
       new callScramblerAnimation(this.headerScramblerPhrase, '.cron__header__text', '!<>-_\\/[]{}—=+*^?#________');
     }, 500)
-
-
-    // assign particleJS parameters
-    this.particleConfig.particles.color.value = localStorage.getItem("@themeAccent");
-    this.particleParams = this.particleConfig;
-    this.particleStyle = {
-      'position': 'absolute',
-      'width': '100%',
-      'height': '100%',
-      'z-index': -1,
-      'top': 0,
-      'left': 0,
-      'right': 0,
-      'bottom': 0,
-    };
   }
 }

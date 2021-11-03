@@ -1,8 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { forkJoin, Observable, Subject } from 'rxjs';
-import { concatAll, map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,10 @@ import { concatAll, map } from 'rxjs/operators';
 export class ThemeService {
 
   private themelistURL = "https://raw.githubusercontent.com/wannabemrrobot/daily-progress/main/themelist.json";
-
-  private currentTheme = new Subject<any>();
-  themeObservable = this.currentTheme.asObservable();
-
+  
   themeList: any = {};
+  // private __themeUpdated:BehaviorSubject<string> = new BehaviorSubject("#ff1e56");
+  // public readonly themeUpdated: Observable<string> = this.__themeUpdated.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -52,6 +52,7 @@ export class ThemeService {
         localStorage.setItem('@theme', theme.$theme)
         localStorage.setItem('@themeAccent', theme['--accent-primary'])
         localStorage.setItem('@themeAttributes', theme)
+        // this.__themeUpdated.next(theme['--accent-primary']);
 
         fallBack = false;
         break;
@@ -91,6 +92,7 @@ export class ThemeService {
 
       localStorage.setItem('@theme', fallBackTheme.$theme)
       localStorage.setItem('@themeAccent', fallBackTheme['--accent-primary'])
+      // this.__themeUpdated.next(fallBackTheme['--accent-primary']);
 
       Object.keys(fallBackTheme).forEach((key: any) => {
         this.document.documentElement.style.setProperty(key, fallBackTheme[key]);
