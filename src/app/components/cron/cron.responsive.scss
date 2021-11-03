@@ -1,25 +1,89 @@
-/* smartphones, iPhone, portrait 480x320 phones */
-@media (min-width:320px) and (max-width:480px) {
+// all rules outside of @media queries apply to devices 1201px and above
+@media (max-width: 960px) {
     .cron {
+        &__container {
+            max-width: 720px;
+        }
         &__header {
-            width: 90%;
+            margin-top: 7%;
             &__text {
-                font-size: 20px;
-                margin: auto;
-                padding-left: 10px;
+                padding: 0 50px;
             }
         }
+        &__subheader {
+            top: 52px;
+        }
+    }
+}
 
+@media (max-width: 768px) {
+    .cron {
+        &__container {
+            max-width: 680px;
+        }
+        &__header {
+            &__text {
+                font-size: 24px;
+                padding: 0 50px 0 50px;
+            }
+        }
+        &__subheader {
+            top: 70px;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .cron {
+        &__container {
+            max-width: 600px;
+        }
+        &__subheader {
+            top: 65px;
+        }
+    }
+}
+
+@media (max-width: 529px) {
+    .cron {
+        &__header {
+            margin-top: 9%;
+            &__text {
+                font-size: 20px;
+                padding: 0 50px 0 50px;
+            }
+        }
         &__subheader {
             top: 62px;
-
             &__buttonwrapper {
                 &-text {
                     display: none;
                 }
             }
         }
+    }
+}
 
+@media (max-width: 465px) {
+    .cron {
+        &__header {
+            height: 130px;
+            &__text {
+                font-size: 18px;
+                padding: 0 30px 0 30px;
+            }
+        }
+        &__info {
+            &-text {
+                font-size: 16px;
+            }
+        }
+        &__days {
+            &-beststreak {
+                top: 80%;
+                right: 36%;
+            }
+        }
         &__timeline {
             &-item {
                 &__title {
@@ -30,56 +94,22 @@
     }
 }
 
-/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
-@media (min-width:481px) and (max-width: 640px) {
+@media (max-width: 425px) {
     .cron {
         &__header {
-            width: 90%;
-            &__text {
-                font-size: 20px;
-                margin: auto;
-                padding-left: 10px;
+            margin-top: 60px;
+            height: 150px;
+        }
+        &__days {
+            &-beststreak {
+                top: 80%;
+                right: 34%;
             }
         }
-
-        &__subheader {
-            top: 62px;
-
-            &__buttonwrapper {
-                &-text {
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
-/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-@media (min-width:641px) and (max-width: 991px) {
-    .cron {
-
-        &__subheader {
-            top: 62px;
-
-            &__buttonwrapper {
-                &-text {
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
-@media (min-width: 769px) and (max-width: 963px) {
-    .cron {
-
-        &__subheader {
-            top: 52px;
-
-            &__buttonwrapper {
-                &-text {
-                    display: none;
-                }
+        &__tab {
+            & .tab {
+                gap: 0;
+                font-size: 0;
             }
         }
     }
