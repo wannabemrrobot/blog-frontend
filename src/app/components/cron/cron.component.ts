@@ -1,5 +1,8 @@
-  import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
+
+// uncomment only for testing purpose
+// import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
 
 declare var callScramblerAnimation: any;
 
@@ -18,7 +21,7 @@ export class CronComponent implements OnInit {
     "If there's one way to disrupt a man's plan, it is to destabilize his timeline."
   ]
   streak: any = 0;
-  bestStreak: any = 0
+  bestStreak: any = 0;
   tabSelected: string = "dailyProgress";
   dailyProgressTab: boolean = true;
 
@@ -83,7 +86,14 @@ export class CronComponent implements OnInit {
     // today and the last commited date
     let today = new Date().getTime()
     let lastCommit = new Date(dailyProgressList[0].date).getTime()
+    let streakBroke = false;
 
+    this.streak = 1
+    this.bestStreak = 1
+
+    let streak = 1
+
+    // iterate to find the streak
     for(let i=1; i<dailyProgressList.length-1; i++) {
       // iterating with 2 consecutive elements
       let prevDate = new Date(dailyProgressList[i-1].date).getTime()
@@ -91,24 +101,27 @@ export class CronComponent implements OnInit {
       
       // check if the consecutive array elements are consecutive days by looking for the difference 
       // (1-consecutive)
-      if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1) {
-        // console.log("on streak")
+      if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1 && streakBroke == false) {
+        streak = streak + 1
         this.streak = this.streak + 1
-        if(this.streak > this.bestStreak) {
-          this.bestStreak = this.streak;
-        }
-        // console.log("streak: ", this.streak)
+        this.bestStreak = this.streak
+      } else if(Math.floor((prevDate - curDate) / 1000 / 60 / 60 / 24) == 1 && streakBroke == true) {
+        // calculate the best streak
+        streak = streak + 1
+        // if(streak > this.bestStreak) {
+        //   console.log("bigger streak encountered: ", streak)
+        //   this.bestStreak = streak;
+        // }
+        this.bestStreak = this.bestStreak < streak ? streak : this.bestStreak
       } else {
-        // console.log("streak failed")
-        break;
+        streakBroke = true
+        streak = 1
       }
     }
 
+    // check if the last commit made is within the last 24 hrs
     if(Math.floor((today - lastCommit) / 1000 / 60 / 60 / 24) > 1) {
       this.streak = 0
-    } else {
-      this.streak = this.streak + 1;
-      this.bestStreak = this.streak + 1;
     }
 
     this.streak = "0".repeat(4 - this.streak.toString().length) + this.streak;
@@ -134,6 +147,11 @@ export class CronComponent implements OnInit {
       // calculate Learning Streak
       this.calculateStreak(this.dailyProgressList)
     })
+
+
+    // uncomment only to test with local json data
+    // this.dailyProgressList = dailyProgressTestData;
+    // this.calculateStreak(this.dailyProgressList);
 
     setTimeout(() => {
       // animate text in the header
