@@ -355,10 +355,21 @@
             &:first-child {
                 border-image: linear-gradient(to top, rgba(97, 97, 97, 0.6) 60%, rgba(97, 97, 97, 0)) 1 100%;  
             }
+
+            &.-first-child {
+                border-image: linear-gradient(to top, rgba(97, 97, 97, 0.6) 60%, rgba(97, 97, 97, 0)) 1 100%;  
+            }
         
-            &:last-child {
-            	border-image: linear-gradient(to bottom, rgb(97, 97, 97, 0.6) 60%, rgb(97, 97, 97, 0)) 1 100%
-            	;
+            &.-last-child {
+            	border-image: linear-gradient(to bottom, rgb(97, 97, 97, 0.6) 60%, rgb(97, 97, 97, 0)) 1 100%;
+            }
+        }
+
+        &-loadmore {
+            cursor: pointer;
+            &-btn {
+                text-decoration: none;
+                color: var(--accent-primary);
             }
         }
     }
