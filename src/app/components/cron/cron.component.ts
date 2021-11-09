@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
 
 // uncomment only for testing purpose
-// import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
+import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
 
 declare var callScramblerAnimation: any;
 
@@ -15,6 +15,10 @@ export class CronComponent implements OnInit {
 
   dailyProgressFiles: any;
   dailyProgressList: any = []
+  dailyProgressBuffer: any = []
+  lastIndex = 0;
+  loadMore: boolean = true;
+
   headerScramblerPhrase = [
     "If there's one way to disrupt a man's plan,",
     "it is to destabilize his timeline.",
@@ -128,6 +132,27 @@ export class CronComponent implements OnInit {
     this.bestStreak = "0".repeat(4 - this.bestStreak.toString().length) + this.bestStreak;
   }
 
+  // load more timeline events on btn click
+  loadmore() {
+    // push elements to list only if there are 10 or more elements in the buffer, to push
+    if((this.lastIndex+9) <= this.dailyProgressBuffer.length) {
+      for(var i=this.lastIndex; i<this.lastIndex+10; i++) {
+        this.dailyProgressList.push(this.dailyProgressBuffer[i])
+      }
+      this.lastIndex = i;
+      // toggle off the load more button, when every element in buffer is pushed to the list
+      if(this.lastIndex == this.dailyProgressBuffer.length) {
+        this.loadMore = false
+      }
+    } else {
+      // this condition block will get executed when there are less than 10 elements in the buffer to push
+      this.loadMore = false;
+      for(var i=this.lastIndex; i<this.dailyProgressBuffer.length; i++) {
+        this.dailyProgressList.push(this.dailyProgressBuffer[i])
+      }
+    }
+  }
+
   // angular life cycle hook, when the component gets loaded
   ngOnInit(): void {
     // get timelineJSON and populate the dailyprogresslist
@@ -141,17 +166,33 @@ export class CronComponent implements OnInit {
           milestone: file.milestone,
           url: file.url,
         }
-        this.dailyProgressList.push(dailyProgressObj)
+        this.dailyProgressBuffer.push(dailyProgressObj)
       }
 
       // calculate Learning Streak
-      this.calculateStreak(this.dailyProgressList)
+      this.calculateStreak(this.dailyProgressBuffer)
+
+      // load the first 10 timelines into the view
+      for(var i=0; i<10; i++) {
+        this.dailyProgressList.push(this.dailyProgressBuffer[i]);
+      }
+      this.lastIndex = i;
     })
 
-
+    ////////////////////////////////////////////////
     // uncomment only to test with local json data
-    // this.dailyProgressList = dailyProgressTestData;
-    // this.calculateStreak(this.dailyProgressList);
+
+    // this.dailyProgressBuffer = dailyProgressTestData;
+    // this.calculateStreak(this.dailyProgressBuffer);
+
+    // load the first 10 timelines into the view
+
+    // for(var i=0; i<10; i++) {
+    //   this.dailyProgressList.push(this.dailyProgressBuffer[i]);
+    // }
+    // this.lastIndex = i;
+    ////////////////////////////////////////////////
+
 
     setTimeout(() => {
       // animate text in the header
