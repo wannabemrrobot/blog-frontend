@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GithubService } from 'src/app/service/github.service';
 
 // uncomment only for testing purpose
-import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
+// import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
 
 declare var callScramblerAnimation: any;
 
