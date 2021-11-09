@@ -328,7 +328,7 @@
                 top: 1em;
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 10px;
                 font-size: .867rem;
                 & .-flag {
                     fill: var(--accent-primary);
@@ -366,10 +366,58 @@
         }
 
         &-loadmore {
-            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+
+            border-top: 2.5px solid;
+            border-image: linear-gradient(to right, rgb(97, 97, 97, 0), rgb(97, 97, 97, 0.6) 60%, rgb(97, 97, 97, 0)) 1 100%;
+            border-image-slice: 1;
+
             &-btn {
+                transition: all .4s ease-in-out;
+                cursor: pointer;
+                max-width: fit-content;
+                padding: 5px 10px;
+                display: flex;
+                gap: 5px;
+                align-items: center;
                 text-decoration: none;
                 color: var(--accent-primary);
+                border-radius: 5px;
+                border: 2px solid transparent;
+
+                &:hover {
+                    border: 2px solid var(--accent-primary);
+                    background: var(--accent-primary);
+                    color: var(--background);
+                    .loadmore-icon {
+                        transition: all .4s ease-in-out;
+                        fill: var(--background);
+                        transform: rotate(360deg);
+                    }
+                    .loadall-icon {
+                        transition: all .4s ease-in-out;
+                        fill: var(--background);
+                        animation: crescendo 0.4s alternate 2 ease-in-out;
+                    }
+
+                    @keyframes crescendo {
+                        0%   {transform: scale(1);}
+                        100% {transform: scale(1.20);}
+                        0% {transform: scale(1);}
+                    }
+                }
+            }
+            .loadmore-icon,
+            .loadall-icon {
+                width: 20px;
+                height: 20px;
+                fill: var(--accent-primary);
+            }
+            .loadall-icon {
+                margin-left: 5px;
             }
         }
     }

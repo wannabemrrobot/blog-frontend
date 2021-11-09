@@ -153,6 +153,12 @@ export class CronComponent implements OnInit {
     }
   }
 
+  // load all timeline events on btn click
+  loadall() {
+    this.dailyProgressList = this.dailyProgressBuffer;
+    this.loadMore = false;
+  }
+
   // angular life cycle hook, when the component gets loaded
   ngOnInit(): void {
     // get timelineJSON and populate the dailyprogresslist
