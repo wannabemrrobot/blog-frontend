@@ -260,6 +260,15 @@
             }
         }
 
+        & input[id="heatmap"] {
+            &:checked {
+                & ~ .-glider {
+                    opacity: 1;
+                    transform: scale3d(1, 1, 1);
+                }
+            }
+        }
+
         .-glider {
             position: absolute;
             top: 0;
@@ -424,5 +433,96 @@
 
     &__separator {
         height: 1.5px;
+    }
+
+    &__heatmap {
+        &-container {
+            padding-bottom: 15px;
+            overflow-x: scroll;
+        }
+
+        &-header {
+            display: flex;
+            gap: 20px;
+
+            &-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            &-text {
+               color: var(--heading-primary);
+               margin: 0;
+            }
+
+            & .mouse-icon{
+                width: 25px;
+                height: 45px;
+                border: 2px solid var(--accent-primary);
+                border-radius: 15px;
+                cursor: pointer;
+                position: relative;
+                text-align: center;
+                transform: rotate(270deg);
+            }
+            & .mouse-wheel{
+                height: 6px;
+                margin: 2px auto 0;
+                display: block;
+                width: 3px;
+                background-color: var(--accent-primary);
+                border-radius: 50%;
+                -webkit-animation: 1.6s ease infinite wheel-up-down;
+                -moz-animation: 1.6s ease infinite wheel-up-down;
+                animation: 1.6s ease infinite wheel-up-down;
+             }
+            @-webkit-keyframes wheel-up-down {
+                0% {
+                    margin-top: 2px;
+                    opacity: 0;
+                }
+                30% {
+                    opacity: 1;
+                }
+                100% {
+                    margin-top: 20px;
+                    opacity: 0;
+                }
+            }
+            @-moz-keyframes wheel-up-down {
+                0% {
+                    margin-top: 2px;
+                    opacity: 0;
+                }
+                30% {
+                    opacity: 1;
+                }
+                100% {
+                    margin-top: 20px;
+                    opacity: 0;
+                }
+            }
+            @keyframes wheel-up-down {
+                0% {
+                    margin-top: 2px;
+                    opacity: 0;
+                }
+                30% {
+                    opacity: 1;
+                }
+                100% {
+                    margin-top: 20px;
+                    opacity: 0;
+                }
+            }
+        }
+
+        &-display {
+            display: block;
+        }
+
+        &-hide {
+            display: none;
+        }
     }
 }
