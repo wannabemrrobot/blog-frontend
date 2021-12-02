@@ -5,6 +5,7 @@ import { GithubService } from 'src/app/service/github.service';
 // import dailyProgressTestData from './../../../assets/data/daily-progress-test.json';
 
 declare var callScramblerAnimation: any;
+declare var callHeatmapInit: any;
 
 @Component({
   selector: 'app-cron',
@@ -19,6 +20,11 @@ export class CronComponent implements OnInit {
   lastIndex = 0;
   loadMore: boolean = true;
 
+  // heatmap variables
+  heatmapContainer = 'cron__heatmap-container';
+  heatmapColor = localStorage.getItem('@themeAccent');
+  heatmapOverview = 'year';
+
   headerScramblerPhrase = [
     "If there's one way to disrupt a man's plan,",
     "it is to destabilize his timeline.",
@@ -28,6 +34,8 @@ export class CronComponent implements OnInit {
   bestStreak: any = 0;
   tabSelected: string = "dailyProgress";
   dailyProgressTab: boolean = true;
+  milestonesTab: boolean = false;
+  heatmapTab: boolean = false;
 
   constructor(
     private __githubService: GithubService,
@@ -66,10 +74,19 @@ export class CronComponent implements OnInit {
   changeTab(event: any) {
     if(event.target.value == "dailyProgress") {
       this.dailyProgressTab = true;
+      this.milestonesTab = false;
+      this.heatmapTab = false;
       this.tabSelected = "dailyProgress";
     } else if(event.target.value == "milestone") {
       this.dailyProgressTab = false;
+      this.milestonesTab = true;
+      this.heatmapTab = false;
       this.tabSelected = "milestone";
+    } else if(event.target.value == "heatmap") {
+      this.dailyProgressTab = false;
+      this.milestonesTab = false;
+      this.heatmapTab = true;
+      this.tabSelected = "heatmap";
     }
   }
 
@@ -156,7 +173,7 @@ export class CronComponent implements OnInit {
   // load all timeline events on btn click
   loadall() {
     this.dailyProgressList = this.dailyProgressBuffer;
-    this.loadMore = false;
+    this.loadMore = false;   
   }
 
   // angular life cycle hook, when the component gets loaded
@@ -171,6 +188,9 @@ export class CronComponent implements OnInit {
           title: file.title,
           milestone: file.milestone,
           url: file.url,
+          total: 1,
+          details: [],
+          summary: []
         }
         this.dailyProgressBuffer.push(dailyProgressObj)
       }
@@ -183,6 +203,12 @@ export class CronComponent implements OnInit {
         this.dailyProgressList.push(this.dailyProgressBuffer[i]);
       }
       this.lastIndex = i;
+
+      let heatmapHandler = () => {
+        // handler function after clicking the heat plot
+      }
+      // initialize streak heatmap
+      new callHeatmapInit(this.dailyProgressBuffer, this.heatmapContainer, this.heatmapColor, this.heatmapOverview, heatmapHandler);
     })
 
     ////////////////////////////////////////////////
@@ -204,5 +230,62 @@ export class CronComponent implements OnInit {
       // animate text in the header
       new callScramblerAnimation(this.headerScramblerPhrase, '.cron__header__text', '!<>-_\\/[]{}—=+*^?#________');
     }, 500)
+
+  //   this.heatmapData = [
+  //   {
+  //     "date": "2016-01-01",
+  //     "total": 1,
+  //     "details": [{
+  //       "name": "Project 1",
+  //       "date": "2016-01-01 12:30:45",
+  //       "value": 9192
+  //     }, {
+  //       "name": "Project 2",
+  //       "date": "2016-01-01 13:37:00",
+  //       "value": 6753
+  //     },
+  //     {
+  //       "name": "Project N",
+  //       "date": "2016-01-01 17:52:41",
+  //       "value": 1219
+  //     }]
+  //   },
+  //   {
+  //     "date": "2016-03-01",
+  //     "total": 1,
+  //     "details": [{
+  //       "name": "Project 1",
+  //       "date": "2016-01-01 12:30:45",
+  //       "value": 9192
+  //     }, {
+  //       "name": "Project 2",
+  //       "date": "2016-01-01 13:37:00",
+  //       "value": 6753
+  //     },
+  //     {
+  //       "name": "Project N",
+  //       "date": "2016-01-01 17:52:41",
+  //       "value": 1219
+  //     }]
+  //   },
+  //   {
+  //     "date": "2016-02-01",
+  //     "total": 1,
+  //     "details": [{
+  //       "name": "Project 1",
+  //       "date": "2016-01-01 12:30:45",
+  //       "value": 9192
+  //     }, {
+  //       "name": "Project 2",
+  //       "date": "2016-01-01 13:37:00",
+  //       "value": 6753
+  //     },
+  //     {
+  //       "name": "Project N",
+  //       "date": "2016-01-01 17:52:41",
+  //       "value": 1219
+  //     }]
+  //   }
+  // ]
   }
 }
