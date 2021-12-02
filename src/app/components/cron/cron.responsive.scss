@@ -44,6 +44,17 @@
     }
 }
 
+@media (max-width: 600px) {
+    .cron {
+        &__tab {
+            & .tab {
+                gap: 0;
+                font-size: 0;
+            }
+        }
+    }
+}
+
 @media (max-width: 529px) {
     .cron {
         &__header {
