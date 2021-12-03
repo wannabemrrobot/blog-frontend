@@ -455,9 +455,9 @@
                 align-items: center;
                 gap: 10px;
             }
-            &-text {
-               color: var(--heading-primary);
-               margin: 0;
+
+            & .cron__subheader__hintwrapper-text {
+                color: var(--heading-primary);
             }
 
             & .mouse-icon{

@@ -36,6 +36,7 @@ export class CronComponent implements OnInit {
   dailyProgressTab: boolean = true;
   milestonesTab: boolean = false;
   heatmapTab: boolean = false;
+  heatmapLatestYear: any;
 
   constructor(
     private __githubService: GithubService,
@@ -209,6 +210,7 @@ export class CronComponent implements OnInit {
       }
       // initialize streak heatmap
       new callHeatmapInit(this.dailyProgressBuffer, this.heatmapContainer, this.heatmapColor, this.heatmapOverview, heatmapHandler);
+      this.heatmapLatestYear = this.dailyProgressBuffer[0].date.split('-')[0];
     })
 
     ////////////////////////////////////////////////
@@ -230,62 +232,5 @@ export class CronComponent implements OnInit {
       // animate text in the header
       new callScramblerAnimation(this.headerScramblerPhrase, '.cron__header__text', '!<>-_\\/[]{}—=+*^?#________');
     }, 500)
-
-  //   this.heatmapData = [
-  //   {
-  //     "date": "2016-01-01",
-  //     "total": 1,
-  //     "details": [{
-  //       "name": "Project 1",
-  //       "date": "2016-01-01 12:30:45",
-  //       "value": 9192
-  //     }, {
-  //       "name": "Project 2",
-  //       "date": "2016-01-01 13:37:00",
-  //       "value": 6753
-  //     },
-  //     {
-  //       "name": "Project N",
-  //       "date": "2016-01-01 17:52:41",
-  //       "value": 1219
-  //     }]
-  //   },
-  //   {
-  //     "date": "2016-03-01",
-  //     "total": 1,
-  //     "details": [{
-  //       "name": "Project 1",
-  //       "date": "2016-01-01 12:30:45",
-  //       "value": 9192
-  //     }, {
-  //       "name": "Project 2",
-  //       "date": "2016-01-01 13:37:00",
-  //       "value": 6753
-  //     },
-  //     {
-  //       "name": "Project N",
-  //       "date": "2016-01-01 17:52:41",
-  //       "value": 1219
-  //     }]
-  //   },
-  //   {
-  //     "date": "2016-02-01",
-  //     "total": 1,
-  //     "details": [{
-  //       "name": "Project 1",
-  //       "date": "2016-01-01 12:30:45",
-  //       "value": 9192
-  //     }, {
-  //       "name": "Project 2",
-  //       "date": "2016-01-01 13:37:00",
-  //       "value": 6753
-  //     },
-  //     {
-  //       "name": "Project N",
-  //       "date": "2016-01-01 17:52:41",
-  //       "value": 1219
-  //     }]
-  //   }
-  // ]
   }
 }
