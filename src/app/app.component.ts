@@ -6,10 +6,11 @@ import { Subject, Subscription } from 'rxjs';
 import { ThemeService } from './service/theme.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss', './app.responsive.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss', './app.responsive.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AppComponent implements OnInit {
   title = 'wannabemrrobot';
@@ -138,7 +139,7 @@ export class AppComponent implements OnInit {
     let postno = Number(url.split('/posts/')[1]);
     let subject = new Subject<Boolean>();
 
-    if(postno == NaN) {
+    if(Number.isNaN(postno)) {
       subject.next(false);
     }else {
       // save the postnumbers in a list for valid post path check in breadcrumbs
@@ -160,7 +161,9 @@ export class AppComponent implements OnInit {
   // change theme on button click
   changeTheme(theme: string) {
     this.lastThemeSelection = theme;
-    this.__themeService.setTheme(theme, this.themeObjList)
+    this.__themeService.setTheme(theme, this.themeObjList);
+    // Dispatch custom event for particle color update
+    window.dispatchEvent(new Event('themeChanged'));
   }
 
 

@@ -18,12 +18,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/wannabemrrobot",
+            "outputPath": {
+              "base": "dist/wannabemrrobot"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -37,10 +40,11 @@
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css"
             ],
             "scripts": [
-              "node_modules/marked/lib/marked.js",
+              "node_modules/marked/marked.min.js",
               "node_modules/prismjs/prism.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
-            ]
+            ],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -65,9 +69,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -79,10 +81,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "wannabemrrobot:build:production"
+              "buildTarget": "wannabemrrobot:build:production"
             },
             "development": {
-              "browserTarget": "wannabemrrobot:build:development"
+              "buildTarget": "wannabemrrobot:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "wannabemrrobot:build"
+            "buildTarget": "wannabemrrobot:build"
           }
         },
         "test": {
@@ -113,6 +115,5 @@
         }
       }
     }
-  },
-  "defaultProject": "wannabemrrobot"
+  }
 }

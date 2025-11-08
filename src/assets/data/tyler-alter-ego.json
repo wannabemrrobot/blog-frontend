@@ -1,0 +1,30 @@
+{
+    "name": "Tyler Durdern",
+    "nickname": "Ty",
+    "profile_url": "https://example.com/profiles/tyler.jpg",
+    "tag_line": "The first rule of Alter Ego is: You do not talk about Alter Ego.",
+    "scramble_text": "Welcome to my world of hidden identities and secret lives.",
+    "level": 1,
+    "xp_details": {
+        "current_xp": 150,
+        "xp_to_next_level": 300
+    },
+    "health_details": {
+        "current_health": 80,
+        "max_health": 100
+    },
+    "energy_details": {
+        "current_energy": 50,
+        "max_energy": 100
+    },
+    "abilities": {
+        "strength": 25,
+        "discipline": 15,
+        "agression": 5,
+        "confidence": 10,
+        "dominance": 10,
+        "pain tolerance": 10,
+        "honor": 15,
+        "determination": 20
+    }
+}

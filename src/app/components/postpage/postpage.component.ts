@@ -3,10 +3,11 @@ import { GithubService } from 'src/app/service/github.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-postpage',
-  templateUrl: './postpage.component.html',
-  styleUrls: ['./postpage.component.scss', './postpage.responsive.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-postpage',
+    templateUrl: './postpage.component.html',
+    styleUrls: ['./postpage.component.scss', './postpage.responsive.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PostpageComponent implements OnInit {
 
