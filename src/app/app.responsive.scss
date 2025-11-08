@@ -1,12 +1,19 @@
 // Tablets - Portrait - 768 * 1024
 @media screen and (max-width: 768px), (min-device-width: 768px) and (max-device-width: 1024px) and (orientation : portrait) {
     .header {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
 
         #darktoggle {
             &-mobile {
-                display: unset;
+                display: flex !important;
+                margin-left: auto !important;
+                margin-right: 15px !important;
+            }
+            &-desktop {
+                display: none !important;
             }
         }
 
@@ -58,12 +65,19 @@
 @media screen and (max-width: 600px), (min-device-width: 600px) and (max-device-width: 960px) 
 and (orientation : portrait) {
     .header {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
 
         #darktoggle {
             &-mobile {
-                display: unset;
+                display: flex !important;
+                margin-left: auto !important;
+                margin-right: 15px !important;
+            }
+            &-desktop {
+                display: none !important;
             }
         }
 
@@ -106,12 +120,19 @@ and (orientation : portrait) {
 @media screen and (max-width: 360px), (min-device-width: 360px) and 
 (max-device-width: 640px) and (orientation : portrait) {
     .header {
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
 
         #darktoggle {
             &-mobile {
-                display: unset;
+                display: flex !important;
+                margin-left: auto !important;
+                margin-right: 15px !important;
+            }
+            &-desktop {
+                display: none !important;
             }
         }
 

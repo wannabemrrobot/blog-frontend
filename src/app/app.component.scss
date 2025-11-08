@@ -1,11 +1,68 @@
 nav {
     background: var(--header-bg);
     transition: background 0.2s ease, color 0.2s ease;
+    
+    .container-fluid {
+        max-width: 805px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
 }
 
 .header {
     position: relative;
-    max-width: 805px;
+    max-width: 805px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+
+    .navbar-collapse {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        flex-grow: 0 !important;
+    }
+
+    .navbar-nav {
+        // Mobile: column (default), Desktop: row
+        flex-direction: column !important;
+        
+        @media (min-width: 992px) {
+            flex-direction: row !important;
+            margin-left: auto !important;
+        }
+    }
+
+    #darktoggle-mobile {
+        position: static !important;
+        margin-right: 15px !important;
+        margin-left: 0 !important;
+        
+        .dropdown-menu {
+            position: fixed !important;
+            right: 10px !important;
+            left: auto !important;
+            top: auto !important;
+            max-width: 200px !important;
+            z-index: 1050 !important;
+        }
+    }
+
+    #darktoggle-desktop {
+        .dropdown {
+            position: static !important;
+        }
+        
+        .dropdown-menu {
+            position: absolute !important;
+            right: 0 !important;
+            left: auto !important;
+        }
+    }
 
     #darkmode-toggle {
         margin-top: 9px;

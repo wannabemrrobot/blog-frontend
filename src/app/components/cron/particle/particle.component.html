@@ -1,1 +1,7 @@
-<particles [style]="particleStyle" [width]="width" [height]="height" [params]="particleParams"></particles>
+<ngx-particles 
+  [id]="id" 
+  [options]="particleOptions" 
+  [particlesInit]="particlesInit.bind(this)"
+  (particlesLoaded)="particlesLoaded($event)"
+  [style]="particleStyle">
+</ngx-particles>

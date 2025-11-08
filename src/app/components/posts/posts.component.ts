@@ -4,10 +4,11 @@ import { GithubService } from 'src/app/service/github.service';
 declare var callScramblerAnimation: any;
 
 @Component({
-  selector: 'app-posts',
-  templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.scss', './posts.responsive.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-posts',
+    templateUrl: './posts.component.html',
+    styleUrls: ['./posts.component.scss', './posts.responsive.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PostsComponent implements OnInit {
 

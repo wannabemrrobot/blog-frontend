@@ -4,9 +4,10 @@ import * as eva from 'eva-icons';
 declare var callScramblerAnimation: any;
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss', './home.responsive.scss'],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss', './home.responsive.scss'],
+    standalone: false
 })
 export class HomeComponent implements OnInit {
 

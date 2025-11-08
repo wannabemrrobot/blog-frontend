@@ -31,7 +31,7 @@ export class ThemeService {
       themeList.map((theme: any) =>
         this.http.get<any[]>(theme.url))
     ).pipe(
-      map(themeObjectList => themeObjectList.reduce((list: any, theme: any) => list.concat(theme), []))
+      map((themeObjectList: any) => themeObjectList.reduce((list: any, theme: any) => list.concat(theme), []))
     )
   }
 

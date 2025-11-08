@@ -4,9 +4,10 @@ declare var callScramblerAnimation: any;
 
 
 @Component({
-  selector: 'app-error404',
-  templateUrl: './error404.component.html',
-  styleUrls: ['./error404.component.scss', './error404.responsive.scss']
+    selector: 'app-error404',
+    templateUrl: './error404.component.html',
+    styleUrls: ['./error404.component.scss', './error404.responsive.scss'],
+    standalone: false
 })
 export class Error404Component implements OnInit {
 

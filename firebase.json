@@ -1,6 +1,7 @@
 {
   "hosting": {
-    "public": "dist/wannabemrrobot",
+    "site": "wannabemrrobot",
+    "public": "dist/wannabemrrobot/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

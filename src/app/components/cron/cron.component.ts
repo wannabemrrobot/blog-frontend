@@ -8,9 +8,10 @@ declare var callScramblerAnimation: any;
 declare var callHeatmapInit: any;
 
 @Component({
-  selector: 'app-cron',
-  templateUrl: './cron.component.html',
-  styleUrls: ['./cron.component.scss', './cron.responsive.scss'],
+    selector: 'app-cron',
+    templateUrl: './cron.component.html',
+    styleUrls: ['./cron.component.scss', './cron.responsive.scss'],
+    standalone: false
 })
 export class CronComponent implements OnInit {
 
@@ -177,8 +178,16 @@ export class CronComponent implements OnInit {
     this.loadMore = false;   
   }
 
+  // Update heatmapLatestYear to the current year based on the calendar
+  updateHeatmapYear() {
+    const today = new Date();
+    this.heatmapLatestYear = today.getFullYear();
+  }
+
   // angular life cycle hook, when the component gets loaded
   ngOnInit(): void {
+    this.updateHeatmapYear();
+
     // get timelineJSON and populate the dailyprogresslist
     this.__githubService.getTimelineJSON().subscribe((response: any) => {
       this.dailyProgressFiles = response;
@@ -210,7 +219,6 @@ export class CronComponent implements OnInit {
       }
       // initialize streak heatmap
       new callHeatmapInit(this.dailyProgressBuffer, this.heatmapContainer, this.heatmapColor, this.heatmapOverview, heatmapHandler);
-      this.heatmapLatestYear = this.dailyProgressBuffer[0].date.split('-')[0];
     })
 
     ////////////////////////////////////////////////

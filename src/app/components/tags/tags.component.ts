@@ -5,9 +5,10 @@ import { GithubService } from 'src/app/service/github.service';
 declare var callScramblerAnimation: any;
 
 @Component({
-  selector: 'app-tags',
-  templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.scss', './tags.responsive.scss']
+    selector: 'app-tags',
+    templateUrl: './tags.component.html',
+    styleUrls: ['./tags.component.scss', './tags.responsive.scss'],
+    standalone: false
 })
 export class TagsComponent implements OnInit {
 
