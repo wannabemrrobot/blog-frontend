@@ -7,6 +7,8 @@ import { WhoamiComponent } from './components/whoami/whoami.component';
 import { PostpageComponent } from './components/postpage/postpage.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { Error404Component } from './components/error404/error404.component';
+import { FightClubComponent } from './components/fightclub/fightclub.component';
+import { MissionsComponent } from './components/missions/missions.component';
 
 const routes: Routes = [
   {
@@ -20,6 +22,14 @@ const routes: Routes = [
   {
     path: 'posts',
     component: PostsComponent
+  },
+  {
+    path: 'fight-club',
+    component: FightClubComponent
+  },
+  {
+    path: 'missions',
+    component: MissionsComponent
   },
   {
     path: 'whoami',

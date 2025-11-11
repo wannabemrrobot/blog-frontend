@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
     "$theme": "Zen White",
 
     "--accent-primary": "#ff1e56",
+    "--accent-primary-rgb": "255, 30, 86",
 
     "--text-primary": "#444444",
     "--text-secondary": "#4d4d4d",
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit {
     "$theme": "Dark Knight",
 
     "--accent-primary": "#ff1e56",
+    "--accent-primary-rgb": "255, 30, 86",
 
     "--text-primary": "#dfdbd5",
     "--text-secondary": "#aca59a",
@@ -97,6 +99,9 @@ export class AppComponent implements OnInit {
         // breadcrumb for cron@daily
         }else if(url == '/crondaily') {
           this.breadcrumb_placeholder = 'cron@daily'
+
+        }else if(url == '/fight-club') {
+          this.breadcrumb_placeholder = 'fightclub.sh'
 
         // breadcrumb for posts
         }else if(url == '/posts') {

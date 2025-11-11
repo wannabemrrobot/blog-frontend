@@ -13,9 +13,12 @@ import { Error404Component } from './components/error404/error404.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { PostpageComponent } from './components/postpage/postpage.component';
 import { TagsComponent } from './components/tags/tags.component';
+import { FightClubComponent } from './components/fightclub/fightclub.component';
+import { MissionsComponent } from './components/missions/missions.component';
 import { NgxParticlesModule } from '@tsparticles/angular';
 import { FormsModule } from '@angular/forms';
 import { ParticleComponent } from './components/cron/particle/particle.component';
+import { GlitchDirective } from './directives/glitch.directive';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -26,6 +29,8 @@ import { ParticleComponent } from './components/cron/particle/particle.component
         PostsComponent,
         PostpageComponent,
         TagsComponent,
+        FightClubComponent,
+        MissionsComponent,
         ParticleComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -33,5 +38,6 @@ import { ParticleComponent } from './components/cron/particle/particle.component
         FormsModule,
         AppRoutingModule,
         NgxParticlesModule,
+        GlitchDirective,
         MarkdownModule.forRoot({ loader: HttpClient })], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
