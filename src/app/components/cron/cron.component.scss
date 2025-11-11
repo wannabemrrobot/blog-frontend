@@ -5,6 +5,7 @@
         max-width: 790px;
         margin: auto;
         padding: 0 15px 0 10px;
+        background-image: linear-gradient(to right, rgba(0,0,0,0), var(--header-bg), rgba(0,0,0,0));
     }
 
     &__header {

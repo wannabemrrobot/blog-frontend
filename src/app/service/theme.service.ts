@@ -71,6 +71,7 @@ export class ThemeService {
         "--accent-primary": "#ff1e56",
     
         "--text-primary": "#444444",
+        "--text-btn": "#fff",
         "--text-secondary": "#4d4d4d",
         "--home-heading": "#646464",
         "--heading-primary": "#3d3d3d",

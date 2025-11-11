@@ -1,0 +1,744 @@
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChildren, ViewChild, QueryList, ElementRef } from '@angular/core';
+import { AuthService } from '../../service/auth.service';
+import { GamificationService, AlterEgo, Synergy } from '../../service/gamification.service';
+import { HistoryService, HistoryEntry } from '../../service/history.service';
+import { Router } from '@angular/router';
+import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
+
+declare var callScramblerAnimation: any;
+
+Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+
+@Component({
+  selector: 'app-fight-club',
+  standalone: false,
+  templateUrl: './fightclub.component.html',
+  styleUrl: './fightclub.component.scss'
+})
+export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
+  isAuthenticated = false;
+  user: any = null;
+  loading = false;
+  error: string | null = null;
+  alterEgos: AlterEgo[] = [];
+  loadingEgos = false;
+  
+  // Synergy data
+  synergy: Synergy | null = null;
+  loadingSynergy = false;
+  
+  // History panel
+  showHistoryPanel = false;
+  history: HistoryEntry[] = [];
+  loadingHistory = false;
+  historyLimit = 20;
+  
+  // Computed properties to prevent infinite loops in template
+  alterEgosComputed: any[] = [];
+  
+  // View toggle for abilities
+  showChartView = true; // true = chart view, false = list view
+  
+  // Text scrambler phrases
+  scramblerPhrases = [
+    "One body",
+    "Three egoes",
+    "Three journey",
+    "One destiny",
+    "Becoming ME",
+    "One body, three egoes, three journey, one destiny. Becoming ME."
+  ];
+  
+  @ViewChildren('radarCanvas') radarCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
+  @ViewChild('synergyCanvas') synergyCanvas!: ElementRef<HTMLCanvasElement>;
+  private charts: Chart[] = [];
+  private synergyChart: Chart | null = null;
+  private chartsRendered = false; // Flag to prevent infinite loop
+  private themeChangeListener: any;
+
+  constructor(
+    private authService: AuthService, 
+    private gamificationService: GamificationService,
+    private historyService: HistoryService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.currentUser$.subscribe((user: any) => {
+      console.log('User state update:', user);
+      this.user = user;
+      this.isAuthenticated = !!user;
+      this.loading = false;
+      
+      if (this.isAuthenticated && user.login && user.login !== 'wannabemrrobot') {
+        console.log('Access denied for user:', user.login);
+        this.error = `Access denied. Only wannabemrrobot can access this area. You are: ${user.login}`;
+        setTimeout(() => {
+          this.logout();
+        }, 3000);
+      } else if (this.isAuthenticated && user.login === 'wannabemrrobot') {
+        console.log('Access granted for wannabemrrobot');
+        this.error = null;
+        this.loadAlterEgos();
+        this.loadSynergy();
+        
+        // Initialize text scrambler animation after user is authenticated and DOM is ready
+        setTimeout(() => {
+          new callScramblerAnimation(this.scramblerPhrases, '.fightclub-scrambler-text', '!<>-_\\/[]{}—=+*^?#________');
+        }, 500);
+      } else if (this.isAuthenticated && !user.login) {
+        console.warn('User authenticated but no GitHub username found');
+        this.error = 'Could not retrieve GitHub username. Please try again.';
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Listen for canvas changes (when *ngFor creates them)
+    this.radarCanvases.changes.subscribe(() => {
+      console.log('Canvas changes detected, count:', this.radarCanvases.length);
+      console.log('Alter egos available:', this.alterEgos.length);
+      console.log('Charts already rendered?', this.chartsRendered);
+      
+      // Only render once when canvases appear and we haven't rendered yet
+      if (this.alterEgos.length > 0 && this.radarCanvases.length > 0 && !this.chartsRendered) {
+        console.log('Triggering chart render from changes subscription');
+        this.chartsRendered = true;
+        setTimeout(() => this.renderCharts(), 100);
+      }
+    });
+
+    // Listen for theme changes
+    this.themeChangeListener = () => {
+      console.log('Theme changed, re-rendering charts');
+      if (this.showChartView && this.charts.length > 0) {
+        // Destroy existing charts
+        this.charts.forEach((chart: Chart) => chart.destroy());
+        this.charts = [];
+        // Re-render with new theme colors
+        setTimeout(() => this.renderCharts(), 100);
+      }
+      // Re-render synergy chart
+      if (this.synergy && this.synergyCanvas) {
+        console.log('Re-rendering synergy chart with new theme');
+        setTimeout(() => this.renderSynergyChart(), 100);
+      }
+    };
+    
+    window.addEventListener('storage', this.themeChangeListener);
+    window.addEventListener('themeChanged', this.themeChangeListener);
+  }
+
+  ngOnDestroy(): void {
+    this.charts.forEach((chart: Chart) => chart.destroy());
+    if (this.synergyChart) {
+      this.synergyChart.destroy();
+    }
+    window.removeEventListener('storage', this.themeChangeListener);
+    window.removeEventListener('themeChanged', this.themeChangeListener);
+  }
+
+  loginWithGitHub(): void {
+    this.loading = true;
+    this.error = null;
+    this.authService.signInWithGitHub()
+      .then((result) => {
+        console.log('Login successful:', result);
+      })
+      .catch((err: any) => {
+        this.loading = false;
+        this.error = 'Login failed. Please try again.';
+        console.error('Login error:', err);
+      });
+  }
+
+  logout(): void {
+    this.authService.logout().then(() => {
+      // Clear local component state
+      this.user = null;
+      this.isAuthenticated = false;
+      this.alterEgos = [];
+      this.alterEgosComputed = [];
+      this.router.navigate(['/']);
+    });
+  }
+
+  logoutAllDevices(): void {
+    if (confirm('This will clear all session data on THIS device only. Note: Firebase does not support true cross-device logout without a backend. Other devices will remain logged in until tokens expire (~1 hour). Continue?')) {
+      // No need to navigate or clear state - revokeAllSessions will force reload
+      this.authService.revokeAllSessions();
+    }
+  }
+
+  loadAlterEgos(): void {
+    this.loadingEgos = true;
+    this.chartsRendered = false; // Reset flag when loading new data
+    this.gamificationService.getAllAlterEgos().subscribe({
+      next: (egos) => {
+        console.log('Alter egos loaded:', egos);
+        this.alterEgos = egos;
+        
+        // Pre-compute all values to prevent template method calls causing infinite loops
+        this.alterEgosComputed = egos.map(ego => ({
+          ...ego,
+          abilitiesArray: Object.entries(ego.abilities).map(([name, value]) => ({ name, value })),
+          xpPercentage: (ego.xp_details.current_xp / ego.xp_details.xp_to_next_level) * 100,
+          healthPercentage: (ego.health_details.current_health / ego.health_details.max_health) * 100,
+          energyPercentage: (ego.energy_details.current_energy / ego.energy_details.max_energy) * 100
+        }));
+        
+        this.loadingEgos = false;
+        // Wait for *ngFor to create canvas elements
+        setTimeout(() => {
+          console.log('After data load - canvas count:', this.radarCanvases?.length);
+          console.log('After data load - ego count:', this.alterEgos.length);
+          
+          // Initialize creed text scramblers for each card
+          this.alterEgosComputed.forEach((ego, index) => {
+            const creedElement = `.ego-creed-text[data-ego-index="${index}"]`;
+            if (ego.creed_text) {
+              // Split by slashes, trim, and filter out empty strings
+              const creedParts = ego.creed_text
+                .split('/')
+                .map((part: string) => part.trim())
+                .filter((part: string) => part.length > 0);
+              
+              // Create the full text by joining all parts with spaces
+              const fullText = creedParts.join(' ');
+              
+              // Only add full text if we have multiple parts
+              const creedPhrases = creedParts.length > 1 
+                ? [...creedParts, fullText] 
+                : creedParts;
+              
+              new callScramblerAnimation(creedPhrases, creedElement, '!<>-_\\/[]{}—=+*^?#________');
+            }
+          });
+          
+          if (this.radarCanvases && this.radarCanvases.length > 0 && !this.chartsRendered) {
+            console.log('Canvas elements found, rendering charts');
+            this.chartsRendered = true;
+            this.renderCharts();
+          } else {
+            console.warn('No canvas elements found yet, waiting for ViewChildren changes');
+          }
+        }, 300);
+      },
+      error: (err) => {
+        console.error('Error loading alter egos:', err);
+        this.error = 'Failed to load alter egos. Please try again later.';
+        this.loadingEgos = false;
+      }
+    });
+  }
+
+  loadSynergy(): void {
+    this.loadingSynergy = true;
+    this.gamificationService.getSynergy().subscribe({
+      next: (synergy) => {
+        console.log('Synergy loaded:', synergy);
+        this.synergy = synergy;
+        this.loadingSynergy = false;
+        // Render synergy chart after data is loaded
+        setTimeout(() => this.renderSynergyChart(), 100);
+      },
+      error: (err) => {
+        console.error('Error loading synergy:', err);
+        this.loadingSynergy = false;
+      }
+    });
+  }
+
+  getXPPercentage(ego: AlterEgo): number {
+    return (ego.xp_details.current_xp / ego.xp_details.xp_to_next_level) * 100;
+  }
+
+  getHealthPercentage(ego: AlterEgo): number {
+    return (ego.health_details.current_health / ego.health_details.max_health) * 100;
+  }
+
+  getEnergyPercentage(ego: AlterEgo): number {
+    return (ego.energy_details.current_energy / ego.energy_details.max_energy) * 100;
+  }
+
+  getAbilitiesArray(ego: AlterEgo): { name: string; value: number }[] {
+    return Object.entries(ego.abilities).map(([name, value]) => ({ name, value }));
+  }
+
+  formatAbilityName(name: string): string {
+    return name
+      .split(/[\s_-]+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  toggleAbilityView(): void {
+    this.showChartView = !this.showChartView;
+    
+    // If switching to chart view, reset and re-render charts
+    if (this.showChartView) {
+      // Destroy existing alter ego charts
+      this.charts.forEach((chart: Chart) => chart.destroy());
+      this.charts = [];
+      this.chartsRendered = false;
+      
+      // Destroy synergy chart if it exists
+      if (this.synergyChart) {
+        this.synergyChart.destroy();
+        this.synergyChart = null;
+      }
+      
+      // Wait for canvas elements to be created by *ngIf
+      setTimeout(() => {
+        // Re-render alter ego charts
+        if (this.radarCanvases && this.radarCanvases.length > 0) {
+          console.log('Re-rendering alter ego charts after view toggle');
+          this.chartsRendered = true;
+          this.renderCharts();
+        }
+        
+        // Re-render synergy chart
+        if (this.synergyCanvas) {
+          console.log('Re-rendering synergy chart after view toggle');
+          this.renderSynergyChart();
+        }
+      }, 100);
+    }
+  }
+
+  toggleHistoryPanel(): void {
+    this.showHistoryPanel = !this.showHistoryPanel;
+    
+    // Load history when opening panel for the first time
+    if (this.showHistoryPanel && this.history.length === 0) {
+      this.loadHistory();
+    }
+  }
+
+  loadHistory(): void {
+    this.loadingHistory = true;
+    this.historyService.getHistory(this.historyLimit).subscribe({
+      next: (history) => {
+        console.log('History loaded:', history);
+        this.history = history;
+        this.loadingHistory = false;
+      },
+      error: (err) => {
+        console.error('Error loading history:', err);
+        this.loadingHistory = false;
+      }
+    });
+  }
+
+  getEventIcon(entry: HistoryEntry): string {
+    const eventType = entry.event_type || entry.state;
+    switch (eventType) {
+      case 'completed': return '✓';
+      case 'failed': return '✗';
+      case 'missed_checkin_penalty': return '⚠️';
+      case 'streak_milestone': return '🎉';
+      default: return '•';
+    }
+  }
+
+  getEventClass(entry: HistoryEntry): string {
+    const eventType = entry.event_type || entry.state;
+    switch (eventType) {
+      case 'completed': return 'event-success';
+      case 'failed': return 'event-failed';
+      case 'missed_checkin_penalty': return 'event-penalty';
+      case 'streak_milestone': return 'event-milestone';
+      default: return 'event-default';
+    }
+  }
+
+  getEventDescription(entry: HistoryEntry): string {
+    const eventType = entry.event_type || entry.state;
+    const alterEgo = entry['alter-ego'];
+    
+    switch (eventType) {
+      case 'completed':
+        return `${alterEgo} completed ${entry.mission_associated}`;
+      case 'failed':
+        return `${alterEgo} failed ${entry.mission_associated}`;
+      case 'missed_checkin_penalty':
+        return `${alterEgo} missed ${entry.days_missed} days check-in`;
+      case 'streak_milestone':
+        return `${alterEgo} reached ${entry.streak_days} day streak`;
+      default:
+        return `${alterEgo} - ${eventType}`;
+    }
+  }
+
+  renderCharts(): void {
+    console.log('renderCharts called');
+    console.log('Canvas elements:', this.radarCanvases?.length);
+    console.log('Alter egos:', this.alterEgos.length);
+    
+    this.charts.forEach((chart: Chart) => chart.destroy());
+    this.charts = [];
+
+    if (!this.radarCanvases || this.radarCanvases.length === 0) {
+      console.warn('No canvas elements found');
+      return;
+    }
+
+    // Get CSS variables from root
+    const rootStyles = getComputedStyle(document.documentElement);
+    const accentPrimary = rootStyles.getPropertyValue('--accent-primary').trim() || '#8eff78';
+    const accentSecondary = rootStyles.getPropertyValue('--accent-secondary').trim() || '#8eff78';
+    const textPrimary = rootStyles.getPropertyValue('--text-primary').trim() || '#ffffff';
+    const textSecondary = rootStyles.getPropertyValue('--text-secondary').trim() || '#d6d6d6';
+    
+    console.log('Theme colors:', { accentPrimary, accentSecondary, textPrimary, textSecondary });
+
+    this.radarCanvases.forEach((canvasRef: ElementRef<HTMLCanvasElement>, index: number) => {
+      const ego = this.alterEgos[index];
+      if (!ego) {
+        console.warn(`No ego found at index ${index}`);
+        return;
+      }
+
+      console.log(`Rendering chart for ${ego.name} at index ${index}`);
+      const canvas = canvasRef.nativeElement;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error('Could not get 2d context for canvas');
+        return;
+      }
+
+      const abilities = this.getAbilitiesArray(ego);
+      const labels = abilities.map(a => this.formatAbilityName(a.name));
+      const dataValues = abilities.map(a => a.value);
+
+      const maxStatValue = Math.max(100, ...dataValues);
+      const maxStat = Math.ceil(maxStatValue / 100) * 100;
+
+      // Convert hex to rgba for borders/fills
+      const hexToRgba = (hex: string, alpha: number) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+      };
+
+      const chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: ego.name + ' stats',
+            data: dataValues,
+            fill: true,
+            backgroundColor: hexToRgba(accentPrimary, 0.06),
+            borderColor: hexToRgba(accentPrimary, 0.85),
+            borderWidth: 1.6,
+            pointBackgroundColor: textPrimary,
+            pointBorderColor: 'rgba(80,80,80,0.25)',
+            pointBorderWidth: 1,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointStyle: 'circle',
+            tension: 0.12
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { 
+            padding: { top: 6, right: 6, bottom: 6, left: 6 } 
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              displayColors: false,
+              backgroundColor: 'rgba(12,18,12,0.92)',
+              titleColor: hexToRgba(accentPrimary, 0.98),
+              bodyColor: '#ffffff',
+              borderColor: hexToRgba(accentPrimary, 0.6),
+              borderWidth: 1,
+              padding: 8,
+              titleFont: { size: 12, weight: 'bold' },
+              bodyFont: { size: 12, weight: 'normal' },
+              callbacks: {
+                title: () => ego.name,
+                label: (context: any) => {
+                  return `${context.label}: ${context.raw}`;
+                }
+              }
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              min: 0,
+              max: maxStat,
+              ticks: { display: false },
+              grid: { 
+                color: (ctx: any) => (ctx.index % 2 === 0) ? 'rgba(20,40,20,0.38)' : 'rgba(40,80,40,0.24)', 
+                lineWidth: 1 
+              },
+              angleLines: { 
+                color: 'rgba(60,120,60,0.08)', 
+                lineWidth: 1 
+              },
+              pointLabels: { 
+                color: textSecondary, 
+                font: { size: 12, weight: 'normal' }, 
+                padding: 10 
+              }
+            }
+          }
+        },
+        plugins: [{
+          id: 'neonOuterPolygon',
+          afterDraw: (chart: any) => {
+            try {
+              const ctx = chart.ctx;
+              const scale = chart.scales.r;
+              if (!scale) return;
+              
+              const labelsCount = chart.data.labels?.length || 0;
+              const maxVal = scale.max;
+              const outerPts: any[] = [];
+              
+              for (let i = 0; i < labelsCount; i++) {
+                outerPts.push(scale.getPointPositionForValue(i, maxVal));
+              }
+              
+              ctx.save();
+              ctx.lineJoin = 'round';
+              
+              const glowPasses = [
+                { width: 12, alpha: 0.06 },
+                { width: 6, alpha: 0.12 },
+                { width: 3, alpha: 0.22 }
+              ];
+              
+              for (const pass of glowPasses) {
+                ctx.beginPath();
+                ctx.moveTo(outerPts[0].x, outerPts[0].y);
+                for (let i = 1; i < outerPts.length; i++) {
+                  ctx.lineTo(outerPts[i].x, outerPts[i].y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = hexToRgba(accentPrimary, pass.alpha);
+                ctx.lineWidth = pass.width;
+                ctx.stroke();
+              }
+              
+              ctx.beginPath();
+              ctx.moveTo(outerPts[0].x, outerPts[0].y);
+              for (let i = 1; i < outerPts.length; i++) {
+                ctx.lineTo(outerPts[i].x, outerPts[i].y);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = hexToRgba(accentPrimary, 0.95);
+              ctx.lineWidth = 1.6;
+              ctx.stroke();
+              
+              for (let i = 0; i < outerPts.length; i++) {
+                const p = outerPts[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6.0, 0, Math.PI * 2);
+                ctx.fillStyle = hexToRgba(accentPrimary, 0.95);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
+                ctx.fillStyle = hexToRgba(accentPrimary, 0.95);
+                ctx.fill();
+              }
+              
+              ctx.restore();
+            } catch (e) {
+              console.error('neonOuterPolygon plugin error', e);
+            }
+          }
+        }]
+      });
+
+      this.charts.push(chart);
+      console.log(`Chart created for ${ego.name}, total charts:`, this.charts.length);
+    });
+  }
+
+  renderSynergyChart(): void {
+    if (!this.synergyCanvas || !this.synergy) {
+      console.warn('Synergy canvas or data not available');
+      return;
+    }
+
+    // Destroy existing chart
+    if (this.synergyChart) {
+      this.synergyChart.destroy();
+      this.synergyChart = null;
+    }
+
+    const canvas = this.synergyCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Could not get 2d context for synergy canvas');
+      return;
+    }
+
+    // Get CSS variables from root - SAME AS ALTER EGO CHARTS
+    const rootStyles = getComputedStyle(document.documentElement);
+    const accentPrimary = rootStyles.getPropertyValue('--accent-primary').trim() || '#8eff78';
+    const accentSecondary = rootStyles.getPropertyValue('--accent-secondary').trim() || '#8eff78';
+    const textPrimary = rootStyles.getPropertyValue('--text-primary').trim() || '#ffffff';
+    const textSecondary = rootStyles.getPropertyValue('--text-secondary').trim() || '#d6d6d6';
+
+    const hexToRgba = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    };
+
+    const synergyData = this.synergy.fight_club.synergy;
+    const labels = ['Mind', 'Body', 'Soul'];
+    const dataValues = [synergyData.mind, synergyData.body, synergyData.soul];
+
+    const maxStatValue = Math.max(100, ...dataValues);
+    const maxStat = Math.ceil(maxStatValue / 100) * 100;
+
+    this.synergyChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Synergy',
+          data: dataValues,
+          fill: true,
+          backgroundColor: hexToRgba(accentPrimary, 0.06),
+          borderColor: hexToRgba(accentPrimary, 0.85),
+          borderWidth: 1.6,
+          pointBackgroundColor: textPrimary,
+          pointBorderColor: 'rgba(80,80,80,0.25)',
+          pointBorderWidth: 1,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointStyle: 'circle',
+          tension: 0.12
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: { 
+          padding: { top: 6, right: 6, bottom: 6, left: 6 } 
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            displayColors: false,
+            backgroundColor: 'rgba(12,18,12,0.92)',
+            titleColor: hexToRgba(accentPrimary, 0.98),
+            bodyColor: '#ffffff',
+            borderColor: hexToRgba(accentPrimary, 0.6),
+            borderWidth: 1,
+            padding: 8,
+            titleFont: { size: 12, weight: 'bold' },
+            bodyFont: { size: 12, weight: 'normal' },
+            callbacks: {
+              title: () => 'Synergy',
+              label: (context: any) => {
+                return `${context.label}: ${context.raw.toFixed(2)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            min: 0,
+            max: maxStat,
+            ticks: { display: false },
+            grid: { 
+              color: (ctx: any) => (ctx.index % 2 === 0) ? 'rgba(20,40,20,0.38)' : 'rgba(40,80,40,0.24)', 
+              lineWidth: 1 
+            },
+            angleLines: { 
+              color: 'rgba(60,120,60,0.08)', 
+              lineWidth: 1 
+            },
+            pointLabels: { 
+              color: textSecondary, 
+              font: { size: 12, weight: 'normal' }, 
+              padding: 10 
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: 'neonOuterPolygon',
+        afterDraw: (chart: any) => {
+          try {
+            const ctx = chart.ctx;
+            const scale = chart.scales.r;
+            if (!scale) return;
+            
+            const labelsCount = chart.data.labels?.length || 0;
+            const maxVal = scale.max;
+            const outerPts: any[] = [];
+            
+            for (let i = 0; i < labelsCount; i++) {
+              outerPts.push(scale.getPointPositionForValue(i, maxVal));
+            }
+            
+            ctx.save();
+            ctx.lineJoin = 'round';
+            
+            const glowPasses = [
+              { width: 12, alpha: 0.06 },
+              { width: 6, alpha: 0.12 },
+              { width: 3, alpha: 0.22 }
+            ];
+            
+            for (const pass of glowPasses) {
+              ctx.beginPath();
+              ctx.moveTo(outerPts[0].x, outerPts[0].y);
+              for (let i = 1; i < outerPts.length; i++) {
+                ctx.lineTo(outerPts[i].x, outerPts[i].y);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = hexToRgba(accentPrimary, pass.alpha);
+              ctx.lineWidth = pass.width;
+              ctx.stroke();
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(outerPts[0].x, outerPts[0].y);
+            for (let i = 1; i < outerPts.length; i++) {
+              ctx.lineTo(outerPts[i].x, outerPts[i].y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = hexToRgba(accentPrimary, 0.95);
+            ctx.lineWidth = 1.6;
+            ctx.stroke();
+            
+            for (let i = 0; i < outerPts.length; i++) {
+              const p = outerPts[i];
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 6.0, 0, Math.PI * 2);
+              ctx.fillStyle = hexToRgba(accentPrimary, 0.95);
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
+              ctx.fillStyle = hexToRgba(accentPrimary, 0.95);
+              ctx.fill();
+            }
+            
+            ctx.restore();
+          } catch (e) {
+            console.error('neonOuterPolygon plugin error', e);
+          }
+        }
+      }]
+    });
+
+    console.log('Synergy chart created with neon effect');
+  }
+}
