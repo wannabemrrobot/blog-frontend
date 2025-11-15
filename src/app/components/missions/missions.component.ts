@@ -17,7 +17,7 @@ interface MissionWithRewards extends Mission {
 export class MissionsComponent implements OnInit {
   isAuthenticated = false;
   user: any = null;
-  loading = false;
+  loading = true; // Start with loading true to prevent flash of content
   error: string | null = null;
 
   // Missions data
