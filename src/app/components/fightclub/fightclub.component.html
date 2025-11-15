@@ -1,26 +1,385 @@
-<div class="fightclub-container">
+<div class="fightclub__container">
+  <div class="fightclub__page-content" style="border: 5px solid;">
+    <!-- Loading State - Show while verifying authentication -->
+    <div *ngIf="loading" class="auth__section">
+      <div class="auth__card">
+        <div class="loading__state">
+          <div class="newtons-cradle">
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+          </div>
+          <p>V3R1FY1N6 4UTH3NT1C4T10N</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Not Authenticated State -->
+    <div *ngIf="!loading && !isAuthenticated" class="auth__section">
+      <div class="auth__card">
+        <div class="auth__logo">
+          <img src="assets/images/fightclub.png" alt="Fight Club">
+        </div>
+
+        <div class="auth__subtitle-wrapper">
+          <p class="auth__subtitle">Little by little you're just letting yourself become ?!</p>
+        </div>
+        
+        <div class="auth__message">
+          <p>Authenticate with your GitHub account to access your personal dashboard.</p>
+            
+          <div class="auth__hintwrapper">
+            <svg class="auth__hinticon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 25 25" fill="inherit">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
+              <circle cx="12" cy="8" r="1"></circle>
+              <path d="M12 10a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"></path>
+            </svg>
+          <p class="auth__note">Only authorized users can proceed.</p>
+          </div>
+        </div>
+
+        <button 
+          *ngIf="!loading"
+          (click)="loginWithGitHub()" 
+          class="github__login-btn">
+          <svg class="github__icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+          </svg>
+          Sign in with GitHub
+        </button>
+        
+        <div *ngIf="loading" class="loading__state">
+          <div class="newtons-cradle">
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+          </div>
+          <p>Authenticating...</p>
+        </div>
+
+        <div *ngIf="error" class="error__message">
+          <p>{{ error }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authenticated State -->
+    <div *ngIf="!loading && isAuthenticated && user" class="dashboard__section">
+      <div class="dashboard__header">
+        <div class="dashboard__title fightclub-scrambler-text"></div>
+        <app-particle #particle></app-particle>
+      </div>
+
+      <div class="user__info-card" style="border: 1px solid #fff;">
+        <div class="user__avatar">
+          <img src="assets/images/fightclub.png" [alt]="user.displayName">
+        </div>
+        <div class="user__details">
+          <h2 appGlitch [glitchDuration]="2000" [glitchDelay]="1000">{{ user.displayName }}</h2>
+          <p class="user__email">{{ user.email }}</p>
+          <div class="logout__buttons">
+            <button (click)="logout()" class="logout__btn animated-btn">
+              <span>LOGOUT</span>
+            </button>
+            <button (click)="logoutAllDevices()" class="logout__btn logout-all animated-btn" title="Clears session data on this device only">
+              <span>Clear All Session Data</span>
+            </button>
+            <button routerLink="/missions" class="logout__btn missions-btn animated-btn" title="View Missions Dashboard">
+              <span>MISSIONS</span>
+            </button>
+            
+            <!-- View Toggle -->
+            <div class="toggle__container">
+              <input 
+                type="checkbox" 
+                class="checkbox" 
+                id="chartViewCheckbox"
+                [checked]="showChartView"
+                (change)="toggleAbilityView()"
+                [title]="showChartView ? 'Switch to List View' : 'Switch to Chart View'">
+              <label class="switch" for="chartViewCheckbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+            
+            <!-- Auto Carousel Toggle -->
+            <div class="toggle__container">
+              <input 
+                type="checkbox" 
+                class="checkbox" 
+                id="autoCarouselCheckbox"
+                [checked]="autoCarousel"
+                (change)="toggleAutoCarousel()"
+                [title]="autoCarousel ? 'Disable Auto Carousel' : 'Enable Auto Carousel'">
+              <label class="switch" for="autoCarouselCheckbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Synergy Dashboard -->
+      <div *ngIf="synergy" class="synergy__dashboard">
+        <!-- Chapter & XP Progress -->
+        <div class="synergy__section">
+          <div class="section__title">{{ synergy.fight_club.chapter }}</div>
+          <div class="chapter__description">{{ synergy.fight_club.description }}</div>
+          
+          <div class="level__display">
+            <span class="level__label">Level</span>
+            <span class="level__value">{{ synergy.fight_club.level }}</span>
+          </div>
+          
+          <div class="xp__details">
+            <div class="xp__label">XP Progress</div>
+            <div class="xp__bar">
+              <div class="xp__fill" [style.width.%]="(synergy.fight_club.xp_details.current_xp / synergy.fight_club.xp_details.xp_to_next_level) * 100"></div>
+            </div>
+            <div class="xp__text">
+              {{ synergy.fight_club.xp_details.current_xp }} / {{ synergy.fight_club.xp_details.xp_to_next_level }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Missions Stats -->
+        <div class="synergy__section">
+          <div class="section__title">
+            <img src="assets/icons/mission.svg" alt="Missions" class="section__icon-svg" />
+            MISSIONS
+          </div>
+          
+          <div class="stat__large-text">
+            <span class="big__number">{{ synergy.fight_club.missions.total }}</span>
+            <span class="label__text">TOTAL</span>
+          </div>
+
+          <div class="stats__list">
+            <div class="stat__line">
+              <span class="stat__value completed">{{ synergy.fight_club.missions.completed }}</span>
+              <span class="stat__label">Completed</span>
+            </div>
+            <div class="stat__line">
+              <span class="stat__value in-progress">{{ synergy.fight_club.missions['in-progress'] }}</span>
+              <span class="stat__label">In Progress</span>
+            </div>
+            <div class="stat__line">
+              <span class="stat__value not-started">{{ synergy.fight_club.missions['not-started'] }}</span>
+              <span class="stat__label">Not Started</span>
+            </div>
+            <div class="stat__line">
+              <span class="stat__value failed">{{ synergy.fight_club.missions.failed }}</span>
+              <span class="stat__label">Failed</span>
+            </div>
+          </div>
+          
+          <div class="progress__summary">
+            <div class="progress__bar-thin">
+              <div class="progress__fill-thin" [style.width.%]="(synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100"></div>
+            </div>
+            <div class="progress__label">{{ ((synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100).toFixed(0) }}% Complete</div>
+          </div>
+        </div>
+
+        <!-- Rewards Stats -->
+        <div class="synergy__section">
+          <div class="section__title">
+            REWARDS
+          </div>
+          
+          <div class="stat__large-text">
+            <span class="big__number">{{ synergy.fight_club.rewards.total }}</span>
+            <span class="label__text">TOTAL</span>
+          </div>
+
+          <div class="stats__list">
+            <div class="stat__line">
+              <span class="stat__value unlocked">{{ synergy.fight_club.rewards.unlocked }}</span>
+              <span class="stat__label">Unlocked</span>
+            </div>
+            <div class="stat__line">
+              <span class="stat__value locked">{{ synergy.fight_club.rewards.locked }}</span>
+              <span class="stat__label">Locked</span>
+            </div>
+          </div>
+          
+          <div class="progress__summary">
+            <div class="progress__bar-thin">
+              <div class="progress__fill-thin" [style.width.%]="synergy.fight_club.rewards.total > 0 ? (synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100 : 0"></div>
+            </div>
+            <div class="progress__label">{{ synergy.fight_club.rewards.total > 0 ? ((synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100).toFixed(0) : 0 }}% Unlocked</div>
+          </div>
+        </div>
+
+        <!-- Synergy Radar Chart -->
+        <div class="synergy__section synergy__chart-section">
+          <div class="section__title">SYNERGY</div>
+          
+          <!-- Chart View -->
+          <div *ngIf="showChartView" class="chart__container">
+            <canvas #synergyCanvas class="synergy__radar-canvas"></canvas>
+          </div>
+          
+          <!-- List View -->
+          <div *ngIf="!showChartView" class="synergy__list-view">
+            <div class="synergy__stat-item">
+              <span class="synergy__stat-name">Mind:</span>
+              <span class="synergy__stat-value">{{ synergy.fight_club.synergy.mind }}</span>
+            </div>
+            <div class="synergy__stat-item">
+              <span class="synergy__stat-name">Body:</span>
+              <span class="synergy__stat-value">{{ synergy.fight_club.synergy.body }}</span>
+            </div>
+            <div class="synergy__stat-item">
+              <span class="synergy__stat-name">Soul:</span>
+              <span class="synergy__stat-value">{{ synergy.fight_club.synergy.soul }}</span>
+            </div>
+          </div>
+          
+          <div class="total__synergy">
+            <span class="label">Total:</span>
+            <span class="value">{{ synergy.fight_club.total_synergy }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alter Egos Dashboard -->
+      <div class="alter-egos__container">
+        <div *ngIf="loadingEgos" class="loading__state">
+          <div class="newtons-cradle">
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+          </div>
+          <p>Loading Alter Egos...</p>
+        </div>
+
+        <!-- Horizontal Navigation Bar -->
+        <div *ngIf="alterEgosComputed.length > 0" class="carousel__navbar">
+          <div *ngFor="let ego of alterEgosComputed; let i = index" class="navbar__item">
+            <input 
+              type="radio" 
+              [id]="'radio_' + i" 
+              name="ego_carousel" 
+              [checked]="i === currentCarouselIndex"
+              (change)="setActiveCard(i)"
+              class="navbar__radio">
+            <label 
+              [for]="'radio_' + i" 
+              class="navbar__label">
+              {{ ego.name }}
+            </label>
+          </div>
+        </div>
+
+        <!-- Carousel Cards -->
+        <div *ngIf="alterEgosComputed.length > 0" class="carousel__scene">
+          <div *ngFor="let ego of alterEgosComputed; let i = index" 
+               [id]="'content_' + i"
+               [class.active]="i === currentCarouselIndex"
+               class="carousel__content">
+            <div class="parent-div">
+              <!-- Creed Text at top of card -->
+              <div class="ego__creed-text" [attr.data-ego-index]="i"></div>
+            
+              <!-- Column 0: Profile Image -->
+              <div class="col__image">
+                <img [src]="ego.profile_url" [alt]="ego.name" class="ego__profile-img">
+              </div>
+
+              <!-- Column 1: Stats & Progress Bars -->
+              <div class="col__stats">
+                <div class="ego__header">
+                  <h2 appGlitch [glitchDuration]="3000" [glitchDelay]="1000" class="ego__name">{{ ego.name }}</h2>
+                  <span class="ego__level">Lv {{ ego.level }}</span>
+                </div>
+                <p class="ego__tagline">{{ ego.tag_line }}</p>
+                
+                <!-- XP Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">{{ ego.xp_details.current_xp }} / {{ ego.xp_details.xp_to_next_level }} XP ({{ ego.xpPercentage | number:'1.0-0' }}%)</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill xp-fill" [style.width.%]="ego.xpPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Health Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">Health • {{ ego.health_details.current_health }}/{{ ego.health_details.max_health }}</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill health-fill" [style.width.%]="ego.healthPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Energy Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">Energy • {{ ego.energy_details.current_energy }}/{{ ego.energy_details.max_energy }}</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill energy-fill" [style.width.%]="ego.energyPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Rewards -->
+                <div class="rewards__row">
+                  <span class="reward__badge">Unlocked {{ ego.unlocked_rewards || 0 }}</span>
+                  <span class="reward__badge locked">Locked {{ ego.locked_rewards || 0 }}</span>
+                </div>
+              </div>
+
+              <!-- Column 2: Abilities (Dynamic) - List View -->
+              <div class="col__abilities" *ngIf="!showChartView">
+                <div class="ability__item" *ngFor="let ability of ego.abilitiesArray">
+                  <span class="ability__name">{{ formatAbilityName(ability.name) }}:</span>
+                  <span class="ability__value">{{ ability.value }}</span>
+                </div>
+              </div>
+
+              <!-- Column 3: Spider Chart - Chart View -->
+              <div class="col__chart" *ngIf="showChartView">
+                <div class="chart__container">
+                  <canvas #radarCanvas class="radar__canvas"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
   <!-- History Toggle Button (Fixed Position) -->
   <button 
-    *ngIf="isAuthenticated && user"
-    class="history-toggle-btn" 
+    *ngIf="!loading && isAuthenticated && user"
+    class="history__toggle-btn" 
     (click)="toggleHistoryPanel()"
     [class.active]="showHistoryPanel"
     title="Toggle History Panel">
-    <svg class="history-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <svg class="history__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"></circle>
       <polyline points="12 6 12 12 16 14"></polyline>
     </svg>
   </button>
 
   <!-- History Side Panel -->
-  <div class="history-panel" [class.open]="showHistoryPanel">
-    <div class="history-header">
-      <h3 class="history-title">📜 History</h3>
-      <button class="history-close-btn" (click)="toggleHistoryPanel()" title="Close">✕</button>
+  <div class="history__panel" [class.open]="showHistoryPanel">
+    <div class="history__header">
+      <h3 class="history__title">📜 History</h3>
+      <button class="history__close-btn" (click)="toggleHistoryPanel()" title="Close">✕</button>
     </div>
 
-    <div *ngIf="loadingHistory" class="loading-state">
-      <div class="spinner"></div>
+    <div *ngIf="loadingHistory" class="loading__state">
+      <div class="newtons-cradle">
+        <div class="newtons-cradle__dot"></div>
+        <div class="newtons-cradle__dot"></div>
+        <div class="newtons-cradle__dot"></div>
+        <div class="newtons-cradle__dot"></div>
+      </div>
       <p>Loading history...</p>
     </div>
 
@@ -28,13 +387,13 @@
       <p>No history entries</p>
     </div>
 
-    <div *ngIf="!loadingHistory && history.length > 0" class="history-list">
-      <div *ngFor="let entry of history" class="history-entry" [ngClass]="getEventClass(entry)">
-        <div class="history-icon-badge">{{ getEventIcon(entry) }}</div>
-        <div class="history-content">
-          <p class="history-description">{{ getEventDescription(entry) }}</p>
-          <p class="history-date">{{ entry.date }}</p>
-          <div *ngIf="entry.delta_changed" class="history-delta">
+    <div *ngIf="!loadingHistory && history.length > 0" class="history__list">
+      <div *ngFor="let entry of history" class="history__entry" [ngClass]="getEventClass(entry)">
+        <div class="history__icon-badge">{{ getEventIcon(entry) }}</div>
+        <div class="history__content">
+          <p class="history__description">{{ getEventDescription(entry) }}</p>
+          <p class="history__date">{{ entry.date }}</p>
+          <div *ngIf="entry.delta_changed" class="history__delta">
             <span *ngIf="entry.delta_changed.xp" [class.positive]="entry.delta_changed.xp > 0" [class.negative]="entry.delta_changed.xp < 0">
               XP: {{ entry.delta_changed.xp > 0 ? '+' : '' }}{{ entry.delta_changed.xp }}
             </span>
@@ -44,307 +403,6 @@
             <span *ngIf="entry.delta_changed.energy" [class.positive]="entry.delta_changed.energy > 0" [class.negative]="entry.delta_changed.energy < 0">
               EN: {{ entry.delta_changed.energy > 0 ? '+' : '' }}{{ entry.delta_changed.energy }}
             </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sudo-content">
-    <!-- Not Authenticated State -->
-    <div *ngIf="!isAuthenticated" class="auth-section">
-      <div class="auth-card">
-        <div class="auth-logo">
-          <img src="assets/images/fightclub.png" alt="Fight Club">
-        </div>
-
-        <div class="auth__subtitle-wrapper">
-          <!-- <svg class="auth__subtitleicon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 25 25" fill="inherit">
-            <g data-name="Layer 2">
-              <g data-name="unlock">
-                <rect width="24" height="24" opacity="0"/>
-                <path d="M17 8h-7V6a2 2 0 0 1 4 0 1 1 0 0 0 2 0 4 4 0 0 0-8 0v2H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm1 11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/>
-                <path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
-              </g>
-            </g>
-          </svg> -->
-
-          <p class="auth__subtitle">Little by little you're just letting yourself become ?!</p>
-        </div>
-        
-        <div class="auth-message">
-          <p>Authenticate with your GitHub account to access your personal dashboard.</p>
-            
-          <div class="auth__hintwrapper">
-            <svg class="auth__hinticon" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 25 25" fill="inherit">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
-              <circle cx="12" cy="8" r="1"></circle>
-              <path d="M12 10a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"></path>
-            </svg>
-          <p class="auth-note">Only authorized users can proceed.</p>
-          </div>
-        </div>
-
-        <button 
-          *ngIf="!loading"
-          (click)="loginWithGitHub()" 
-          class="github-login-btn">
-          <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
-          </svg>
-          Sign in with GitHub
-        </button>
-        
-        <div *ngIf="loading" class="loading-state">
-          <div class="spinner"></div>
-          <p>Authenticating...</p>
-        </div>
-
-        <div *ngIf="error" class="error-message">
-          <p>{{ error }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Authenticated State -->
-    <div *ngIf="isAuthenticated && user" class="dashboard-section">
-      <div class="dashboard-header">
-        <div class="dashboard-title fightclub-scrambler-text"></div>
-        <app-particle #particle></app-particle>
-      </div>
-
-      <div class="user-info-card">
-        <div class="user-avatar">
-          <img src="assets/images/fightclub.png" [alt]="user.displayName">
-        </div>
-        <div class="user-details">
-          <h2 appGlitch [glitchDuration]="2000" [glitchDelay]="1000">{{ user.displayName }}</h2>
-          <p class="user-email">{{ user.email }}</p>
-          <div class="logout-buttons">
-            <button (click)="logout()" class="logout-btn">Logout</button>
-            <button (click)="logoutAllDevices()" class="logout-btn logout-all" title="Clears session data on this device only">Clear All Session Data</button>
-            <button routerLink="/missions" class="logout-btn missions-btn" title="View Missions Dashboard">🎯 Missions</button>
-            
-            <!-- View Toggle -->
-            <div class="toggle-container">
-              <input 
-                type="checkbox" 
-                class="toggle-input"
-                [checked]="showChartView"
-                (change)="toggleAbilityView()"
-                [title]="showChartView ? 'Switch to List View' : 'Switch to Chart View'">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 142" class="toggle">
-                <path d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 292 31.7878 292 71C292 110.212 260.212 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z" class="toggle-background"></path>
-                <rect rx="6" height="64" width="12" y="39" x="64" class="toggle-icon on"></rect>
-                <path d="M221 91C232.046 91 241 82.0457 241 71C241 59.9543 232.046 51 221 51C209.954 51 201 59.9543 201 71C201 82.0457 209.954 91 221 91ZM221 103C238.673 103 253 88.6731 253 71C253 53.3269 238.673 39 221 39C203.327 39 189 53.3269 189 71C189 88.6731 203.327 103 221 103Z" fill-rule="evenodd" class="toggle-icon off"></path>
-                <g filter="url('#goo')">
-                  <rect fill="#fff" rx="29" height="58" width="116" y="42" x="13" class="toggle-circle-center"></rect>
-                  <rect fill="#fff" rx="58" height="114" width="114" y="14" x="14" class="toggle-circle left"></rect>
-                  <rect fill="#fff" rx="58" height="114" width="114" y="14" x="164" class="toggle-circle right"></rect>
-                </g>
-                <filter id="goo">
-                  <feGaussianBlur stdDeviation="10" result="blur" in="SourceGraphic"></feGaussianBlur>
-                  <feColorMatrix result="goo" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" mode="matrix" in="blur"></feColorMatrix>
-                </filter>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Synergy Dashboard -->
-      <div *ngIf="synergy" class="synergy-dashboard">
-        <!-- Chapter & XP Progress -->
-        <div class="synergy-section chapter-section">
-          <div class="section-title">{{ synergy.fight_club.chapter }}</div>
-          <div class="chapter-description">{{ synergy.fight_club.description }}</div>
-          
-          <div class="level-display">
-            <span class="level-label">Level</span>
-            <span class="level-value">{{ synergy.fight_club.level }}</span>
-          </div>
-          
-          <div class="xp-details">
-            <div class="xp-label">XP Progress</div>
-            <div class="xp-bar">
-              <div class="xp-fill" [style.width.%]="(synergy.fight_club.xp_details.current_xp / synergy.fight_club.xp_details.xp_to_next_level) * 100"></div>
-            </div>
-            <div class="xp-text">
-              {{ synergy.fight_club.xp_details.current_xp }} / {{ synergy.fight_club.xp_details.xp_to_next_level }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Missions Stats -->
-        <div class="synergy-section missions-section">
-          <div class="section-title">
-            <img src="assets/icons/mission.svg" alt="Missions" class="section-icon-svg" />
-            MISSIONS
-          </div>
-          
-          <div class="stat-large-text">
-            <span class="big-number">{{ synergy.fight_club.missions.total }}</span>
-            <span class="label-text">TOTAL</span>
-          </div>
-
-          <div class="stats-list">
-            <div class="stat-line">
-              <span class="stat-value completed">{{ synergy.fight_club.missions.completed }}</span>
-              <span class="stat-label">Completed</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-value in-progress">{{ synergy.fight_club.missions['in-progress'] }}</span>
-              <span class="stat-label">In Progress</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-value not-started">{{ synergy.fight_club.missions['not-started'] }}</span>
-              <span class="stat-label">Not Started</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-value failed">{{ synergy.fight_club.missions.failed }}</span>
-              <span class="stat-label">Failed</span>
-            </div>
-          </div>
-          
-          <div class="progress-summary">
-            <div class="progress-bar-thin">
-              <div class="progress-fill-thin" [style.width.%]="(synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100"></div>
-            </div>
-            <div class="progress-label">{{ ((synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100).toFixed(0) }}% Complete</div>
-          </div>
-        </div>
-
-        <!-- Rewards Stats -->
-        <div class="synergy-section rewards-section">
-          <div class="section-title">
-            REWARDS
-          </div>
-          
-          <div class="stat-large-text">
-            <span class="big-number">{{ synergy.fight_club.rewards.total }}</span>
-            <span class="label-text">TOTAL</span>
-          </div>
-
-          <div class="stats-list">
-            <div class="stat-line">
-              <span class="stat-value unlocked">{{ synergy.fight_club.rewards.unlocked }}</span>
-              <span class="stat-label">Unlocked</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-value locked">{{ synergy.fight_club.rewards.locked }}</span>
-              <span class="stat-label">Locked</span>
-            </div>
-          </div>
-          
-          <div class="progress-summary">
-            <div class="progress-bar-thin">
-              <div class="progress-fill-thin" [style.width.%]="synergy.fight_club.rewards.total > 0 ? (synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100 : 0"></div>
-            </div>
-            <div class="progress-label">{{ synergy.fight_club.rewards.total > 0 ? ((synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100).toFixed(0) : 0 }}% Unlocked</div>
-          </div>
-        </div>
-
-        <!-- Synergy Radar Chart -->
-        <div class="synergy-section synergy-chart-section">
-          <div class="section-title">SYNERGY</div>
-          
-          <!-- Chart View -->
-          <div *ngIf="showChartView" class="chart-container">
-            <canvas #synergyCanvas class="synergy-radar-canvas"></canvas>
-          </div>
-          
-          <!-- List View -->
-          <div *ngIf="!showChartView" class="synergy-list-view">
-            <div class="synergy-stat-item">
-              <span class="synergy-stat-name">Mind:</span>
-              <span class="synergy-stat-value">{{ synergy.fight_club.synergy.mind }}</span>
-            </div>
-            <div class="synergy-stat-item">
-              <span class="synergy-stat-name">Body:</span>
-              <span class="synergy-stat-value">{{ synergy.fight_club.synergy.body }}</span>
-            </div>
-            <div class="synergy-stat-item">
-              <span class="synergy-stat-name">Soul:</span>
-              <span class="synergy-stat-value">{{ synergy.fight_club.synergy.soul }}</span>
-            </div>
-          </div>
-          
-          <div class="total-synergy">
-            <span class="label">Total:</span>
-            <span class="value">{{ synergy.fight_club.total_synergy }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alter Egos Dashboard -->
-      <div class="alter-egos-container">
-        <div *ngIf="loadingEgos" class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading Alter Egos...</p>
-        </div>
-
-        <!-- Alter Ego Cards -->
-        <div *ngFor="let ego of alterEgosComputed; let i = index" class="parent-div">
-          <!-- Creed Text at top of card -->
-          <div class="ego-creed-text" [attr.data-ego-index]="i"></div>
-          
-          <!-- Column 0: Profile Image -->
-          <div class="col-image">
-            <img [src]="ego.profile_url" [alt]="ego.name" class="ego-profile-img">
-          </div>
-
-          <!-- Column 1: Stats & Progress Bars -->
-          <div class="col-stats">
-            <div class="ego-header">
-              <h2 appGlitch [glitchDuration]="3000" [glitchDelay]="1000" class="ego-name">{{ ego.name }}</h2>
-              <span class="ego-level">Lv {{ ego.level }}</span>
-            </div>
-            <p class="ego-tagline">{{ ego.tag_line }}</p>
-            
-            <!-- XP Progress -->
-            <div class="stat-row">
-              <span class="stat-label">{{ ego.xp_details.current_xp }} / {{ ego.xp_details.xp_to_next_level }} XP ({{ ego.xpPercentage | number:'1.0-0' }}%)</span>
-              <div class="progress-bar">
-                <div class="progress-fill xp-fill" [style.width.%]="ego.xpPercentage"></div>
-              </div>
-            </div>
-
-            <!-- Health Progress -->
-            <div class="stat-row">
-              <span class="stat-label">Health • {{ ego.health_details.current_health }}/{{ ego.health_details.max_health }}</span>
-              <div class="progress-bar">
-                <div class="progress-fill health-fill" [style.width.%]="ego.healthPercentage"></div>
-              </div>
-            </div>
-
-            <!-- Energy Progress -->
-            <div class="stat-row">
-              <span class="stat-label">Energy • {{ ego.energy_details.current_energy }}/{{ ego.energy_details.max_energy }}</span>
-              <div class="progress-bar">
-                <div class="progress-fill energy-fill" [style.width.%]="ego.energyPercentage"></div>
-              </div>
-            </div>
-
-            <!-- Rewards -->
-            <div class="rewards-row">
-              <span class="reward-badge">Unlocked {{ ego.unlocked_rewards || 0 }}</span>
-              <span class="reward-badge locked">Locked {{ ego.locked_rewards || 0 }}</span>
-            </div>
-          </div>
-
-          <!-- Column 2: Abilities (Dynamic) - List View -->
-          <div class="col-abilities" *ngIf="!showChartView">
-            <div class="ability-item" *ngFor="let ability of ego.abilitiesArray">
-              <span class="ability-name">{{ formatAbilityName(ability.name) }}:</span>
-              <span class="ability-value">{{ ability.value }}</span>
-            </div>
-          </div>
-
-          <!-- Column 3: Spider Chart - Chart View -->
-          <div class="col-chart" *ngIf="showChartView">
-            <div class="chart-container">
-              <canvas #radarCanvas class="radar-canvas"></canvas>
-            </div>
           </div>
         </div>
       </div>

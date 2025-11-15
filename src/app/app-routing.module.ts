@@ -9,6 +9,7 @@ import { TagsComponent } from './components/tags/tags.component';
 import { Error404Component } from './components/error404/error404.component';
 import { FightClubComponent } from './components/fightclub/fightclub.component';
 import { MissionsComponent } from './components/missions/missions.component';
+import { AuthGuard } from './service/auth.guard';
 
 const routes: Routes = [
   {
@@ -29,7 +30,8 @@ const routes: Routes = [
   },
   {
     path: 'missions',
-    component: MissionsComponent
+    component: MissionsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'whoami',

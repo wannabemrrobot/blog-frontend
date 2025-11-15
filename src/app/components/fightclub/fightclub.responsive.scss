@@ -1,0 +1,123 @@
+// Synergy Dashboard Responsive
+@media (max-width: 1200px) {
+  .synergy {
+    &__dashboard {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .parent-div {
+    flex-wrap: wrap;
+  }
+
+  .col {
+    &__image {
+      flex: 0 0 150px;
+    }
+
+    &__chart {
+      flex: 1 1 100%;
+      margin-top: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .synergy {
+    &__dashboard {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .fightclub {
+    &__container {
+      padding: 20px 15px;
+    }
+  }
+
+  .parent-div {
+    flex-direction: column;
+  }
+
+  .col {
+    &__image,
+    &__stats,
+    &__abilities,
+    &__chart {
+      flex: 1 1 100%;
+    }
+
+    &__image {
+      max-width: 250px;
+      margin: 0 auto;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .fightclub {
+    &__container {
+      padding: 20px 15px;
+      margin-top: 80px;
+    }
+  }
+
+  .auth {
+    &__card {
+      padding: 30px 20px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+  }
+
+  .dashboard {
+    &__header {
+      margin-bottom: 30px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+  }
+
+  .user {
+    &__info-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    &__avatar {
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    &__details {
+      h2 {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .history {
+    &__panel {
+      width: 100%;
+      right: -100%;
+
+      &.open {
+        right: 0;
+      }
+    }
+
+    &__toggle-btn {
+      right: 15px;
+      width: 45px;
+      height: 45px;
+    }
+  }
+}
