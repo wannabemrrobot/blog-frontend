@@ -121,6 +121,9 @@ export class AppComponent implements OnInit {
         }else if(url == '/whoami') {
           this.breadcrumb_placeholder = 'whoami'
 
+        }else if(url == '/missions') {
+          this.breadcrumb_placeholder = 'ls missions'
+
         // breadcrumb for tags
         }else if(url == '/tags') {
           this.breadcrumb_placeholder = 'ls tags'
