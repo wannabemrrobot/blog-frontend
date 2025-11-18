@@ -3,6 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from 'rxjs';
 import { map, take, filter } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class AuthGuard implements CanActivate {
       filter(user => user !== undefined), // Wait until auth state is determined (not initial undefined)
       take(1),
       map(user => {
-        // If user is authenticated but not wannabemrrobot, redirect to home
-        if (user && user.login && user.login !== 'wannabemrrobot') {
+        // If user is authenticated but not the authorized user, redirect to home
+        if (user && user.login && user.login !== environment.authorizedUser) {
           console.log('AuthGuard: Access denied for user:', user.login);
           this.router.navigate(['/']);
           return false;

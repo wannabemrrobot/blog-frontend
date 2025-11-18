@@ -1,5 +1,5 @@
 <div class="fightclub__container">
-  <div class="fightclub__page-content" style="border: 5px solid;">
+  <div class="fightclub__page-content">
     <!-- Loading State - Show while verifying authentication -->
     <div *ngIf="loading" class="auth__section">
       <div class="auth__card">
@@ -72,7 +72,7 @@
         <app-particle #particle></app-particle>
       </div>
 
-      <div class="user__info-card" style="border: 1px solid #fff;">
+      <div class="user__info-card">
         <div class="user__avatar">
           <img src="assets/images/fightclub.png" [alt]="user.displayName">
         </div>
@@ -83,10 +83,10 @@
             <button (click)="logout()" class="logout__btn animated-btn">
               <span>LOGOUT</span>
             </button>
-            <button (click)="logoutAllDevices()" class="logout__btn logout-all animated-btn" title="Clears session data on this device only">
+            <button (click)="logoutAllDevices()" class="logout__btn logout-all animated-btn">
               <span>Clear All Session Data</span>
             </button>
-            <button routerLink="/missions" class="logout__btn missions-btn animated-btn" title="View Missions Dashboard">
+            <button routerLink="/missions" class="logout__btn missions-btn animated-btn">
               <span>MISSIONS</span>
             </button>
             
@@ -257,8 +257,71 @@
           <p>Loading Alter Egos...</p>
         </div>
 
+        <!-- Mobile Card Stack (visible only on mobile) -->
+        <div *ngIf="alterEgosComputed.length > 0" class="card-stack mobile-only">
+          <article *ngFor="let ego of alterEgosComputed; let i = index" 
+                   class="stack-card"
+                   [style.--i]="i"
+                   [attr.data-index]="i">
+            <div class="parent-div">
+              <!-- Creed Text at top of card -->
+              <div class="ego__creed-text" [attr.data-ego-index]="i"></div>
+            
+              <!-- Column 0: Profile Image -->
+              <div class="col__image">
+                <img [src]="ego.profile_url" [alt]="ego.name" class="ego__profile-img">
+              </div>
+
+              <!-- Column 1: Stats & Progress Bars -->
+              <div class="col__stats">
+                <div class="ego__header">
+                  <h2 appGlitch [glitchDuration]="3000" [glitchDelay]="1000" class="ego__name">{{ ego.name }}</h2>
+                  <span class="ego__level">Lv {{ ego.level }}</span>
+                </div>
+                <p class="ego__tagline">{{ ego.tag_line }}</p>
+                
+                <!-- XP Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">{{ ego.xp_details.current_xp }} / {{ ego.xp_details.xp_to_next_level }} XP ({{ ego.xpPercentage | number:'1.0-0' }}%)</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill xp-fill" [style.width.%]="ego.xpPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Health Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">Health • {{ ego.health_details.current_health }}/{{ ego.health_details.max_health }}</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill health-fill" [style.width.%]="ego.healthPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Energy Progress -->
+                <div class="stat-row">
+                  <span class="stat__label">Energy • {{ ego.energy_details.current_energy }}/{{ ego.energy_details.max_energy }}</span>
+                  <div class="progress__bar">
+                    <div class="progress__fill energy-fill" [style.width.%]="ego.energyPercentage"></div>
+                  </div>
+                </div>
+
+                <!-- Rewards -->
+                <div class="stat-row">
+                  <span class="stat__label">Rewards • {{ ego.rewards_unlocked }}/{{ ego.total_rewards }}</span>
+                </div>
+              </div>
+
+              <!-- Column 2: Abilities Chart -->
+              <div class="col__chart">
+                <h3 class="chart__title">Abilities</h3>
+                <canvas class="ego__radar-canvas"></canvas>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Desktop Carousel (hidden on mobile) -->
         <!-- Horizontal Navigation Bar -->
-        <div *ngIf="alterEgosComputed.length > 0" class="carousel__navbar">
+        <div *ngIf="alterEgosComputed.length > 0" class="carousel__navbar desktop-only">
           <div *ngFor="let ego of alterEgosComputed; let i = index" class="navbar__item">
             <input 
               type="radio" 
@@ -276,7 +339,7 @@
         </div>
 
         <!-- Carousel Cards -->
-        <div *ngIf="alterEgosComputed.length > 0" class="carousel__scene">
+        <div *ngIf="alterEgosComputed.length > 0" class="carousel__scene desktop-only">
           <div *ngFor="let ego of alterEgosComputed; let i = index" 
                [id]="'content_' + i"
                [class.active]="i === currentCarouselIndex"
