@@ -34,11 +34,6 @@
 
     <!-- Authenticated State -->
     <div *ngIf="isAuthenticated && user" class="dashboard-section">
-      <div class="dashboard-header">
-        <h1 class="dashboard-title">🎯 Missions Dashboard</h1>
-        <p class="dashboard-subtitle">Tracking your alter-ego missions</p>
-      </div>
-
       <!-- Loading State -->
       <div *ngIf="loadingMissions" class="loading-state">
         <div class="spinner"></div>

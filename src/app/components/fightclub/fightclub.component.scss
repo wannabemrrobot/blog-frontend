@@ -1190,11 +1190,7 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 30px;
     padding: 15px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
 }
 
@@ -1207,6 +1203,7 @@
 }
 
 .navbar__label {
+    color: var(--text-secondary) !important;
     display: inline-block;
     padding: 12px 24px;
     font-size: 14px;
@@ -1215,24 +1212,15 @@
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 6px;
-    border: 2px solid transparent;
-    background: var(--card-bg);
-    opacity: 0.6;
     
     &:hover {
-        opacity: 0.85;
-        background: rgba(var(--accent-primary-rgb, 142, 255, 120), 0.1);
-        border-color: rgba(var(--accent-primary-rgb, 142, 255, 120), 0.3);
+        color: var(--text-secondary) !important;
     }
 }
 
 .navbar__radio:checked + .navbar__label {
     opacity: 1;
     color: var(--accent-primary) !important;
-    border-color: var(--accent-primary);
-    background: rgba(var(--accent-primary-rgb, 142, 255, 120), 0.15);
-    box-shadow: 0 0 12px rgba(var(--accent-primary-rgb, 142, 255, 120), 0.3);
 }
 
 /* Carousel Scene - Horizontal Cards */
