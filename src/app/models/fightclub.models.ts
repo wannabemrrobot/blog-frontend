@@ -20,6 +20,8 @@ export interface ComputedAlterEgo extends AlterEgo {
   xpPercentage: number;
   healthPercentage: number;
   energyPercentage: number;
+  rewards_unlocked: number;
+  total_rewards: number;
 }
 
 /**

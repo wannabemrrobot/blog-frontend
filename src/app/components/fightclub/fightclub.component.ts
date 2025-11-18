@@ -281,7 +281,9 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       abilitiesArray: this.chartService.getAbilitiesArray(ego),
       xpPercentage: this.calculatePercentage(ego.xp_details.current_xp, ego.xp_details.xp_to_next_level),
       healthPercentage: this.calculatePercentage(ego.health_details.current_health, ego.health_details.max_health),
-      energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy)
+      energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy),
+      rewards_unlocked: ego.unlocked_rewards?.length || 0,
+      total_rewards: (ego.unlocked_rewards?.length || 0) + (ego.locked_rewards?.length || 0)
     }));
   }
 
@@ -528,5 +530,149 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         return `${alterEgo} - ${eventType}`;
     }
+  }
+
+  // ========== Mobile Card Stack ==========
+  
+  ngAfterViewChecked(): void {
+    // Initialize card stack swipe functionality after view is checked
+    if (this.alterEgosComputed.length > 0 && typeof window !== 'undefined') {
+      setTimeout(() => {
+        this.initializeCardStack();
+        this.renderMobileCardCharts();
+      }, 0);
+    }
+  }
+
+  private renderMobileCardCharts(): void {
+    if (typeof document === 'undefined') return;
+    
+    const mobileCanvases = document.querySelectorAll('.stack-card .ego__radar-canvas');
+    if (mobileCanvases.length === 0 || this.alterEgosComputed.length === 0) return;
+
+    const themeColors = this.chartService.getThemeColors();
+
+    mobileCanvases.forEach((canvas, index) => {
+      const ego = this.alterEgosComputed[index];
+      if (!ego || !(canvas instanceof HTMLCanvasElement)) return;
+
+      // Check if chart already exists for this canvas
+      if (canvas.hasAttribute('data-chart-rendered')) return;
+      canvas.setAttribute('data-chart-rendered', 'true');
+
+      this.chartService.createAlterEgoChart(canvas, ego, themeColors);
+    });
+  }
+
+  private initializeCardStack(): void {
+    const cardStack = document.querySelector('.card-stack');
+    if (!cardStack || cardStack.hasAttribute('data-initialized')) {
+      return;
+    }
+
+    cardStack.setAttribute('data-initialized', 'true');
+    
+    let cards = Array.from(document.querySelectorAll('.stack-card')) as HTMLElement[];
+    let isSwiping = false;
+    let startX = 0;
+    let currentX = 0;
+    let animationFrameId: number | null = null;
+
+    const updatePositions = () => {
+      cards.forEach((card, i) => {
+        card.style.setProperty('--i', String(i));
+        card.style.setProperty('--swipe-x', '0px');
+        card.style.setProperty('--swipe-rotate', '0deg');
+        card.style.opacity = '1';
+      });
+    };
+
+    const applySwipeStyles = (deltaX: number) => {
+      const card = cards[0];
+      if (!card) return;
+      card.style.setProperty('--swipe-x', `${deltaX}px`);
+      card.style.setProperty('--swipe-rotate', `${deltaX * 0.2}deg`);
+      card.style.opacity = String(1 - Math.min(Math.abs(deltaX) / 100, 1) * 0.75);
+    };
+
+    const handleStart = (clientX: number) => {
+      if (isSwiping) return;
+      isSwiping = true;
+      startX = currentX = clientX;
+      const card = cards[0];
+      if (card) {
+        card.style.transition = 'none';
+      }
+    };
+
+    const handleMove = (clientX: number) => {
+      if (!isSwiping) return;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        currentX = clientX;
+        const deltaX = currentX - startX;
+        applySwipeStyles(deltaX);
+
+        if (Math.abs(deltaX) > 50) {
+          handleEnd();
+        }
+      });
+    };
+
+    const handleEnd = () => {
+      if (!isSwiping) return;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      const deltaX = currentX - startX;
+      const threshold = 50;
+      const duration = 300;
+      const card = cards[0];
+
+      if (card) {
+        card.style.transition = `transform ${duration}ms ease, opacity ${duration}ms ease`;
+
+        if (Math.abs(deltaX) > threshold) {
+          const direction = Math.sign(deltaX);
+          card.style.setProperty('--swipe-x', `${direction * 300}px`);
+          card.style.setProperty('--swipe-rotate', `${direction * 20}deg`);
+
+          setTimeout(() => {
+            card.style.setProperty('--swipe-rotate', `${-direction * 20}deg`);
+          }, duration * 0.5);
+
+          setTimeout(() => {
+            cards = [...cards.slice(1), card];
+            updatePositions();
+            attachListeners(); // Reattach to new top card
+          }, duration);
+        } else {
+          applySwipeStyles(0);
+        }
+      }
+
+      isSwiping = false;
+      startX = currentX = 0;
+    };
+
+    const attachListeners = () => {
+      const topCard = cards[0];
+      if (!topCard) return;
+
+      topCard.addEventListener('pointerdown', (e: Event) => {
+        const event = e as PointerEvent;
+        handleStart(event.clientX);
+      });
+      
+      topCard.addEventListener('pointermove', (e: Event) => {
+        const event = e as PointerEvent;
+        handleMove(event.clientX);
+      });
+      
+      topCard.addEventListener('pointerup', () => handleEnd());
+      topCard.addEventListener('pointercancel', () => handleEnd());
+    };
+
+    updatePositions();
+    attachListeners();
   }
 }
