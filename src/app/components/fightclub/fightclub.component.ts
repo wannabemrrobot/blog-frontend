@@ -116,8 +116,8 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (user.login !== environment.authorizedUser) {
-      this.error = `Access denied. Only ${environment.authorizedUser} can access this area. You are: ${user.login}`;
+    if (!environment.authorizedUser.includes(user.login)) {
+      this.error = `Access denied. Only ${environment.authorizedUser.join(', ')} can access this area. You are: ${user.login}`;
       setTimeout(() => this.logout(), TIMING.UNAUTHORIZED_REDIRECT_DELAY);
       return;
     }
@@ -141,7 +141,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initializeIfAuthenticated(): void {
-    if (this.isAuthenticated && this.user?.login === environment.authorizedUser) {
+    if (this.isAuthenticated && this.user?.login && environment.authorizedUser.includes(this.user.login)) {
       this.initializeScrambler();
       
       if (this.alterEgos.length > 0 && this.radarCanvases?.length > 0 && !this.chartsRendered) {
