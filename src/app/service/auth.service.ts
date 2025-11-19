@@ -106,15 +106,7 @@ export class AuthService {
     return result;
   }
 
-  logout(): Promise<void> {
-    return signOut(this.auth).then(() => {
-      // Clear Firebase local storage after signout
-      const persistenceKey = 'firebase:authUser:' + firebaseConfig.apiKey + ':[DEFAULT]';
-      localStorage.removeItem(persistenceKey);
-    });
-  }
-
-  async revokeAllSessions(): Promise<void> {
+  async logout(): Promise<void> {
     // Clear all Firebase auth data from storage
     const persistenceKeys = Object.keys(localStorage).filter(key => 
       key.includes('firebase') || key.includes(firebaseConfig.apiKey)
@@ -143,7 +135,7 @@ export class AuthService {
       window.location.href = '/';
     }, 100);
     
-    console.log('All sessions revoked and local auth data cleared');
+    console.log('User logged out and all session data cleared');
   }
 
   getCurrentUser(): Observable<any> {

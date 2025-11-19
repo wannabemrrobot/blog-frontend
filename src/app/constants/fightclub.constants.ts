@@ -51,7 +51,7 @@ export const EVENT_CLASSES: Record<string, string> = {
 // Chart configuration
 export const CHART_CONFIG = {
   DEFAULT_MAX_STAT: 100,
-  CHART_PADDING: { top: 6, right: 6, bottom: 6, left: 6 },
+  CHART_PADDING: { top: 30, right: 30, bottom: 30, left: 30 },
   POINT_RADIUS: 4,
   POINT_HOVER_RADIUS: 6,
   BORDER_WIDTH: 1.6,

@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import type { ISourceOptions, Engine, Container } from '@tsparticles/engine';
 import { loadBasic } from '@tsparticles/basic';
-import * as particleConfig from '../../../../assets/data/particle-config-v3.json';
+import * as particleConfigV3 from '../../../../assets/data/particle-config-v3.json';
+import * as particleConfigFightclub from '../../../../assets/data/particle-config-fightclub.json';
 
 @Component({
     selector: 'app-particle',
@@ -11,10 +12,12 @@ import * as particleConfig from '../../../../assets/data/particle-config-v3.json
 })
 export class ParticleComponent implements OnInit, OnDestroy {
 
+  @Input() configType: 'default' | 'fightclub' = 'default';
+
   // particles in cron streak
   particleStyle: any = {};
   particleOptions: ISourceOptions = {};
-  particleConfig: any = (particleConfig as any).default;
+  particleConfig: any;
   id = "tsparticles-cron";
   private particlesContainer?: Container;
   private storageListener: any;
@@ -22,6 +25,11 @@ export class ParticleComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
+    // Select config based on input
+    this.particleConfig = this.configType === 'fightclub' 
+      ? (particleConfigFightclub as any).default 
+      : (particleConfigV3 as any).default;
+
     this.particleStyle = {
       'position': 'absolute',
       'width': '100%',
