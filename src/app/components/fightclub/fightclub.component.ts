@@ -117,7 +117,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!environment.authorizedUser.includes(user.login)) {
-      this.error = `Access denied. Only ${environment.authorizedUser.join(', ')} can access this area. You are: ${user.login}`;
+      this.error = `Access denied. Only ${environment.authorizedUser} can access this area. You are: ${user.login}`;
       setTimeout(() => this.logout(), TIMING.UNAUTHORIZED_REDIRECT_DELAY);
       return;
     }
@@ -216,16 +216,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   logout(): void {
     this.authService.logout().then(() => {
       this.clearComponentState();
-      this.router.navigate(['/']);
     });
-  }
-
-  logoutAllDevices(): void {
-    const message = 'This will clear all session data on THIS device only. Note: Firebase does not support true cross-device logout without a backend. Other devices will remain logged in until tokens expire (~1 hour). Continue?';
-    
-    if (confirm(message)) {
-      this.authService.revokeAllSessions();
-    }
   }
 
   private clearComponentState(): void {
@@ -276,15 +267,25 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private computeAlterEgos(egos: AlterEgo[]): ComputedAlterEgo[] {
-    return egos.map(ego => ({
-      ...ego,
-      abilitiesArray: this.chartService.getAbilitiesArray(ego),
-      xpPercentage: this.calculatePercentage(ego.xp_details.current_xp, ego.xp_details.xp_to_next_level),
-      healthPercentage: this.calculatePercentage(ego.health_details.current_health, ego.health_details.max_health),
-      energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy),
-      rewards_unlocked: ego.unlocked_rewards?.length || 0,
-      total_rewards: (ego.unlocked_rewards?.length || 0) + (ego.locked_rewards?.length || 0)
-    }));
+    return egos.map((ego, index) => {
+      // Hardcoded image paths for the three alter egos
+      const images = [
+        'assets/images/alter-ego/tyler.jpeg',
+        'assets/images/alter-ego/mr-robot.jpeg',
+        'assets/images/alter-ego/kei.jpeg'
+      ];
+      
+      return {
+        ...ego,
+        profile_url: images[index] || ego.profile_url, // Use local image by index or fallback to original
+        abilitiesArray: this.chartService.getAbilitiesArray(ego),
+        xpPercentage: this.calculatePercentage(ego.xp_details.current_xp, ego.xp_details.xp_to_next_level),
+        healthPercentage: this.calculatePercentage(ego.health_details.current_health, ego.health_details.max_health),
+        energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy),
+        rewards_unlocked: ego.unlocked_rewards?.length || 0,
+        total_rewards: (ego.unlocked_rewards?.length || 0) + (ego.locked_rewards?.length || 0)
+      };
+    });
   }
 
   private calculatePercentage(current: number, max: number): number {
