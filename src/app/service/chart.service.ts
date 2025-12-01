@@ -43,6 +43,64 @@ export class ChartService {
   }
 
   /**
+   * Reorder abilities to place longer labels at top/bottom (north/south)
+   * and shorter labels at left/right (east/west) positions
+   */
+  private reorderAbilitiesForRadarChart(abilities: Array<{ name: string; value: number }>): Array<{ name: string; value: number }> {
+    // Sort by label length (descending) - longest first
+    const sorted = [...abilities].sort((a, b) => b.name.length - a.name.length);
+    
+    const count = sorted.length;
+    const reordered: Array<{ name: string; value: number }> = new Array(count);
+    
+    // Radar charts go clockwise from top
+    // For even distribution: assign longest to top/bottom, shortest to sides
+    // Priority positions: 0 (top), floor(n/2) (bottom), then fill others
+    
+    // Calculate key positions
+    const topIndex = 0;
+    const bottomIndex = Math.floor(count / 2);
+    const rightIndex = Math.floor(count / 4);
+    const leftIndex = Math.floor(3 * count / 4);
+    
+    // Track which positions are filled
+    const filled = new Set<number>();
+    let sortedIdx = 0;
+    
+    // 1. Place longest at top
+    reordered[topIndex] = sorted[sortedIdx++];
+    filled.add(topIndex);
+    
+    // 2. Place second longest at bottom (if exists)
+    if (count > 1) {
+      reordered[bottomIndex] = sorted[sortedIdx++];
+      filled.add(bottomIndex);
+    }
+    
+    // 3. Fill remaining positions, avoiding side positions (right/left) for longest labels
+    // Fill sides last with shortest labels
+    const sidePositions = [rightIndex, leftIndex].filter(pos => !filled.has(pos));
+    const otherPositions = [];
+    for (let i = 0; i < count; i++) {
+      if (!filled.has(i) && !sidePositions.includes(i)) {
+        otherPositions.push(i);
+      }
+    }
+    
+    // Fill other positions first
+    for (const pos of otherPositions) {
+      reordered[pos] = sorted[sortedIdx++];
+    }
+    
+    // Fill side positions with shortest remaining labels
+    for (const pos of sidePositions) {
+      reordered[pos] = sorted[sortedIdx++];
+    }
+    
+    return reordered;
+  }
+
+  /**
    * Get abilities as array from ego object
    */
   getAbilitiesArray(ego: AlterEgo): Array<{ name: string; value: number }> {
@@ -130,11 +188,14 @@ export class ChartService {
     }
 
     const abilities = this.getAbilitiesArray(ego);
-    const labels = abilities.map(a => this.formatAbilityName(a.name));
-    const dataValues = abilities.map(a => a.value);
+    const reorderedAbilities = this.reorderAbilitiesForRadarChart(abilities);
+    const labels = reorderedAbilities.map(a => this.formatAbilityName(a.name));
+    const dataValues = reorderedAbilities.map(a => a.value);
 
     const maxStatValue = Math.max(CHART_CONFIG.DEFAULT_MAX_STAT, ...dataValues);
+    const minStatValue = Math.min(0, ...dataValues);
     const maxStat = Math.ceil(maxStatValue / 100) * 100;
+    const minStat = Math.floor(minStatValue / 100) * 100;
 
     const hexToRgba = this.hexToRgba.bind(this);
 
@@ -183,8 +244,8 @@ export class ChartService {
         },
         scales: {
           r: {
-            beginAtZero: true,
-            min: 0,
+            beginAtZero: minStat >= 0,
+            min: minStat,
             max: maxStat,
             ticks: { display: false },
             grid: { 
@@ -218,8 +279,15 @@ export class ChartService {
     }
 
     const synergyData = synergy.fight_club.synergy;
-    const labels = ['Mind', 'Body', 'Soul'];
-    const dataValues = [synergyData.mind, synergyData.body, synergyData.soul];
+    const synergyAbilities = [
+      { name: 'Mind', value: synergyData.mind },
+      { name: 'Body', value: synergyData.body },
+      { name: 'Soul', value: synergyData.soul }
+    ];
+    
+    const reorderedSynergy = this.reorderAbilitiesForRadarChart(synergyAbilities);
+    const labels = reorderedSynergy.map(s => s.name);
+    const dataValues = reorderedSynergy.map(s => s.value);
 
     const maxStatValue = Math.max(CHART_CONFIG.DEFAULT_MAX_STAT, ...dataValues);
     const maxStat = Math.ceil(maxStatValue / 100) * 100;

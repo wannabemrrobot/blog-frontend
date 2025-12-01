@@ -80,7 +80,7 @@
       </div>
 
       <!-- SCRAMBLER TEXT HEADER WITH PARTICLES -->
-      <div class="scrambler__header">
+      <div class="scrambler__header" *ngIf="showChartView">
         <div class="fightclub__logo">
           <img src="assets/images/fightclub.png" alt="Fight Club Logo">
         </div>
@@ -97,101 +97,52 @@
           <!-- SYNERGY DETAILS PANE -->
           <div *ngIf="synergy" class="synergy__details-pane pane">
             <div class="chapter__info">
-              <div class="chapter__name">{{ synergy.fight_club.chapter }}</div>
+              <div class="chapter__name">
+                <svg class="chapter__hash" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>
+                <span class="chapter__index">{{ synergy.fight_club.level }}</span> - <span class="chapter__text">{{ synergy.fight_club.chapter }}</span>
+              </div>
               <div class="chapter__description">{{ synergy.fight_club.description }}</div>
-            </div>
-            
-            <div class="level__display">
-              <span class="level__label">Level</span>
-              <span class="level__value">{{ synergy.fight_club.level }}</span>
             </div>
             
             <div class="xp__details">
               <div class="xp__label">XP Progress</div>
-              <div class="xp__bar">
+              <div class="xp__bar" [class.inactive]="synergy.fight_club.xp_details.current_xp < 0">
                 <div class="xp__fill" [style.width.%]="(synergy.fight_club.xp_details.current_xp / synergy.fight_club.xp_details.xp_to_next_level) * 100"></div>
               </div>
               <div class="xp__text">
                 {{ synergy.fight_club.xp_details.current_xp }} / {{ synergy.fight_club.xp_details.xp_to_next_level }}
               </div>
             </div>
-          </div>
 
-          <!-- MISSIONS, REWARDS DETAILS PANE -->
-          <div *ngIf="synergy" class="missions-rewards__pane pane">
-            
-            <!-- Missions Stats -->
-            <div class="stats__section">
-              <div class="section__header">
-                <img src="assets/icons/mission.svg" alt="Missions" class="section__icon-svg" />
-                <span>MISSIONS</span>
+            <div class="daily__progress-tags">
+              <div class="progress__tag">
+                <svg class="tag__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>
+                <span class="tag__label">Streak</span>
+                <span class="tag__value">{{ synergy.fight_club.daily_progress.daily_progress_streak }}</span>
               </div>
-              
-              <div class="stat__large-text">
-                <span class="big__number">{{ synergy.fight_club.missions.total }}</span>
-                <span class="label__text">TOTAL</span>
-              </div>
-
-              <div class="stats__list">
-                <div class="stat__line">
-                  <span class="stat__value completed">{{ synergy.fight_club.missions.completed }}</span>
-                  <span class="stat__label">Completed</span>
-                </div>
-                <div class="stat__line">
-                  <span class="stat__value in-progress">{{ synergy.fight_club.missions['in-progress'] }}</span>
-                  <span class="stat__label">In Progress</span>
-                </div>
-                <div class="stat__line">
-                  <span class="stat__value not-started">{{ synergy.fight_club.missions['not-started'] }}</span>
-                  <span class="stat__label">Not Started</span>
-                </div>
-                <div class="stat__line">
-                  <span class="stat__value failed">{{ synergy.fight_club.missions.failed }}</span>
-                  <span class="stat__label">Failed</span>
-                </div>
-              </div>
-              
-              <div class="progress__summary">
-                <div class="progress__bar-thin">
-                  <div class="progress__fill-thin" [style.width.%]="(synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100"></div>
-                </div>
-                <div class="progress__label">{{ ((synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100).toFixed(0) }}% Complete</div>
-              </div>
-            </div>
-
-            <!-- Rewards Stats -->
-            <div class="stats__section">
-              <div class="section__header">
-                <span>REWARDS</span>
-              </div>
-              
-              <div class="stat__large-text">
-                <span class="big__number">{{ synergy.fight_club.rewards.total }}</span>
-                <span class="label__text">TOTAL</span>
-              </div>
-
-              <div class="stats__list">
-                <div class="stat__line">
-                  <span class="stat__value unlocked">{{ synergy.fight_club.rewards.unlocked }}</span>
-                  <span class="stat__label">Unlocked</span>
-                </div>
-                <div class="stat__line">
-                  <span class="stat__value locked">{{ synergy.fight_club.rewards.locked }}</span>
-                  <span class="stat__label">Locked</span>
-                </div>
-              </div>
-              
-              <div class="progress__summary">
-                <div class="progress__bar-thin">
-                  <div class="progress__fill-thin" [style.width.%]="synergy.fight_club.rewards.total > 0 ? (synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100 : 0"></div>
-                </div>
-                <div class="progress__label">{{ synergy.fight_club.rewards.total > 0 ? ((synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100).toFixed(0) : 0 }}% Unlocked</div>
+              <div class="progress__tag">
+                <svg class="tag__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>
+                <span class="tag__label">Days</span>
+                <span class="tag__value">{{ synergy.fight_club.daily_progress.days_checked_in }}</span>
               </div>
             </div>
           </div>
 
           <!-- SYNERGY CHART PANE -->
           <div *ngIf="synergy" class="synergy__chart-pane pane">
+            
+            <h4 class="section__heading">
+              <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+              </svg>
+              <span class="heading__text">SYNERGY</span>
+            </h4>
             
             <!-- Chart View -->
             <div *ngIf="showChartView" class="chart__container">
@@ -201,28 +152,51 @@
             <!-- List View -->
             <div *ngIf="!showChartView" class="synergy__list-view">
               <div class="synergy__stat-item">
-                <span class="synergy__stat-name">Mind:</span>
+                <span class="synergy__stat-name">
+                  <svg class="synergy__stat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>mind
+                </span>
                 <span class="synergy__stat-value">{{ synergy.fight_club.synergy.mind }}</span>
               </div>
               <div class="synergy__stat-item">
-                <span class="synergy__stat-name">Body:</span>
+                <span class="synergy__stat-name">
+                  <svg class="synergy__stat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>body
+                </span>
                 <span class="synergy__stat-value">{{ synergy.fight_club.synergy.body }}</span>
               </div>
               <div class="synergy__stat-item">
-                <span class="synergy__stat-name">Soul:</span>
+                <span class="synergy__stat-name">
+                  <svg class="synergy__stat-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>soul
+                </span>
                 <span class="synergy__stat-value">{{ synergy.fight_club.synergy.soul }}</span>
               </div>
             </div>
             
             <div class="total__synergy">
-              <span class="label">Total:</span>
-              <span class="value">{{ synergy.fight_club.total_synergy }}</span>
+              <span class="total__label">
+                <svg class="total__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>total
+              </span>
+              <span class="total__value">{{ synergy.fight_club.total_synergy }}</span>
             </div>
           </div>
+
+          <!-- MISSIONS, REWARDS DETAILS PANE -->
+        </div>
+
+        <!-- MISSIONS VIEW -->
+        <div class="missions__view" *ngIf="showMissionsView">
+          <app-missions></app-missions>
         </div>
 
         <!-- CENTER: ALTER EGO CAROUSEL -->
-        <div class="center__carousel">
+        <div class="center__carousel" *ngIf="!showMissionsView">
           <div *ngIf="loadingEgos" class="loading__state">
             <div class="newtons-cradle">
               <div class="newtons-cradle__dot"></div>
@@ -260,56 +234,107 @@
             <div *ngFor="let ego of alterEgosComputed; let i = index" 
                  [id]="'content_' + i"
                  [class.active]="i === currentCarouselIndex"
+                 [class.disabled]="ego.status?.current_status === 'disabled'"
                  class="carousel__content">
               <div class="ego__cards-wrapper">
                 <!-- PROFILE & DETAILS CARD -->
                 <div class="ego__card profile-details-card">
-                  <div class="profile-section">
-                    <div class="ego__profile-wrapper">
-                      <img [src]="ego.profile_url" [alt]="ego.name" class="ego__profile-img">
-                    </div>
+                  <h4 class="section__heading">
+                    <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                      <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                    </svg>
+                    <span class="heading__text">ALTER EGO</span>
+                    <span *ngIf="ego.status?.current_status === 'disabled' && ego.status?.note" class="heading__status-note">— {{ ego.status?.note }}</span>
+                    <svg class="heading__icon-end" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                      <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+                    </svg>
+                  </h4>
+                  
+                  <div class="profile-details-wrapper">
+                    <div class="profile-section" [class.disabled]="ego.status?.current_status === 'disabled'">
+                    <img [src]="ego.profile_url" [alt]="ego.name" class="ego__profile-img">
+                    <svg *ngIf="ego.status?.current_status === 'disabled'" class="disabled-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g data-name="Layer 2"><g data-name="slash"><rect width="24" height="24" opacity="0"/><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm8 10a7.92 7.92 0 0 1-1.69 4.9L7.1 5.69A7.92 7.92 0 0 1 12 4a8 8 0 0 1 8 8zM4 12a7.92 7.92 0 0 1 1.69-4.9L16.9 18.31A7.92 7.92 0 0 1 12 20a8 8 0 0 1-8-8z"/></g></g></svg>
                   </div>
                   <div class="details-section">
                     <div class="ego__header">
                       <h2 appGlitch [glitchDuration]="3000" [glitchDelay]="1000" class="ego__name">{{ ego.name }}</h2>
                       <span class="ego__level">Lv {{ ego.level }}</span>
                     </div>
-                    <p class="ego__tagline">{{ ego.tag_line }}</p>
+                    <p class="ego__tagline">
+                      <span class="ego__tagline-text">{{ ego.tag_line }}</span>
+                      <span class="ego__tagline-cursor"></span>
+                    </p>
+                    
+                    <div class="ego__title-soap-grid">
+                      <div class="ego__title-tag">
+                        <svg class="title-tag__hash" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                          <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                        </svg>
+                        <span class="title-tag__text">{{ ego.title }}</span>
+                      </div>
+                      
+                      <div class="ego__soap">
+                        <svg class="ego__soap-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                          <path d="M20.66 7.26c0-.07-.1-.14-.15-.21l-.09-.1a2.5 2.5 0 0 0-.86-.68l-6.4-3a2.7 2.7 0 0 0-2.26 0l-6.4 3a2.6 2.6 0 0 0-.86.68L3.52 7a1 1 0 0 0-.15.2A2.39 2.39 0 0 0 3 8.46v7.06a2.49 2.49 0 0 0 1.46 2.26l6.4 3a2.7 2.7 0 0 0 2.27 0l6.4-3A2.49 2.49 0 0 0 21 15.54V8.46a2.39 2.39 0 0 0-.34-1.2zm-8.95-2.2a.73.73 0 0 1 .58 0l5.33 2.48L12 10.15 6.38 7.54zM5.3 16a.47.47 0 0 1-.3-.43V9.1l6 2.79v6.72zm13.39 0L13 18.61v-6.72l6-2.79v6.44a.48.48 0 0 1-.31.46z"/>
+                        </svg>
+                        <span class="ego__soap-value">{{ ego.soap_points || 0 }}</span>
+                      </div>
+                    </div>
                     
                     <!-- XP Progress -->
                     <div class="stat-row">
                       <span class="stat__label">{{ ego.xp_details.current_xp }} / {{ ego.xp_details.xp_to_next_level }} XP ({{ ego.xpPercentage | number:'1.0-0' }}%)</span>
-                      <div class="progress__bar">
+                      <div class="progress__bar" [class.inactive]="ego.xp_details.current_xp < 0">
                         <div class="progress__fill xp-fill" [style.width.%]="ego.xpPercentage"></div>
                       </div>
                     </div>
 
-                    <!-- Health Progress -->
-                    <div class="stat-row">
-                      <span class="stat__label">Health • {{ ego.health_details.current_health }}/{{ ego.health_details.max_health }}</span>
-                      <div class="progress__bar">
-                        <div class="progress__fill health-fill" [style.width.%]="ego.healthPercentage"></div>
+                    <!-- Health & Energy Stats -->
+                    <div class="stats-container">
+                      <div class="stat-row health-stat">
+                        <svg class="health-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <g data-name="Layer 2">
+                            <g data-name="heart">
+                              <rect width="24" height="24" opacity="0"/>
+                              <path d="M12 21a1 1 0 0 1-.71-.29l-7.77-7.78a5.26 5.26 0 0 1 0-7.4 5.24 5.24 0 0 1 7.4 0L12 6.61l1.08-1.08a5.24 5.24 0 0 1 7.4 0 5.26 5.26 0 0 1 0 7.4l-7.77 7.78A1 1 0 0 1 12 21z"/>
+                            </g>
+                          </g>
+                        </svg>
+                        <span class="stat__label">{{ ego.health_details.current_health }}/{{ ego.health_details.max_health }}</span>
                       </div>
-                    </div>
 
-                    <!-- Energy Progress -->
-                    <div class="stat-row">
-                      <span class="stat__label">Energy • {{ ego.energy_details.current_energy }}/{{ ego.energy_details.max_energy }}</span>
-                      <div class="progress__bar">
-                        <div class="progress__fill energy-fill" [style.width.%]="ego.energyPercentage"></div>
+                      <div class="stat-row energy-stat">
+                        <svg class="energy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <g data-name="Layer 2">
+                            <g data-name="battery">
+                              <rect width="24" height="24" opacity="0"/>
+                              <path d="M15.83 6H4.17A2.31 2.31 0 0 0 2 8.43v7.14A2.31 2.31 0 0 0 4.17 18h11.66A2.31 2.31 0 0 0 18 15.57V8.43A2.31 2.31 0 0 0 15.83 6z"/>
+                              <path d="M21 9a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1z"/>
+                            </g>
+                          </g>
+                        </svg>
+                        <span class="stat__label">{{ ego.energy_details.current_energy }}/{{ ego.energy_details.max_energy }}</span>
                       </div>
-                    </div>
-
-                    <!-- Rewards -->
-                    <div class="rewards__row">
-                      <span class="reward__badge">Unlocked {{ ego.unlocked_rewards || 0 }}</span>
-                      <span class="reward__badge locked">Locked {{ ego.locked_rewards || 0 }}</span>
                     </div>
                   </div>
                 </div>
+              
+              <!-- Creed Text -->
+              <div class="ego__creed" *ngIf="ego.creed_text">
+                <svg class="creed__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g data-name="Layer 2"><g data-name="link-2"><rect width="24" height="24" opacity="0"/><path d="M13.29 9.29l-4 4a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4-4a1 1 0 0 0-1.42-1.42z"/><path d="M12.28 17.4L11 18.67a4.2 4.2 0 0 1-5.58.4 4 4 0 0 1-.27-5.93l1.42-1.43a1 1 0 0 0 0-1.42 1 1 0 0 0-1.42 0l-1.27 1.28a6.15 6.15 0 0 0-.67 8.07 6.06 6.06 0 0 0 9.07.6l1.42-1.42a1 1 0 0 0-1.42-1.42z"/><path d="M19.66 3.22a6.18 6.18 0 0 0-8.13.68L10.45 5a1.09 1.09 0 0 0-.17 1.61 1 1 0 0 0 1.42 0L13 5.3a4.17 4.17 0 0 1 5.57-.4 4 4 0 0 1 .27 5.95l-1.42 1.43a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l1.42-1.42a6.06 6.06 0 0 0-.6-9.06z"/></g></g></svg>
+                <div class="creed__text">{{ ego.creed_text }}</div>
+              </div>
+            </div>
 
                 <!-- ABILITIES CHART CARD -->
                 <div class="ego__card abilities-card">
+                  
+                  <h4 class="section__heading">
+                    <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                      <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                    </svg>
+                    <span class="heading__text">EGO TRAITS</span>
+                  </h4>
                   
                   <!-- List View -->
                   <div class="abilities__list" *ngIf="!showChartView">
@@ -331,6 +356,109 @@
               </div>
             </div>
           </div>
+
+          <!-- MISSIONS & REWARDS CARDS -->
+          <div *ngIf="synergy" class="missions-rewards__container">
+            <!-- Missions Card -->
+            <div class="missions__card pane">
+              <h4 class="section__heading">
+                <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>
+                <span class="heading__text">MISSIONS</span>
+                <svg class="heading__icon-end" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                  <g data-name="Layer 2"><g data-name="checkmark-square"><rect width="24" height="24" opacity="0"/><path d="M20 11.83a1 1 0 0 0-1 1v5.57a.6.6 0 0 1-.6.6H5.6a.6.6 0 0 1-.6-.6V5.6a.6.6 0 0 1 .6-.6h9.57a1 1 0 1 0 0-2H5.6A2.61 2.61 0 0 0 3 5.6v12.8A2.61 2.61 0 0 0 5.6 21h12.8a2.61 2.61 0 0 0 2.6-2.6v-5.57a1 1 0 0 0-1-1z"/><path d="M10.72 11a1 1 0 0 0-1.44 1.38l2.22 2.33a1 1 0 0 0 .72.31 1 1 0 0 0 .72-.3l6.78-7a1 1 0 1 0-1.44-1.4l-6.05 6.26z"/></g></g>
+                </svg>
+              </h4>
+              
+              <div class="stat__row-top">
+                <div class="stat__total">
+                  <span class="total__number">{{ synergy.fight_club.missions.total }}</span>
+                  <span class="total__label">TOTAL</span>
+                </div>
+                <div class="progress__summary">
+                  <div class="progress__bar-thin">
+                    <div class="progress__fill-thin" [style.width.%]="synergy.fight_club.missions.total > 0 ? (synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100 : 0"></div>
+                  </div>
+                  <div class="progress__label">{{ synergy.fight_club.missions.total > 0 ? ((synergy.fight_club.missions.completed / synergy.fight_club.missions.total) * 100).toFixed(0) : 0 }}% Complete</div>
+                </div>
+              </div>
+
+              <div class="stats__list">
+                <div class="stat__tag completed-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">Completed</span>
+                  <span class="stat__count">{{ synergy.fight_club.missions.completed }}</span>
+                </div>
+                <div class="stat__tag in-progress-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">In Progress</span>
+                  <span class="stat__count">{{ synergy.fight_club.missions['in-progress'] }}</span>
+                </div>
+                <div class="stat__tag not-started-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">Not Started</span>
+                  <span class="stat__count">{{ synergy.fight_club.missions['not-started'] }}</span>
+                </div>
+                <div class="stat__tag failed-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">Failed</span>
+                  <span class="stat__count">{{ synergy.fight_club.missions.failed }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rewards Card -->
+            <div class="rewards__card pane">
+              <h4 class="section__heading">
+                <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                  <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                </svg>
+                <span class="heading__text">REWARDS</span>
+                <svg class="heading__icon-end" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                  <g data-name="Layer 2"><g data-name="star"><rect width="24" height="24" transform="rotate(90 12 12)" opacity="0"/><path d="M17.56 21a1 1 0 0 1-.46-.11L12 18.22l-5.1 2.67a1 1 0 0 1-1.45-1.06l1-5.63-4.12-4a1 1 0 0 1-.25-1 1 1 0 0 1 .81-.68l5.7-.83 2.51-5.13a1 1 0 0 1 1.8 0l2.54 5.12 5.7.83a1 1 0 0 1 .81.68 1 1 0 0 1-.25 1l-4.12 4 1 5.63a1 1 0 0 1-.4 1 1 1 0 0 1-.62.18zM12 16.1a.92.92 0 0 1 .46.11l3.77 2-.72-4.21a1 1 0 0 1 .29-.89l3-2.93-4.2-.62a1 1 0 0 1-.71-.56L12 5.25 10.11 9a1 1 0 0 1-.75.54l-4.2.62 3 2.93a1 1 0 0 1 .29.89l-.72 4.16 3.77-2a.92.92 0 0 1 .5-.04z"/></g></g>
+                </svg>
+              </h4>
+              
+              <div class="stat__row-top">
+                <div class="stat__total">
+                  <span class="total__number">{{ synergy.fight_club.rewards.total }}</span>
+                  <span class="total__label">TOTAL</span>
+                </div>
+                <div class="progress__summary">
+                  <div class="progress__bar-thin">
+                    <div class="progress__fill-thin" [style.width.%]="synergy.fight_club.rewards.total > 0 ? (synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100 : 0"></div>
+                  </div>
+                  <div class="progress__label">{{ synergy.fight_club.rewards.total > 0 ? ((synergy.fight_club.rewards.unlocked / synergy.fight_club.rewards.total) * 100).toFixed(0) : 0 }}% Unlocked</div>
+                </div>
+              </div>
+
+              <div class="stats__list">
+                <div class="stat__tag unlocked-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">Unlocked</span>
+                  <span class="stat__count">{{ synergy.fight_club.rewards.unlocked }}</span>
+                </div>
+                <div class="stat__tag locked-tag">
+                  <svg class="stat__hashicon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="stat__text">Locked</span>
+                  <span class="stat__count">{{ synergy.fight_club.rewards.locked }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- RIGHT SIDEBAR -->
@@ -339,9 +467,9 @@
           <div class="admin__pane pane">
             <div class="admin__controls">
               <div class="admin__buttons">
-                <button routerLink="/missions" class="button">
+                <button (click)="toggleMissionsView()" class="button">
                   <svg class="svgIcon" viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg>
-                  Missions
+                  {{ showMissionsView ? 'Home' : 'Missions' }}
                 </button>
                 <button (click)="logout()" class="admin__btn animated-btn">
                   <span class="btn__icon">
@@ -409,6 +537,12 @@
 
           <!-- HISTORY PANE -->
           <div class="history__pane pane">
+            <h4 class="section__heading">
+              <svg class="heading__hash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="inherit">
+                <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+              </svg>
+              <span class="heading__text">HISTORY</span>
+            </h4>
             
             <div *ngIf="loadingHistory" class="loading__state">
               <div class="newtons-cradle">
@@ -426,32 +560,62 @@
 
             <div *ngIf="!loadingHistory && history.length > 0" class="history__list">
               <div *ngFor="let entry of history" class="history__entry" [ngClass]="getEventClass(entry)">
-                <div class="history__icon-badge">{{ getEventIcon(entry) }}</div>
+                <div class="history__icon-badge">
+                  <svg *ngIf="getEventClass(entry) === 'event-success'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g data-name="Layer 2">
+                      <g data-name="checkmark">
+                        <rect width="24" height="24" opacity="0"/>
+                        <path d="M9.86 18a1 1 0 0 1-.73-.32l-4.86-5.17a1 1 0 1 1 1.46-1.37l4.12 4.39 8.41-9.2a1 1 0 1 1 1.48 1.34l-9.14 10a1 1 0 0 1-.73.33z"/>
+                      </g>
+                    </g>
+                  </svg>
+                  <svg *ngIf="getEventClass(entry) === 'event-failed'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g data-name="Layer 2">
+                      <g data-name="close">
+                        <rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/>
+                        <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+                      </g>
+                    </g>
+                  </svg>
+                  <svg *ngIf="getEventClass(entry) === 'event-default'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g data-name="Layer 2">
+                      <g data-name="arrow-ios-forward">
+                        <rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"/>
+                        <path d="M10 19a1 1 0 0 1-.64-.23 1 1 0 0 1-.13-1.41L13.71 12 9.39 6.63a1 1 0 0 1 .15-1.41 1 1 0 0 1 1.46.15l4.83 6a1 1 0 0 1 0 1.27l-5 6A1 1 0 0 1 10 19z"/>
+                      </g>
+                    </g>
+                  </svg>
+                  <span *ngIf="getEventClass(entry) !== 'event-success' && getEventClass(entry) !== 'event-failed' && getEventClass(entry) !== 'event-default'">{{ getEventIcon(entry) }}</span>
+                </div>
                 <div class="history__content">
-                  <p class="history__description">{{ getEventDescription(entry) }}</p>
+                  <p class="history__description" [innerHTML]="getEventDescription(entry)"></p>
                   <p class="history__date">{{ entry.date }}</p>
                   <div *ngIf="entry.delta_changed" class="history__delta">
                     <span *ngIf="entry.delta_changed.xp" [class.positive]="entry.delta_changed.xp > 0" [class.negative]="entry.delta_changed.xp < 0">
-                      XP: {{ entry.delta_changed.xp > 0 ? '+' : '' }}{{ entry.delta_changed.xp }}
+                      <span style="color: var(--text-secondary)">XP:</span> {{ entry.delta_changed.xp > 0 ? '+' : '' }}{{ entry.delta_changed.xp }}
                     </span>
                     <span *ngIf="entry.delta_changed.health" [class.positive]="entry.delta_changed.health > 0" [class.negative]="entry.delta_changed.health < 0">
-                      HP: {{ entry.delta_changed.health > 0 ? '+' : '' }}{{ entry.delta_changed.health }}
+                      <span style="color: var(--text-secondary)">HP:</span> {{ entry.delta_changed.health > 0 ? '+' : '' }}{{ entry.delta_changed.health }}
                     </span>
                     <span *ngIf="entry.delta_changed.energy" [class.positive]="entry.delta_changed.energy > 0" [class.negative]="entry.delta_changed.energy < 0">
-                      EN: {{ entry.delta_changed.energy > 0 ? '+' : '' }}{{ entry.delta_changed.energy }}
+                      <span style="color: var(--text-secondary)">EN:</span> {{ entry.delta_changed.energy > 0 ? '+' : '' }}{{ entry.delta_changed.energy }}
+                    </span>
+                  </div>
+                  <div *ngIf="entry.synergy_before && entry.synergy_after" class="history__synergy">
+                    <span [class.positive]="entry.synergy_after.mind > entry.synergy_before.mind" [class.negative]="entry.synergy_after.mind < entry.synergy_before.mind" [class.neutral]="entry.synergy_after.mind === entry.synergy_before.mind">
+                      <span style="color: var(--text-secondary)">M:</span> {{ entry.synergy_after.mind > entry.synergy_before.mind ? '+' : '' }}{{ (entry.synergy_after.mind - entry.synergy_before.mind).toFixed(1) }}
+                    </span>
+                    <span [class.positive]="entry.synergy_after.body > entry.synergy_before.body" [class.negative]="entry.synergy_after.body < entry.synergy_before.body" [class.neutral]="entry.synergy_after.body === entry.synergy_before.body">
+                      <span style="color: var(--text-secondary)">B:</span> {{ entry.synergy_after.body > entry.synergy_before.body ? '+' : '' }}{{ (entry.synergy_after.body - entry.synergy_before.body).toFixed(1) }}
+                    </span>
+                    <span [class.positive]="entry.synergy_after.soul > entry.synergy_before.soul" [class.negative]="entry.synergy_after.soul < entry.synergy_before.soul" [class.neutral]="entry.synergy_after.soul === entry.synergy_before.soul">
+                      <span style="color: var(--text-secondary)">S:</span> {{ entry.synergy_after.soul > entry.synergy_before.soul ? '+' : '' }}{{ (entry.synergy_after.soul - entry.synergy_before.soul).toFixed(1) }}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- UPCOMING MISSIONS PANE -->
-      <div class="upcoming-missions__pane pane">
-        <div class="missions__content">
-          <p>Upcoming missions will be displayed here...</p>
         </div>
       </div>
     </div>
@@ -505,6 +669,17 @@
             </span>
             <span *ngIf="entry.delta_changed.energy" [class.positive]="entry.delta_changed.energy > 0" [class.negative]="entry.delta_changed.energy < 0">
               EN: {{ entry.delta_changed.energy > 0 ? '+' : '' }}{{ entry.delta_changed.energy }}
+            </span>
+          </div>
+          <div *ngIf="entry.synergy_before && entry.synergy_after" class="history__synergy">
+            <span [class.positive]="entry.synergy_after.mind > entry.synergy_before.mind" [class.negative]="entry.synergy_after.mind < entry.synergy_before.mind" [class.neutral]="entry.synergy_after.mind === entry.synergy_before.mind">
+              <span style="color: var(--text-secondary)">M:</span> {{ entry.synergy_after.mind > entry.synergy_before.mind ? '+' : '' }}{{ (entry.synergy_after.mind - entry.synergy_before.mind).toFixed(1) }}
+            </span>
+            <span [class.positive]="entry.synergy_after.body > entry.synergy_before.body" [class.negative]="entry.synergy_after.body < entry.synergy_before.body" [class.neutral]="entry.synergy_after.body === entry.synergy_before.body">
+              <span style="color: var(--text-secondary)">B:</span> {{ entry.synergy_after.body > entry.synergy_before.body ? '+' : '' }}{{ (entry.synergy_after.body - entry.synergy_before.body).toFixed(1) }}
+            </span>
+            <span [class.positive]="entry.synergy_after.soul > entry.synergy_before.soul" [class.negative]="entry.synergy_after.soul < entry.synergy_before.soul" [class.neutral]="entry.synergy_after.soul === entry.synergy_before.soul">
+              <span style="color: var(--text-secondary)">S:</span> {{ entry.synergy_after.soul > entry.synergy_before.soul ? '+' : '' }}{{ (entry.synergy_after.soul - entry.synergy_before.soul).toFixed(1) }}
             </span>
           </div>
         </div>

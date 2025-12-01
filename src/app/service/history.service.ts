@@ -11,6 +11,18 @@ export interface HistoryEntry {
   state?: string;
   delta_changed: any;
   state_after_delta_applied: any;
+  synergy_before?: {
+    mind: number;
+    body: number;
+    soul: number;
+    total: number;
+  };
+  synergy_after?: {
+    mind: number;
+    body: number;
+    soul: number;
+    total: number;
+  };
   date: string;
   reward_unlocked?: string[];
   habit_name?: string;

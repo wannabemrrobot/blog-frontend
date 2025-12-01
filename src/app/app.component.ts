@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
     "--tagbg-hover": "#ff5e860c",
 
     "--background": "#fff",
+    "--background-rgb": "255, 255, 255",
     "--header-bg": "#f8f9fa",
     "--subheader-bg": "#fff",
     "--border": "#d1d1d1",
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
     "--tagbg-hover": "#ff5e860c",
 
     "--background": "#181a1b",
+    "--background-rgb": "24, 26, 27",
     "--header-bg": "#1b1e1f",
     "--subheader-bg": "#181a1b",
     "--border": "#3d4245",

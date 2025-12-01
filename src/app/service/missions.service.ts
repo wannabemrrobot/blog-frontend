@@ -26,9 +26,9 @@ export interface Mission {
   };
   reward: RewardReference[];
   mission_icon: string;
-  due_date?: string;
+  due_date?: string | null;
   start_date: string;
-  completion_date?: string;
+  completion_date?: string | null;
 }
 
 export interface RewardReference {
@@ -42,7 +42,7 @@ export interface Reward {
   title: string;
   description: string;
   associated_mission_ids: string[];
-  reward_type: string;
+  reward_type: string; // This is the type/category: legendary, street, etc.
   is_locked: boolean;
   badge_icon: string;
 }
@@ -55,6 +55,14 @@ export class MissionsService {
   private readonly GITHUB_REPO = 'daily-progress';
   private readonly MISSIONS_BASE_PATH = 'gamification/missions';
   private readonly REWARDS_BASE_PATH = 'gamification/rewards';
+  
+  // Aggregate file paths
+  private readonly MISSIONS_ACTIVE_AGGREGATE = `${this.MISSIONS_BASE_PATH}/active.json`;
+  private readonly MISSIONS_COMPLETED_AGGREGATE = `${this.MISSIONS_BASE_PATH}/completed.json`;
+  private readonly MISSIONS_FAILED_AGGREGATE = `${this.MISSIONS_BASE_PATH}/failed.json`;
+  private readonly MISSIONS_NOT_STARTED_AGGREGATE = `${this.MISSIONS_BASE_PATH}/not-started.json`;
+  private readonly REWARDS_LOCKED_AGGREGATE = `${this.REWARDS_BASE_PATH}/locked-aggregate.json`;
+  private readonly REWARDS_UNLOCKED_AGGREGATE = `${this.REWARDS_BASE_PATH}/unlocked-aggregate.json`;
 
   constructor(
     private http: HttpClient,
@@ -103,18 +111,58 @@ export class MissionsService {
   }
 
   /**
-   * Load multiple missions with lazy loading
+   * Load aggregate missions file from GitHub
    */
-  loadMissions(folder: 'not-completed' | 'completed', limit: number = 5): Observable<Mission[]> {
-    return this.getMissionFiles(folder, limit).pipe(
-      switchMap(files => {
-        if (files.length === 0) {
+  private loadMissionsAggregate(aggregatePath: string): Observable<Mission[]> {
+    return this.githubService.getFileContent(this.GITHUB_OWNER, this.GITHUB_REPO, aggregatePath).pipe(
+      switchMap(fileData => {
+        if (!fileData.download_url) {
           return of([]);
         }
+        const timestamp = new Date().getTime();
+        return this.http.get<any>(`${fileData.download_url}?t=${timestamp}`).pipe(
+          map(aggregateData => {
+            // Extract missions array from aggregate structure
+            return aggregateData.missions || [];
+          })
+        );
+      }),
+      catchError(err => {
+        console.error(`Error loading aggregate from ${aggregatePath}:`, err);
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Load multiple missions from aggregate files
+   */
+  loadMissions(folder: 'not-completed' | 'completed', limit: number = 5): Observable<Mission[]> {
+    // Map folder to aggregate files
+    const aggregatePaths: string[] = [];
+    
+    if (folder === 'not-completed') {
+      // Load in-progress, not-started, and failed missions
+      aggregatePaths.push(
+        this.MISSIONS_ACTIVE_AGGREGATE,
+        this.MISSIONS_NOT_STARTED_AGGREGATE,
+        this.MISSIONS_FAILED_AGGREGATE
+      );
+    } else {
+      // Load completed missions
+      aggregatePaths.push(this.MISSIONS_COMPLETED_AGGREGATE);
+    }
+    
+    // Load all relevant aggregates
+    const aggregateRequests = aggregatePaths.map(path => this.loadMissionsAggregate(path));
+    
+    return forkJoin(aggregateRequests).pipe(
+      map(results => {
+        // Flatten and combine all missions
+        const allMissions = results.reduce((acc, missions) => acc.concat(missions), []);
         
-        // Load all mission files in parallel
-        const missionRequests = files.map(file => this.loadMissionData(file));
-        return forkJoin(missionRequests);
+        // Apply limit if specified
+        return limit ? allMissions.slice(0, limit) : allMissions;
       })
     );
   }
@@ -196,5 +244,40 @@ export class MissionsService {
     );
 
     return forkJoin(rewardRequests);
+  }
+
+  /**
+   * Load all rewards from aggregate files
+   */
+  loadAllRewards(limit?: number): Observable<Reward[]> {
+    return forkJoin({
+      locked: this.loadRewardsAggregate(this.REWARDS_LOCKED_AGGREGATE),
+      unlocked: this.loadRewardsAggregate(this.REWARDS_UNLOCKED_AGGREGATE)
+    }).pipe(
+      map(({ locked, unlocked }) => {
+        const allRewards = [...locked, ...unlocked];
+        return limit ? allRewards.slice(0, limit) : allRewards;
+      })
+    );
+  }
+
+  /**
+   * Load rewards aggregate file from GitHub
+   */
+  private loadRewardsAggregate(aggregatePath: string): Observable<Reward[]> {
+    return this.githubService.getFileContent(this.GITHUB_OWNER, this.GITHUB_REPO, aggregatePath).pipe(
+      switchMap(fileData => {
+        if (!fileData.download_url) {
+          return of([]);
+        }
+        const timestamp = new Date().getTime();
+        return this.http.get<any>(`${fileData.download_url}?t=${timestamp}`).pipe(
+          map(aggregateData => {
+            // Extract rewards array from aggregate structure
+            return aggregateData.rewards || [];
+          })
+        );
+      })
+    );
   }
 }
