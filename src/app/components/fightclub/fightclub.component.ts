@@ -61,11 +61,15 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   autoCarousel = true;
   currentCarouselIndex = 0;
   
+  // Scrambler state
+  scramblerEnabled = true;
+  
   // Local storage keys
   private readonly STORAGE_KEYS = {
     CHART_VIEW: 'fightclub_showChartView',
     AUTO_CAROUSEL: 'fightclub_autoCarousel',
-    MISSIONS_VIEW: 'fightclub_showMissionsView'
+    MISSIONS_VIEW: 'fightclub_showMissionsView',
+    SCRAMBLER_ENABLED: 'fightclub_scramblerEnabled'
   };
   private carouselInterval: any = null;
   readonly carouselDuration = TIMING.CAROUSEL_DURATION;
@@ -119,6 +123,11 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       if (savedMissionsView !== null) {
         this.showMissionsView = savedMissionsView === 'true';
       }
+
+      const savedScramblerEnabled = localStorage.getItem(this.STORAGE_KEYS.SCRAMBLER_ENABLED);
+      if (savedScramblerEnabled !== null) {
+        this.scramblerEnabled = savedScramblerEnabled === 'true';
+      }
     } catch (error) {
       console.error('Error loading settings from localStorage:', error);
     }
@@ -145,6 +154,14 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.setItem(this.STORAGE_KEYS.MISSIONS_VIEW, String(this.showMissionsView));
     } catch (error) {
       console.error('Error saving missions view to localStorage:', error);
+    }
+  }
+
+  private saveScramblerEnabledToLocalStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.SCRAMBLER_ENABLED, String(this.scramblerEnabled));
+    } catch (error) {
+      console.error('Error saving scrambler enabled to localStorage:', error);
     }
   }
 
@@ -377,12 +394,18 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   private initializeScrambler(): void {
     setTimeout(() => {
       try {
-        if (typeof callScramblerAnimation !== 'undefined') {
+        const element = document.querySelector(SCRAMBLER_CONFIG.MAIN_SELECTOR);
+        if (!element) return;
+
+        if (this.scramblerEnabled && typeof callScramblerAnimation !== 'undefined') {
           new callScramblerAnimation(
             SCRAMBLER_CONFIG.MAIN_PHRASES,
             SCRAMBLER_CONFIG.MAIN_SELECTOR,
             SCRAMBLER_CONFIG.ANIMATION_CHARS
           );
+        } else {
+          // Show static text when scrambler is disabled
+          element.textContent = 'One body, three egoes, three journey, one destiny. Becoming ME.';
         }
       } catch (error) {
         console.error('Error initializing scrambler:', error);
@@ -490,6 +513,9 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.synergyCanvas && this.synergy) {
         this.renderSynergyChart();
       }
+      
+      // Reinitialize scrambler animation
+      this.initializeScrambler();
     }, TIMING.CHART_RENDER_DELAY);
   }
 
@@ -522,6 +548,12 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
     this.autoCarousel = !this.autoCarousel;
     this.saveAutoCarouselToLocalStorage();
     this.autoCarousel ? this.startCarousel() : this.stopCarousel();
+  }
+
+  toggleScrambler(): void {
+    this.scramblerEnabled = !this.scramblerEnabled;
+    this.saveScramblerEnabledToLocalStorage();
+    this.initializeScrambler();
   }
 
   private startCarousel(): void {

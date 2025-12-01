@@ -486,7 +486,7 @@
               </div>
               
               <div class="admin__toggles">
-                <!-- View Toggle -->
+                <!-- Chart View Toggle -->
                 <div class="toggle__container">
                   <span class="toggle__icon">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -511,26 +511,48 @@
                 
                 <!-- Auto Carousel Toggle -->
                 <div class="toggle__container">
-                <span class="toggle__icon">
-                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <g data-name="Layer 2"><g data-name="arrowhead-right">
-                      <rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"/>
-                      <path d="M18.78 11.37l-4.78-6a1 1 0 0 0-1.41-.15 1 1 0 0 0-.15 1.41L16.71 12l-4.48 5.37a1 1 0 0 0 .13 1.41A1 1 0 0 0 13 19a1 1 0 0 0 .77-.36l5-6a1 1 0 0 0 .01-1.27z"/>
-                      <path d="M7 5.37a1 1 0 0 0-1.61 1.26L9.71 12l-4.48 5.36a1 1 0 0 0 .13 1.41A1 1 0 0 0 6 19a1 1 0 0 0 .77-.36l5-6a1 1 0 0 0 0-1.27z"/>
-                    </g></g>
-                  </svg>
-                </span>
-                <input 
-                  type="checkbox" 
-                  class="checkbox" 
-                  id="autoCarouselCheckbox"
-                  [checked]="autoCarousel"
-                  (change)="toggleAutoCarousel()"
-                  [title]="autoCarousel ? 'Disable Auto Carousel' : 'Enable Auto Carousel'">
-                <label class="switch" for="autoCarouselCheckbox">
-                  <span class="slider"></span>
-                </label>
-              </div>
+                  <span class="toggle__icon">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <g data-name="Layer 2"><g data-name="arrowhead-right">
+                        <rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"/>
+                        <path d="M18.78 11.37l-4.78-6a1 1 0 0 0-1.41-.15 1 1 0 0 0-.15 1.41L16.71 12l-4.48 5.37a1 1 0 0 0 .13 1.41A1 1 0 0 0 13 19a1 1 0 0 0 .77-.36l5-6a1 1 0 0 0 .01-1.27z"/>
+                        <path d="M7 5.37a1 1 0 0 0-1.61 1.26L9.71 12l-4.48 5.36a1 1 0 0 0 .13 1.41A1 1 0 0 0 6 19a1 1 0 0 0 .77-.36l5-6a1 1 0 0 0 0-1.27z"/>
+                      </g></g>
+                    </svg>
+                  </span>
+                  <input 
+                    type="checkbox" 
+                    class="checkbox" 
+                    id="autoCarouselCheckbox"
+                    [checked]="autoCarousel"
+                    (change)="toggleAutoCarousel()"
+                    [title]="autoCarousel ? 'Disable Auto Carousel' : 'Enable Auto Carousel'">
+                  <label class="switch" for="autoCarouselCheckbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <!-- Scrambler Toggle -->
+                <div class="toggle__container">
+                  <span class="toggle__icon">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <g data-name="Layer 2"><g data-name="text">
+                        <rect width="24" height="24" opacity="0"/>
+                        <path d="M20 4H4a1 1 0 0 0-1 1v3a1 1 0 0 0 2 0V6h6v13H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2V6h6v2a1 1 0 0 0 2 0V5a1 1 0 0 0-1-1z"/>
+                      </g></g>
+                    </svg>
+                  </span>
+                  <input 
+                    type="checkbox" 
+                    class="checkbox" 
+                    id="scramblerCheckbox"
+                    [checked]="scramblerEnabled"
+                    (change)="toggleScrambler()"
+                    [title]="scramblerEnabled ? 'Disable Text Animation' : 'Enable Text Animation'">
+                  <label class="switch" for="scramblerCheckbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
