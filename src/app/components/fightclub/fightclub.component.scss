@@ -406,7 +406,6 @@
 
 // Missions View
 .missions__view {
-    grid-column: 2;
     grid-row: 1;
     display: flex;
     flex-direction: column;
@@ -939,7 +938,7 @@
 // Admin Pane
 .admin {
     &__pane {
-        padding: 12px;
+        padding: 10px;
         flex: 0 0 auto;
     }
 
@@ -957,18 +956,64 @@
 
     &__toggles {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
 
         .toggle__container {
             width: auto;
             height: auto;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 8px;
+            padding: 10px 8px;
             background: rgba(var(--accent-primary-rgb, 142, 255, 120), 0.05);
             border-radius: 6px;
+            cursor: help;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid transparent;
+
+            &:hover {
+                background: rgba(96, 165, 250, 0.15);
+                transform: translateY(-1px);
+            }
+
+            &::after {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-bottom: 8px;
+                color: var(--text-primary);
+                background-color: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 5px;
+                font-size: 13px;
+                padding: 4px 8px;
+                width: fit-content;
+                height: fit-content;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                z-index: 1000;
+            }
+
+            &:hover::after {
+                opacity: 1;
+            }
+
+            &:nth-child(1)::after {
+                content: 'Chart/List';
+            }
+
+            &:nth-child(2)::after {
+                content: 'Auto Carousel';
+            }
+
+            &:nth-child(3)::after {
+                content: 'Text Animation';
+            }
 
             .toggle__icon {
                 width: 22px;
