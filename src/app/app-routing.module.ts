@@ -26,7 +26,8 @@ const routes: Routes = [
   },
   {
     path: 'fight-club',
-    component: FightClubComponent
+    component: FightClubComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'missions',

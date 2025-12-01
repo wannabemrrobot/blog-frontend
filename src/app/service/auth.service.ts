@@ -44,15 +44,28 @@ export class AuthService {
         const githubProvider = user.providerData.find(p => p.providerId === 'github.com');
         let githubUsername = '';
         
-        if (githubProvider && githubProvider.uid) {
-          // GitHub uid is typically in format "12345678" (just the numeric ID)
-          // We need to fetch the username via the access token or from reloadUserInfo
-          githubUsername = (user as any).reloadUserInfo?.screenName || '';
-        }
+        // Try to get GitHub username from reloadUserInfo
+        githubUsername = (user as any).reloadUserInfo?.screenName || '';
         
-        // If still empty, try to parse from displayName
-        if (!githubUsername && user.displayName) {
-          githubUsername = user.displayName.toLowerCase().replace(/\s+/g, '');
+        // If we have a stored GitHub access token, fetch the actual username from GitHub API
+        const githubAccessToken = localStorage.getItem('github_access_token');
+        if (githubAccessToken && !githubUsername) {
+          try {
+            const response = await fetch('https://api.github.com/user', {
+              headers: {
+                'Authorization': `Bearer ${githubAccessToken}`,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            });
+            
+            if (response.ok) {
+              const githubData = await response.json();
+              githubUsername = githubData.login; // This is the immutable GitHub username
+              console.log('Fetched GitHub username from API:', githubUsername);
+            }
+          } catch (error) {
+            console.error('Error fetching GitHub username:', error);
+          }
         }
         
         const githubUser = {
@@ -79,34 +92,60 @@ export class AuthService {
     provider.addScope('read:user');
     provider.addScope('repo'); // Add repo scope to access repository contents
     
-    const result = await signInWithPopup(this.auth, provider);
-    
-    // Get GitHub access token
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    const githubAccessToken = credential?.accessToken;
-    
-    // Store GitHub token for API access
-    if (githubAccessToken) {
-      localStorage.setItem('github_access_token', githubAccessToken);
-      console.log('GitHub access token stored');
+    try {
+      const result = await signInWithPopup(this.auth, provider);
+      
+      // Get GitHub access token
+      const credential = GithubAuthProvider.credentialFromResult(result);
+      const githubAccessToken = credential?.accessToken;
+      
+      // Store GitHub token for API access
+      if (githubAccessToken) {
+        localStorage.setItem('github_access_token', githubAccessToken);
+        console.log('GitHub access token stored');
+        
+        // Fetch actual GitHub username using the access token
+        try {
+          const response = await fetch('https://api.github.com/user', {
+            headers: {
+              'Authorization': `Bearer ${githubAccessToken}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+          
+          if (response.ok) {
+            const githubData = await response.json();
+            const actualGithubUsername = githubData.login; // This is the immutable GitHub username
+            console.log('GitHub Login Success:', {
+              username: actualGithubUsername,
+              displayName: result.user.displayName,
+              email: result.user.email,
+              hasToken: !!githubAccessToken
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching GitHub username:', error);
+        }
+      }
+      
+      return result;
+    } catch (error: any) {
+      console.error('Sign in error:', error);
+      // If popup was closed or blocked, throw a cleaner error
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign in popup was closed. Please try again.');
+      }
+      throw error;
     }
-    
-    // Get GitHub username from the credential
-    const githubUsername = (result.user as any).reloadUserInfo?.screenName || 
-                           result.user.displayName?.toLowerCase() || 
-                           '';
-    
-    console.log('GitHub Login Success:', {
-      username: githubUsername,
-      displayName: result.user.displayName,
-      email: result.user.email,
-      hasToken: !!githubAccessToken
-    });
-    
-    return result;
   }
 
   async logout(): Promise<void> {
+    // Sign out from Firebase
+    await signOut(this.auth);
+    
+    // Clear GitHub token
+    localStorage.removeItem('github_access_token');
+    
     // Clear all Firebase auth data from storage
     const persistenceKeys = Object.keys(localStorage).filter(key => 
       key.includes('firebase') || key.includes(firebaseConfig.apiKey)
@@ -119,23 +158,7 @@ export class AuthService {
     // Clear session storage
     sessionStorage.clear();
     
-    // Clear IndexedDB (where Firebase stores auth data)
-    if (window.indexedDB) {
-      const dbDeleteRequest = indexedDB.deleteDatabase('firebaseLocalStorageDb');
-      dbDeleteRequest.onsuccess = () => {
-        console.log('Firebase IndexedDB cleared');
-      };
-    }
-    
-    // Sign out from Firebase
-    await signOut(this.auth);
-    
-    // Force reload to clear any in-memory state
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 100);
-    
-    console.log('User logged out and all session data cleared');
+    console.log('User logged out and session data cleared');
   }
 
   getCurrentUser(): Observable<any> {

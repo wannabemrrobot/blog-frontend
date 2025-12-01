@@ -55,10 +55,18 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   
   // View state
   showChartView = true;
+  showMissionsView = false;
   
   // Carousel state
   autoCarousel = true;
   currentCarouselIndex = 0;
+  
+  // Local storage keys
+  private readonly STORAGE_KEYS = {
+    CHART_VIEW: 'fightclub_showChartView',
+    AUTO_CAROUSEL: 'fightclub_autoCarousel',
+    MISSIONS_VIEW: 'fightclub_showMissionsView'
+  };
   private carouselInterval: any = null;
   readonly carouselDuration = TIMING.CAROUSEL_DURATION;
   
@@ -79,6 +87,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.loadSettingsFromLocalStorage();
     this.subscribeToAuthChanges();
   }
 
@@ -93,6 +102,51 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // ========== Lifecycle Helpers ==========
+
+  private loadSettingsFromLocalStorage(): void {
+    try {
+      const savedChartView = localStorage.getItem(this.STORAGE_KEYS.CHART_VIEW);
+      if (savedChartView !== null) {
+        this.showChartView = savedChartView === 'true';
+      }
+
+      const savedAutoCarousel = localStorage.getItem(this.STORAGE_KEYS.AUTO_CAROUSEL);
+      if (savedAutoCarousel !== null) {
+        this.autoCarousel = savedAutoCarousel === 'true';
+      }
+
+      const savedMissionsView = localStorage.getItem(this.STORAGE_KEYS.MISSIONS_VIEW);
+      if (savedMissionsView !== null) {
+        this.showMissionsView = savedMissionsView === 'true';
+      }
+    } catch (error) {
+      console.error('Error loading settings from localStorage:', error);
+    }
+  }
+
+  private saveChartViewToLocalStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.CHART_VIEW, String(this.showChartView));
+    } catch (error) {
+      console.error('Error saving chart view to localStorage:', error);
+    }
+  }
+
+  private saveAutoCarouselToLocalStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.AUTO_CAROUSEL, String(this.autoCarousel));
+    } catch (error) {
+      console.error('Error saving auto carousel to localStorage:', error);
+    }
+  }
+
+  private saveMissionsViewToLocalStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.MISSIONS_VIEW, String(this.showMissionsView));
+    } catch (error) {
+      console.error('Error saving missions view to localStorage:', error);
+    }
+  }
 
   private subscribeToAuthChanges(): void {
     this.authService.currentUser$
@@ -126,6 +180,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
     this.error = null;
     this.loadAlterEgos();
     this.loadSynergy();
+    this.loadHistory();
     this.initializeScrambler();
   }
 
@@ -267,25 +322,15 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private computeAlterEgos(egos: AlterEgo[]): ComputedAlterEgo[] {
-    return egos.map((ego, index) => {
-      // Hardcoded image paths for the three alter egos
-      const images = [
-        'assets/images/alter-ego/tyler.jpeg',
-        'assets/images/alter-ego/mr-robot.jpeg',
-        'assets/images/alter-ego/kei.jpeg'
-      ];
-      
-      return {
-        ...ego,
-        profile_url: images[index] || ego.profile_url, // Use local image by index or fallback to original
-        abilitiesArray: this.chartService.getAbilitiesArray(ego),
-        xpPercentage: this.calculatePercentage(ego.xp_details.current_xp, ego.xp_details.xp_to_next_level),
-        healthPercentage: this.calculatePercentage(ego.health_details.current_health, ego.health_details.max_health),
-        energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy),
-        rewards_unlocked: ego.unlocked_rewards?.length || 0,
-        total_rewards: (ego.unlocked_rewards?.length || 0) + (ego.locked_rewards?.length || 0)
-      };
-    });
+    return egos.map(ego => ({
+      ...ego,
+      abilitiesArray: this.chartService.getAbilitiesArray(ego),
+      xpPercentage: this.calculatePercentage(ego.xp_details.current_xp, ego.xp_details.xp_to_next_level),
+      healthPercentage: this.calculatePercentage(ego.health_details.current_health, ego.health_details.max_health),
+      energyPercentage: this.calculatePercentage(ego.energy_details.current_energy, ego.energy_details.max_energy),
+      rewards_unlocked: ego.unlocked_rewards?.length || 0,
+      total_rewards: (ego.unlocked_rewards?.length || 0) + (ego.locked_rewards?.length || 0)
+    }));
   }
 
   private calculatePercentage(current: number, max: number): number {
@@ -419,6 +464,7 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleAbilityView(): void {
     this.showChartView = !this.showChartView;
+    this.saveChartViewToLocalStorage();
 
     if (this.showChartView) {
       this.reRenderChartsAfterViewToggle();
@@ -455,10 +501,26 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  toggleMissionsView(): void {
+    this.showMissionsView = !this.showMissionsView;
+    this.saveMissionsViewToLocalStorage();
+    
+    // Re-render charts when returning to dashboard view
+    if (!this.showMissionsView && this.showChartView) {
+      setTimeout(() => {
+        this.renderCharts();
+        if (this.synergy && this.synergyCanvas) {
+          this.renderSynergyChart();
+        }
+      }, 100);
+    }
+  }
+
   // ========== Carousel Controls ==========
 
   toggleAutoCarousel(): void {
     this.autoCarousel = !this.autoCarousel;
+    this.saveAutoCarouselToLocalStorage();
     this.autoCarousel ? this.startCarousel() : this.stopCarousel();
   }
 
@@ -518,18 +580,21 @@ export class FightClubComponent implements OnInit, AfterViewInit, OnDestroy {
   getEventDescription(entry: HistoryEntry): string {
     const eventType = entry.event_type || entry.state;
     const alterEgo = entry['alter-ego'];
+    const alterEgoStyled = `<span class="alter-ego-name">${alterEgo}</span>`;
 
     switch (eventType) {
       case 'completed':
-        return `${alterEgo} completed ${entry.mission_associated}`;
+        return `${alterEgoStyled} <span class="event-verb">completed</span> ${entry.mission_associated}`;
       case 'failed':
-        return `${alterEgo} failed ${entry.mission_associated}`;
+        return `${alterEgoStyled} <span class="event-verb">failed</span> ${entry.mission_associated}`;
       case 'missed_checkin_penalty':
-        return `${alterEgo} missed ${entry.days_missed} days check-in`;
+        return `${alterEgoStyled} <span class="event-verb">missed</span> ${entry.days_missed} days check-in`;
       case 'streak_milestone':
-        return `${alterEgo} reached ${entry.streak_days} day streak`;
+        return `${alterEgoStyled} <span class="event-verb">reached</span> ${entry.streak_days} day streak`;
       default:
-        return `${alterEgo} - ${eventType}`;
+        return entry.mission_associated 
+          ? `${alterEgoStyled} <span class="event-verb">-</span> ${entry.mission_associated}` 
+          : `${alterEgoStyled} <span class="event-verb">-</span> ${eventType}`;
     }
   }
 

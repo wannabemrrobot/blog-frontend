@@ -34,142 +34,725 @@
 
     <!-- Authenticated State -->
     <div *ngIf="isAuthenticated && user" class="dashboard-section">
+      <!-- Navigation Bar -->
+      <div class="missions__navbar">
+        <div class="navbar__item">
+          <input 
+            type="radio" 
+            id="radio_active" 
+            name="missions_nav" 
+            [checked]="currentView === 'active'"
+            (change)="setView('active')"
+            class="navbar__radio">
+          <label 
+            for="radio_active" 
+            class="navbar__label">
+            <svg class="navbar__hashicon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+              <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+            </svg>
+            <span class="navbar__text">Active</span>
+            <span class="navbar__count">{{ notCompletedMissions.length }}</span>
+          </label>
+        </div>
+        <div class="navbar__item">
+          <input 
+            type="radio" 
+            id="radio_completed" 
+            name="missions_nav" 
+            [checked]="currentView === 'completed'"
+            (change)="setView('completed')"
+            class="navbar__radio">
+          <label 
+            for="radio_completed" 
+            class="navbar__label">
+            <svg class="navbar__hashicon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+              <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+            </svg>
+            <span class="navbar__text">Completed</span>
+            <span class="navbar__count">{{ completedMissions.length }}</span>
+          </label>
+        </div>
+        <div class="navbar__item">
+          <input 
+            type="radio" 
+            id="radio_rewards" 
+            name="missions_nav" 
+            [checked]="currentView === 'rewards'"
+            (change)="setView('rewards')"
+            class="navbar__radio">
+          <label 
+            for="radio_rewards" 
+            class="navbar__label">
+            <svg class="navbar__hashicon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+              <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+            </svg>
+            <span class="navbar__text">Rewards</span>
+            <span class="navbar__count">{{ getFilteredUnlockedRewardsCount() }}/{{ filteredRewards.length }}</span>
+          </label>
+        </div>
+        <div class="navbar__item">
+          <input 
+            type="radio" 
+            id="radio_badges" 
+            name="missions_nav" 
+            [checked]="currentView === 'badges'"
+            (change)="setView('badges')"
+            class="navbar__radio">
+          <label 
+            for="radio_badges" 
+            class="navbar__label">
+            <svg class="navbar__hashicon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+              <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+            </svg>
+            <span class="navbar__text">Badges</span>
+            <span class="navbar__count" *ngIf="badgesData">{{ badgesData.unlocked_count }}/{{ badgesData.total_badges }}</span>
+          </label>
+        </div>
+      </div>
+
       <!-- Loading State -->
       <div *ngIf="loadingMissions" class="loading-state">
         <div class="spinner"></div>
         <p>Loading missions...</p>
       </div>
 
-      <!-- Active Missions -->
-      <div *ngIf="!loadingMissions" class="missions-section">
-        <h2 class="section-title">ACTIVE MISSIONS ({{ notCompletedMissions.length }})</h2>
+      <!-- Active Missions View -->
+      <div *ngIf="!loadingMissions && currentView === 'active'" class="missions__view">
+        <!-- Filter Bar for Active Missions -->
+        <div class="filter-bar">
+          <svg class="filter-bar__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <g data-name="Layer 2"><g data-name="funnel"><rect width="24" height="24" opacity="0"/><path d="M13.9 22a1 1 0 0 1-.6-.2l-4-3.05a1 1 0 0 1-.39-.8v-3.27l-4.8-9.22A1 1 0 0 1 5 4h14a1 1 0 0 1 .86.49 1 1 0 0 1 0 1l-5 9.21V21a1 1 0 0 1-.55.9 1 1 0 0 1-.41.1zm-3-4.54l2 1.53v-4.55A1 1 0 0 1 13 14l4.3-8H6.64l4.13 8a1 1 0 0 1 .11.46z"/></g></g>
+          </svg>
+          <div class="filter-group">
+            <button 
+              class="filter-btn" 
+              [class.active]="activeMissionFilters.hasRewards === true"
+              (click)="toggleActiveMissionFilter('hasRewards', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.2 7h-.39A3 3 0 0 0 19 6a3.08 3.08 0 0 0-3.14-3A4.46 4.46 0 0 0 12 5.4 4.46 4.46 0 0 0 8.14 3 3.08 3.08 0 0 0 5 6a3 3 0 0 0 .19 1H4.8A2 2 0 0 0 3 9.2v3.6A2.08 2.08 0 0 0 4.5 15v4.37A1.75 1.75 0 0 0 6.31 21h11.38a1.75 1.75 0 0 0 1.81-1.67V15a2.08 2.08 0 0 0 1.5-2.2V9.2A2 2 0 0 0 19.2 7zM19 9.2v3.6a.56.56 0 0 1 0 .2h-6V9h6a.56.56 0 0 1 0 .2zM15.86 5A1.08 1.08 0 0 1 17 6a1.08 1.08 0 0 1-1.14 1H13.4a2.93 2.93 0 0 1 2.46-2zM7 6a1.08 1.08 0 0 1 1.14-1 2.93 2.93 0 0 1 2.45 2H8.14A1.08 1.08 0 0 1 7 6zM5 9.2A.56.56 0 0 1 5 9h6v4H5a.56.56 0 0 1 0-.2zM6.5 15H11v4H6.5zm6.5 4v-4h4.5v4z"/>
+              </svg>
+              W/ Rewards
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="activeMissionFilters.hasRewards === false"
+              (click)="toggleActiveMissionFilter('hasRewards', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.2 7h-.39A3 3 0 0 0 19 6a3.08 3.08 0 0 0-3.14-3A4.46 4.46 0 0 0 12 5.4 4.46 4.46 0 0 0 8.14 3 3.08 3.08 0 0 0 5 6a3 3 0 0 0 .19 1H4.8A2 2 0 0 0 3 9.2v3.6A2.08 2.08 0 0 0 4.5 15v4.37A1.75 1.75 0 0 0 6.31 21h11.38a1.75 1.75 0 0 0 1.81-1.67V15a2.08 2.08 0 0 0 1.5-2.2V9.2A2 2 0 0 0 19.2 7zM19 9.2v3.6a.56.56 0 0 1 0 .2h-6V9h6a.56.56 0 0 1 0 .2zM15.86 5A1.08 1.08 0 0 1 17 6a1.08 1.08 0 0 1-1.14 1H13.4a2.93 2.93 0 0 1 2.46-2zM7 6a1.08 1.08 0 0 1 1.14-1 2.93 2.93 0 0 1 2.45 2H8.14A1.08 1.08 0 0 1 7 6zM5 9.2A.56.56 0 0 1 5 9h6v4H5a.56.56 0 0 1 0-.2zM6.5 15H11v4H6.5zm6.5 4v-4h4.5v4z"/>
+              </svg>
+              W/O Rewards
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="activeMissionFilters.hasDeadline === true"
+              (click)="toggleActiveMissionFilter('hasDeadline', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                <circle cx="8" cy="16" r="1"/>
+                <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+              </svg>
+              W/ Deadline
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="activeMissionFilters.hasDeadline === false"
+              (click)="toggleActiveMissionFilter('hasDeadline', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                <circle cx="8" cy="16" r="1"/>
+                <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+              </svg>
+              W/O Deadline
+            </button>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-group">
+            <button 
+              class="filter-btn filter-btn--ego" 
+              [class.active]="activeMissionFilters.alterEgo !== null"
+              (click)="cycleActiveMissionAlterEgo()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+              </svg>
+              <span class="filter-btn--ego__label">{{ getActiveMissionAlterEgoLabel() }}</span>
+            </button>
+          </div>
+          <button 
+            class="filter-clear-btn" 
+            *ngIf="activeMissionFilters.hasRewards !== null || activeMissionFilters.hasDeadline !== null || activeMissionFilters.alterEgo !== null"
+            (click)="clearActiveMissionFilters()"
+            title="Clear filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <g data-name="Layer 2">
+                <g data-name="close">
+                  <rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/>
+                  <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </div>
         
-        <div *ngIf="notCompletedMissions.length === 0" class="empty-state">
+        <div class="missions-section">
+        
+        <div *ngIf="filteredActiveMissions.length === 0" class="empty-state">
           <p>No active missions</p>
         </div>
 
-        <div *ngIf="notCompletedMissions.length > 0" class="missions-table">
-          <div class="table-header">
-            <div class="col-id">Mission ID</div>
-            <div class="col-title">Title</div>
-            <div class="col-ego">Alter Ego</div>
-            <div class="col-difficulty">Difficulty</div>
-            <div class="col-progress">Progress</div>
-            <div class="col-due">Due Date</div>
-            <div class="col-rewards">Rewards</div>
-          </div>
-
-          <div *ngFor="let mission of notCompletedMissions" class="mission-row">
-            <div class="col-id">
-              <span class="mission-code">{{ mission.mission_code }}</span>
-            </div>
-            <div class="col-title">
-              <span class="mission-title">{{ mission.title }}</span>
-              <span class="mission-status" [ngClass]="'status-' + mission.status">{{ mission.status }}</span>
-            </div>
-            <div class="col-ego">
-              <span class="ego-badge" [ngClass]="'ego-' + mission.archetype">{{ mission.archetype }}</span>
-            </div>
-            <div class="col-difficulty">
-              <span class="difficulty-badge" [ngClass]="getDifficultyClass(mission.difficulty)">
-                {{ mission.difficulty }}
-              </span>
-            </div>
-            <div class="col-progress">
-              <div class="progress-container">
-                <div class="progress-bar">
-                  <div class="progress-fill" [style.width.%]="getProgressPercentage(mission)"></div>
+        <div *ngIf="filteredActiveMissions.length > 0" class="missions-table">
+          <div *ngFor="let mission of filteredActiveMissions" class="mission-row">
+            <div class="mission-content">
+              <div class="mission-header">
+                <div class="mission-code">
+                  <svg class="mission-code__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="mission-code__text">{{ mission.mission_code }}</span>
                 </div>
-                <span class="progress-text">{{ mission.progress.current }}/{{ mission.progress.total }}</span>
+                <div class="mission-title">{{ mission.title }}</div>
+                <span class="mission-status" [ngClass]="'status-' + mission.status">
+                  <svg class="mission-status__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14">
+                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                    <circle cx="12" cy="8" r="1"/>
+                    <path d="M12 10a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/>
+                  </svg>
+                  {{ mission.status }}
+                </span>
+                <span class="mission-ego">
+                  <svg class="mission-ego__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+                  </svg>
+                  <span class="mission-ego__text">{{ mission.archetype }}</span>
+                </span>
+              </div>
+              
+              <div class="mission-details-row">
+                <div class="mission-meta-column">
+                  <div class="mission-meta-date">
+                    <span class="due-date" *ngIf="mission.due_date">
+                      <svg class="due-date__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                        <circle cx="8" cy="16" r="1"/>
+                        <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+                      </svg>
+                      {{ mission.due_date }}
+                    </span>
+                    <span class="no-date" *ngIf="!mission.due_date">No due date</span>
+                  </div>
+                  <div class="mission-meta-difficulty">
+                    <span class="difficulty-badge" [ngClass]="getDifficultyClass(mission.difficulty)">{{ mission.difficulty }}</span>
+                  </div>
+                </div>
+                <div class="mission-progress-column">
+                  <div class="mission-progress">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                      <path class="progress-circle__bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke-width="3"
+                      />
+                      <path class="progress-circle__fill"
+                        [attr.stroke-dasharray]="getProgressPercentage(mission) + ', 100'"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke-width="3"
+                      />
+                    </svg>
+                    <span class="progress-text">{{ mission.progress.current }}/{{ mission.progress.total }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mission-rewards" *ngIf="!mission.loadingRewards && mission.rewards && mission.rewards.length > 0">
+                <div class="rewards-list">
+                  <div *ngFor="let reward of mission.rewards" class="reward-item">
+                    <svg class="reward-item__cube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                      <path d="M20.66 7.26c0-.07-.1-.14-.15-.21l-.09-.1a2.5 2.5 0 0 0-.86-.68l-6.4-3a2.7 2.7 0 0 0-2.26 0l-6.4 3a2.6 2.6 0 0 0-.86.68L3.52 7a1 1 0 0 0-.15.2A2.39 2.39 0 0 0 3 8.46v7.06a2.49 2.49 0 0 0 1.46 2.26l6.4 3a2.7 2.7 0 0 0 2.27 0l6.4-3A2.49 2.49 0 0 0 21 15.54V8.46a2.39 2.39 0 0 0-.34-1.2zm-8.95-2.2a .73.73 0 0 1 .58 0l5.33 2.48L12 10.15 6.38 7.54zM5.3 16a .47.47 0 0 1-.3-.43V9.1l6 2.79v6.72zm13.39 0L13 18.61v-6.72l6-2.79v6.44a .48.48 0 0 1-.31.46z"/>
+                    </svg>
+                    <span class="reward-badge" [ngClass]="getRewardTypeClass(reward.reward_type)">
+                      <svg class="reward-badge__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                      </svg>
+                      {{ reward.reward_type }}
+                    </span>
+                    <div class="reward-details">
+                      <span class="reward-id">
+                        <svg class="reward-id__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                          <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                        </svg>
+                        <span class="reward-id__text">{{ reward.reward_id }}</span>
+                      </span>
+                      <span class="reward-title">{{ reward.title }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-due">
-              <span class="due-date" *ngIf="mission.due_date">{{ mission.due_date }}</span>
-              <span class="no-date" *ngIf="!mission.due_date">-</span>
-            </div>
-            <div class="col-rewards">
-              <div *ngIf="mission.loadingRewards" class="loading-rewards">...</div>
-              <div *ngIf="!mission.loadingRewards && (!mission.rewards || mission.rewards.length === 0)" class="no-rewards">
-                No rewards
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Completed Missions View -->
+      <div *ngIf="!loadingMissions && currentView === 'completed'" class="missions__view">
+        <!-- Filter Bar for Completed Missions -->
+        <div class="filter-bar">
+          <svg class="filter-bar__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <g data-name="Layer 2"><g data-name="funnel"><rect width="24" height="24" opacity="0"/><path d="M13.9 22a1 1 0 0 1-.6-.2l-4-3.05a1 1 0 0 1-.39-.8v-3.27l-4.8-9.22A1 1 0 0 1 5 4h14a1 1 0 0 1 .86.49 1 1 0 0 1 0 1l-5 9.21V21a1 1 0 0 1-.55.9 1 1 0 0 1-.41.1zm-3-4.54l2 1.53v-4.55A1 1 0 0 1 13 14l4.3-8H6.64l4.13 8a1 1 0 0 1 .11.46z"/></g></g>
+          </svg>
+          <div class="filter-group">
+            <button 
+              class="filter-btn" 
+              [class.active]="completedMissionFilters.hasRewards === true"
+              (click)="toggleCompletedMissionFilter('hasRewards', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.2 7h-.39A3 3 0 0 0 19 6a3.08 3.08 0 0 0-3.14-3A4.46 4.46 0 0 0 12 5.4 4.46 4.46 0 0 0 8.14 3 3.08 3.08 0 0 0 5 6a3 3 0 0 0 .19 1H4.8A2 2 0 0 0 3 9.2v3.6A2.08 2.08 0 0 0 4.5 15v4.37A1.75 1.75 0 0 0 6.31 21h11.38a1.75 1.75 0 0 0 1.81-1.67V15a2.08 2.08 0 0 0 1.5-2.2V9.2A2 2 0 0 0 19.2 7zM19 9.2v3.6a.56.56 0 0 1 0 .2h-6V9h6a.56.56 0 0 1 0 .2zM15.86 5A1.08 1.08 0 0 1 17 6a1.08 1.08 0 0 1-1.14 1H13.4a2.93 2.93 0 0 1 2.46-2zM7 6a1.08 1.08 0 0 1 1.14-1 2.93 2.93 0 0 1 2.45 2H8.14A1.08 1.08 0 0 1 7 6zM5 9.2A.56.56 0 0 1 5 9h6v4H5a.56.56 0 0 1 0-.2zM6.5 15H11v4H6.5zm6.5 4v-4h4.5v4z"/>
+              </svg>
+              W/ Rewards
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="completedMissionFilters.hasRewards === false"
+              (click)="toggleCompletedMissionFilter('hasRewards', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.2 7h-.39A3 3 0 0 0 19 6a3.08 3.08 0 0 0-3.14-3A4.46 4.46 0 0 0 12 5.4 4.46 4.46 0 0 0 8.14 3 3.08 3.08 0 0 0 5 6a3 3 0 0 0 .19 1H4.8A2 2 0 0 0 3 9.2v3.6A2.08 2.08 0 0 0 4.5 15v4.37A1.75 1.75 0 0 0 6.31 21h11.38a1.75 1.75 0 0 0 1.81-1.67V15a2.08 2.08 0 0 0 1.5-2.2V9.2A2 2 0 0 0 19.2 7zM19 9.2v3.6a.56.56 0 0 1 0 .2h-6V9h6a.56.56 0 0 1 0 .2zM15.86 5A1.08 1.08 0 0 1 17 6a1.08 1.08 0 0 1-1.14 1H13.4a2.93 2.93 0 0 1 2.46-2zM7 6a1.08 1.08 0 0 1 1.14-1 2.93 2.93 0 0 1 2.45 2H8.14A1.08 1.08 0 0 1 7 6zM5 9.2A.56.56 0 0 1 5 9h6v4H5a.56.56 0 0 1 0-.2zM6.5 15H11v4H6.5zm6.5 4v-4h4.5v4z"/>
+              </svg>
+              W/O Rewards
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="completedMissionFilters.hasCompletionDate === true"
+              (click)="toggleCompletedMissionFilter('hasCompletionDate', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                <circle cx="8" cy="16" r="1"/>
+                <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+              </svg>
+              W/ Completion Date
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="completedMissionFilters.hasCompletionDate === false"
+              (click)="toggleCompletedMissionFilter('hasCompletionDate', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                <circle cx="8" cy="16" r="1"/>
+                <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+              </svg>
+              W/O Completion Date
+            </button>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-group">
+            <button 
+              class="filter-btn filter-btn--ego" 
+              [class.active]="completedMissionFilters.alterEgo !== null"
+              (click)="cycleCompletedMissionAlterEgo()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+              </svg>
+              <span class="filter-btn--ego__label">{{ getCompletedMissionAlterEgoLabel() }}</span>
+            </button>
+          </div>
+          <button 
+            class="filter-clear-btn" 
+            *ngIf="completedMissionFilters.hasRewards !== null || completedMissionFilters.hasCompletionDate !== null || completedMissionFilters.alterEgo !== null"
+            (click)="clearCompletedMissionFilters()"
+            title="Clear filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <g data-name="Layer 2">
+                <g data-name="close">
+                  <rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/>
+                  <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="missions-section">
+        
+        <div *ngIf="filteredCompletedMissions.length === 0" class="empty-state">
+          <p>No completed missions yet</p>
+        </div>
+
+        <div *ngIf="filteredCompletedMissions.length > 0" class="missions-table">
+          <div *ngFor="let mission of filteredCompletedMissions" class="mission-row completed">
+            <div class="mission-content">
+              <div class="mission-header">
+                <div class="mission-code">
+                  <svg class="mission-code__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="mission-code__text">{{ mission.mission_code }}</span>
+                </div>
+                <div class="mission-title">{{ mission.title }}</div>
+                <span class="mission-status status-completed">
+                  <svg class="mission-status__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14">
+                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                    <circle cx="12" cy="8" r="1"/>
+                    <path d="M12 10a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/>
+                  </svg>
+                  {{ mission.status }}
+                </span>
+                <span class="mission-ego">
+                  <svg class="mission-ego__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                    <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+                  </svg>
+                  <span class="mission-ego__text">{{ mission.archetype }}</span>
+                </span>
               </div>
-              <div *ngIf="!mission.loadingRewards && mission.rewards && mission.rewards.length > 0" class="rewards-list">
-                <span 
-                  *ngFor="let reward of mission.rewards" 
-                  class="reward-badge" 
-                  [ngClass]="getRewardTypeClass(reward.reward_type)"
-                  [title]="reward.title">
+              
+              <div class="mission-details-row">
+                <div class="mission-meta-column">
+                  <div class="mission-meta-date">
+                    <span class="due-date" *ngIf="mission.completion_date">
+                      <svg class="due-date__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM6 6h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1v4H5V7a1 1 0 0 1 1-1zm12 14H6a1 1 0 0 1-1-1v-6h14v6a1 1 0 0 1-1 1z"/>
+                        <circle cx="8" cy="16" r="1"/>
+                        <path d="M16 15h-4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2z"/>
+                      </svg>
+                      {{ mission.completion_date }}
+                    </span>
+                    <span class="no-date" *ngIf="!mission.completion_date">-</span>
+                  </div>
+                  <div class="mission-meta-difficulty">
+                    <span class="difficulty-badge" [ngClass]="getDifficultyClass(mission.difficulty)">{{ mission.difficulty }}</span>
+                  </div>
+                </div>
+                <div class="mission-progress-column">
+                  <div class="mission-progress">
+                    <svg class="progress-circle">
+                      <path class="progress-circle__bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke-width="3"
+                      />
+                      <path class="progress-circle__fill completed"
+                        [attr.stroke-dasharray]="getProgressPercentage(mission) + ', 100'"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke-width="3"
+                      />
+                    </svg>
+                    <span class="progress-text">{{ mission.progress.current }}/{{ mission.progress.total }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mission-rewards" *ngIf="!mission.loadingRewards && mission.rewards && mission.rewards.length > 0">
+                <div class="rewards-list">
+                  <div *ngFor="let reward of mission.rewards" class="reward-item">
+                    <svg class="reward-item__cube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                      <path d="M20.66 7.26c0-.07-.1-.14-.15-.21l-.09-.1a2.5 2.5 0 0 0-.86-.68l-6.4-3a2.7 2.7 0 0 0-2.26 0l-6.4 3a2.6 2.6 0 0 0-.86.68L3.52 7a1 1 0 0 0-.15.2A2.39 2.39 0 0 0 3 8.46v7.06a2.49 2.49 0 0 0 1.46 2.26l6.4 3a2.7 2.7 0 0 0 2.27 0l6.4-3A2.49 2.49 0 0 0 21 15.54V8.46a2.39 2.39 0 0 0-.34-1.2zm-8.95-2.2a .73.73 0 0 1 .58 0l5.33 2.48L12 10.15 6.38 7.54zM5.3 16a .47.47 0 0 1-.3-.43V9.1l6 2.79v6.72zm13.39 0L13 18.61v-6.72l6-2.79v6.44a .48.48 0 0 1-.31.46z"/>
+                    </svg>
+                    <span class="reward-badge" [ngClass]="getRewardTypeClass(reward.reward_type)">
+                      <svg class="reward-badge__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                      </svg>
+                      {{ reward.reward_type }}
+                    </span>
+                    <div class="reward-details">
+                      <span class="reward-id">
+                        <svg class="reward-id__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="inherit">
+                          <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                        </svg>
+                        <span class="reward-id__text">{{ reward.reward_id }}</span>
+                      </span>
+                      <span class="reward-title">{{ reward.title }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Rewards View -->
+      <div *ngIf="!loadingMissions && currentView === 'rewards'" class="missions__view">
+        <!-- Filter Bar for Rewards -->
+        <div class="filter-bar">
+          <svg class="filter-bar__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <g data-name="Layer 2"><g data-name="funnel"><rect width="24" height="24" opacity="0"/><path d="M13.9 22a1 1 0 0 1-.6-.2l-4-3.05a1 1 0 0 1-.39-.8v-3.27l-4.8-9.22A1 1 0 0 1 5 4h14a1 1 0 0 1 .86.49 1 1 0 0 1 0 1l-5 9.21V21a1 1 0 0 1-.55.9 1 1 0 0 1-.41.1zm-3-4.54l2 1.53v-4.55A1 1 0 0 1 13 14l4.3-8H6.64l4.13 8a1 1 0 0 1 .11.46z"/></g></g>
+          </svg>
+          <div class="filter-group">
+            <button 
+              class="filter-btn" 
+              [class.active]="rewardFilters.locked === false"
+              (click)="toggleRewardFilter('locked', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 8h-7V6a2 2 0 0 1 4 0 1 1 0 0 0 2 0 4 4 0 0 0-8 0v2H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm1 11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
+              </svg>
+              Unlocked
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="rewardFilters.locked === true"
+              (click)="toggleRewardFilter('locked', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 8h-1V6.11a4 4 0 1 0-8 0V8H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm-7-1.89A2.06 2.06 0 0 1 12 4a2.06 2.06 0 0 1 2 2.11V8h-4zM18 19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
+              </svg>
+              Locked
+            </button>
+          </div>
+          <button 
+            class="filter-clear-btn" 
+            *ngIf="rewardFilters.locked !== null || rewardFilters.type !== null"
+            (click)="clearRewardFilters()"
+            title="Clear filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <g data-name="Layer 2">
+                <g data-name="close">
+                  <rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/>
+                  <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="rewards-section">
+          <div *ngIf="allRewards.length === 0" class="empty-state">
+            <p>No rewards available yet. Complete missions to earn rewards!</p>
+          </div>
+          
+          <div *ngIf="allRewards.length > 0 && filteredRewards.length === 0" class="empty-state">
+            <p>No rewards match your current filters. Try adjusting your filters.</p>
+          </div>
+          
+          <div *ngIf="filteredRewards.length > 0" class="rewards-grid">
+            <div *ngFor="let reward of filteredRewards" class="reward-card" [class.reward-card--locked]="reward.is_locked">
+              <div class="reward-card__header">
+                <svg class="reward-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                  <path d="M20.66 7.26c0-.07-.1-.14-.15-.21l-.09-.1a2.5 2.5 0 0 0-.86-.68l-6.4-3a2.7 2.7 0 0 0-2.26 0l-6.4 3a2.6 2.6 0 0 0-.86.68L3.52 7a1 1 0 0 0-.15.2A2.39 2.39 0 0 0 3 8.46v7.06a2.49 2.49 0 0 0 1.46 2.26l6.4 3a2.7 2.7 0 0 0 2.27 0l6.4-3A2.49 2.49 0 0 0 21 15.54V8.46a2.39 2.39 0 0 0-.34-1.2zm-8.95-2.2a.73.73 0 0 1 .58 0l5.33 2.48L12 10.15 6.38 7.54zM5.3 16a.47.47 0 0 1-.3-.43V9.1l6 2.79v6.72zm13.39 0L13 18.61v-6.72l6-2.79v6.44a.48.48 0 0 1-.31.46z"/>
+                </svg>
+                <span class="reward-card__type" [ngClass]="getRewardTypeClass(reward.reward_type)">
+                  <svg class="reward-card__type-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
                   {{ reward.reward_type }}
                 </span>
+                <!-- Lock/Unlock Icon -->
+                <svg *ngIf="reward.is_locked" class="reward-card__lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                  <g data-name="Layer 2"><g data-name="lock"><rect width="24" height="24" opacity="0"/><path d="M17 8h-1V6.11a4 4 0 1 0-8 0V8H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm-7-1.89A2.06 2.06 0 0 1 12 4a2.06 2.06 0 0 1 2 2.11V8h-4zM18 19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/></g></g>
+                </svg>
+                <svg *ngIf="!reward.is_locked" class="reward-card__lock-icon reward-card__lock-icon--unlocked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                  <g data-name="Layer 2"><g data-name="unlock"><rect width="24" height="24" opacity="0"/><path d="M17 8h-7V6a2 2 0 0 1 4 0 1 1 0 0 0 2 0 4 4 0 0 0-8 0v2H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm1 11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/></g></g>
+                </svg>
+              </div>
+              
+              <div class="reward-card__body">
+                <div class="reward-card__id">
+                  <svg class="reward-card__id-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                    <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                  </svg>
+                  <span class="reward-card__id-text">{{ reward.reward_id }}</span>
+                </div>
+                <h3 class="reward-card__title">{{ reward.title }}</h3>
+                <p class="reward-card__description" *ngIf="reward.description">{{ reward.description }}</p>
+                <div class="reward-card__missions" *ngIf="reward.associated_mission_ids && reward.associated_mission_ids.length > 0">
+                  <svg class="reward-card__missions-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                  </svg>
+                  <div class="reward-card__mission-tag" *ngFor="let missionId of reward.associated_mission_ids">
+                    <svg class="reward-card__mission-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="inherit">
+                      <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                    </svg>
+                    <span class="reward-card__mission-text">{{ missionId }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Completed Missions -->
-      <div *ngIf="!loadingMissions" class="missions-section">
-        <h2 class="section-title">COMPLETED MISSIONS ({{ completedMissions.length }})</h2>
+      <!-- Badges View -->
+      <div *ngIf="!loadingBadges && currentView === 'badges'" class="missions__view">
+        <!-- Filter Bar for Badges -->
+        <div class="filter-bar">
+          <svg class="filter-bar__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <g data-name="Layer 2"><g data-name="funnel"><rect width="24" height="24" opacity="0"/><path d="M13.9 22a1 1 0 0 1-.6-.2l-4-3.05a1 1 0 0 1-.39-.8v-3.27l-4.8-9.22A1 1 0 0 1 5 4h14a1 1 0 0 1 .86.49 1 1 0 0 1 0 1l-5 9.21V21a1 1 0 0 1-.55.9 1 1 0 0 1-.41.1zm-3-4.54l2 1.53v-4.55A1 1 0 0 1 13 14l4.3-8H6.64l4.13 8a1 1 0 0 1 .11.46z"/></g></g>
+          </svg>
+          <div class="filter-group">
+            <button 
+              class="filter-btn" 
+              [class.active]="badgeFilters.locked === false"
+              (click)="toggleBadgeFilter('locked', false)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 8h-7V6a2 2 0 0 1 4 0 1 1 0 0 0 2 0 4 4 0 0 0-8 0v2H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm1 11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
+              </svg>
+              Unlocked
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="badgeFilters.locked === true"
+              (click)="toggleBadgeFilter('locked', true)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 8h-1V6.11a4 4 0 1 0-8 0V8H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm-7-1.89A2.06 2.06 0 0 1 12 4a2.06 2.06 0 0 1 2 2.11V8h-4zM18 19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/>
+              </svg>
+              Locked
+            </button>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-group">
+            <button 
+              class="filter-btn filter-btn--rarity" 
+              [class.active]="badgeFilters.rarity === 'common'"
+              (click)="setBadgeRarity('common')">
+              Common
+            </button>
+            <button 
+              class="filter-btn filter-btn--rarity" 
+              [class.active]="badgeFilters.rarity === 'uncommon'"
+              (click)="setBadgeRarity('uncommon')">
+              Uncommon
+            </button>
+            <button 
+              class="filter-btn filter-btn--rarity" 
+              [class.active]="badgeFilters.rarity === 'rare'"
+              (click)="setBadgeRarity('rare')">
+              Rare
+            </button>
+            <button 
+              class="filter-btn filter-btn--rarity" 
+              [class.active]="badgeFilters.rarity === 'epic'"
+              (click)="setBadgeRarity('epic')">
+              Epic
+            </button>
+            <button 
+              class="filter-btn filter-btn--rarity" 
+              [class.active]="badgeFilters.rarity === 'legendary'"
+              (click)="setBadgeRarity('legendary')">
+              Legendary
+            </button>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-group">
+            <button 
+              class="filter-btn filter-btn--ego" 
+              [class.active]="badgeFilters.alterEgo !== null"
+              (click)="cycleBadgeAlterEgo()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <g data-name="Layer 2"><g data-name="person"><rect width="24" height="24" opacity="0"/><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2 2 2 0 0 1 2-2z"/><path d="M12 13a7 7 0 0 0-7 7 1 1 0 0 0 2 0 5 5 0 0 1 10 0 1 1 0 0 0 2 0 7 7 0 0 0-7-7z"/></g></g>
+              </svg>
+              <span class="filter-btn--ego__label">{{ getBadgeAlterEgoLabel() }}</span>
+            </button>
+          </div>
+          <button 
+            class="filter-clear-btn" 
+            *ngIf="badgeFilters.alterEgo !== null || badgeFilters.locked !== null || badgeFilters.rarity !== null"
+            (click)="clearBadgeFilters()"
+            title="Clear filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <g data-name="Layer 2">
+                <g data-name="close">
+                  <rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/>
+                  <path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </div>
         
-        <div *ngIf="completedMissions.length === 0" class="empty-state">
-          <p>No completed missions yet</p>
-        </div>
-
-        <div *ngIf="completedMissions.length > 0" class="missions-table">
-          <div class="table-header">
-            <div class="col-id">Mission ID</div>
-            <div class="col-title">Title</div>
-            <div class="col-ego">Alter Ego</div>
-            <div class="col-difficulty">Difficulty</div>
-            <div class="col-progress">Progress</div>
-            <div class="col-due">Completed</div>
-            <div class="col-rewards">Rewards</div>
+        <div class="badges-section">
+          <div *ngIf="!badgesData || badgesData.badges.length === 0" class="empty-state">
+            <p>No badges available yet. Complete missions and reach milestones to earn badges!</p>
           </div>
+          
+          <div *ngIf="badgesData && badgesData.badges.length > 0">
+            <!-- Badges Summary -->
+            <div class="badges-summary">
+              <div class="summary-stat">
+                <span class="summary-stat__label">Total Badges</span>
+                <span class="summary-stat__value">{{ badgesData.total_badges }}</span>
+              </div>
+              <div class="summary-stat">
+                <span class="summary-stat__label">Unlocked</span>
+                <span class="summary-stat__value unlocked">{{ badgesData.unlocked_count }}</span>
+              </div>
+              <div class="summary-stat">
+                <span class="summary-stat__label">Locked</span>
+                <span class="summary-stat__value locked">{{ badgesData.total_badges - badgesData.unlocked_count }}</span>
+              </div>
+            </div>
 
-          <div *ngFor="let mission of completedMissions" class="mission-row completed">
-            <div class="col-id">
-              <span class="mission-code">{{ mission.mission_code }}</span>
-            </div>
-            <div class="col-title">
-              <span class="mission-title">{{ mission.title }}</span>
-              <span class="mission-status status-completed">{{ mission.status }}</span>
-            </div>
-            <div class="col-ego">
-              <span class="ego-badge" [ngClass]="'ego-' + mission.archetype">{{ mission.archetype }}</span>
-            </div>
-            <div class="col-difficulty">
-              <span class="difficulty-badge" [ngClass]="getDifficultyClass(mission.difficulty)">
-                {{ mission.difficulty }}
-              </span>
-            </div>
-            <div class="col-progress">
-              <div class="progress-container">
-                <div class="progress-bar">
-                  <div class="progress-fill completed" [style.width.%]="getProgressPercentage(mission)"></div>
+            <!-- Badges Grid -->
+            <div class="badges-grid">
+              <div *ngFor="let badge of filteredBadges" 
+                   class="badge-card" 
+                   [ngClass]="{
+                     'badge-unlocked': badge.status === 'unlocked',
+                     'badge-locked': badge.status === 'locked'
+                   }">
+                
+                <div class="badge-card__header">
+                  <div class="badge-card__id">
+                    <svg class="badge-card__id-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="inherit">
+                      <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                    </svg>
+                    <span class="badge-card__id-text">{{ badge.badge_id }}</span>
+                  </div>
+                  <span class="badge-card__rarity" [ngClass]="getRarityClass(badge.rarity)">
+                    <svg class="badge-card__rarity-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 14h-4.3l.73-4H20a1 1 0 0 0 0-2h-3.21l.69-3.81A1 1 0 0 0 16.64 3a1 1 0 0 0-1.22.82L14.67 8h-3.88l.69-3.81A1 1 0 0 0 10.64 3a1 1 0 0 0-1.22.82L8.67 8H4a1 1 0 0 0 0 2h4.3l-.73 4H4a1 1 0 0 0 0 2h3.21l-.69 3.81A1 1 0 0 0 7.36 21a1 1 0 0 0 1.22-.82L9.33 16h3.88l-.69 3.81a1 1 0 0 0 .84 1.19 1 1 0 0 0 1.22-.82l.75-4.18H20a1 1 0 0 0 0-2zM9.7 14l.73-4h3.87l-.73 4z"/>
+                    </svg>
+                    {{ badge.rarity }}
+                  </span>
+                  <svg *ngIf="badge.status === 'locked'" class="badge-card__lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <g data-name="Layer 2"><g data-name="lock"><rect width="24" height="24" opacity="0"/><path d="M17 8h-1V6.11a4 4 0 1 0-8 0V8H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm-7-1.89A2.06 2.06 0 0 1 12 4a2.06 2.06 0 0 1 2 2.11V8h-4zM18 19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/></g></g>
+                  </svg>
+                  <svg *ngIf="badge.status === 'unlocked'" class="badge-card__lock-icon badge-card__lock-icon--unlocked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <g data-name="Layer 2"><g data-name="unlock"><rect width="24" height="24" opacity="0"/><path d="M17 8h-7V6a2 2 0 0 1 4 0 1 1 0 0 0 2 0 4 4 0 0 0-8 0v2H7a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3zm1 11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/><path d="M12 12a3 3 0 1 0 3 3 3 3 0 0 0-3-3zm0 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1z"/></g></g>
+                  </svg>
                 </div>
-                <span class="progress-text">{{ mission.progress.current }}/{{ mission.progress.total }}</span>
-              </div>
-            </div>
-            <div class="col-due">
-              <span class="due-date" *ngIf="mission.completion_date">{{ mission.completion_date }}</span>
-              <span class="no-date" *ngIf="!mission.completion_date">-</span>
-            </div>
-            <div class="col-rewards">
-              <div *ngIf="mission.loadingRewards" class="loading-rewards">...</div>
-              <div *ngIf="!mission.loadingRewards && (!mission.rewards || mission.rewards.length === 0)" class="no-rewards">
-                No rewards
-              </div>
-              <div *ngIf="!mission.loadingRewards && mission.rewards && mission.rewards.length > 0" class="rewards-list">
-                <span 
-                  *ngFor="let reward of mission.rewards" 
-                  class="reward-badge" 
-                  [ngClass]="getRewardTypeClass(reward.reward_type)"
-                  [title]="reward.title">
-                  {{ reward.reward_type }}
-                </span>
+
+                <div class="badge-card__body">
+
+                  <h3 class="badge-card__name">{{ badge.name }}</h3>
+                  <p class="badge-card__description">{{ badge.description }}</p>
+
+                  <div class="badge-card__criteria">
+                    <span class="criteria-label">Criteria:</span>
+                    <span class="criteria-value">{{ badge.criteria.type | titlecase }} ≥ {{ badge.criteria.value }}</span>
+                  </div>
+
+                  <div class="badge-card__category">
+                    <span class="category-label">Category:</span>
+                    <span class="category-value">{{ badge.category }}</span>
+                  </div>
+
+                  <!-- Earned By Section (only for unlocked badges) -->
+                  <div *ngIf="badge.status === 'unlocked' && badge.earned_by.length > 0" class="badge-card__earned">
+                    <span class="earned-label">Earned by:</span>
+                    <div class="earned-list">
+                      <div *ngFor="let earner of badge.earned_by" class="earned-item">
+                        <span class="earned-archetype">{{ earner.archetype }}</span>
+                        <span class="earned-date">{{ earner.earned_date }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Locked Badge Status -->
+                  <div *ngIf="badge.status === 'locked'" class="badge-card__status">
+                    <svg class="status-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 13a1.49 1.49 0 0 0-1 2.61V17a1 1 0 0 0 2 0v-1.39A1.49 1.49 0 0 0 12 13zm5-4V7A5 5 0 0 0 7 7v2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3zM9 7a3 3 0 0 1 6 0v2H9zm9 12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1z"/>
+                    </svg>
+                    <span>Locked</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Loading State for Badges -->
+      <div *ngIf="loadingBadges && currentView === 'badges'" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading badges...</p>
       </div>
 
       <div *ngIf="error" class="error-message">

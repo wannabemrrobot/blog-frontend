@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  //authorizedUser: 'wannabemrrobot',
   testMode: true,
-  authorizedUser: ["gsk-21","wannabemrrobot"]
+  authorizedUser: ["wannabemrrobot"]
 };
 
 /*

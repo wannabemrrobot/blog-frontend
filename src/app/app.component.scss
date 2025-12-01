@@ -275,7 +275,9 @@ nav {
 }
 
 .dropdown-menu {
-    background-color: var(--background);
+    background-color: rgba(var(--accent-primary-rgb), 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 3px solid var(--accent-primary);
     border-radius: 10px;
     position: absolute !important;
