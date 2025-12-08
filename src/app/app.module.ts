@@ -19,6 +19,7 @@ import { NgxParticlesModule } from '@tsparticles/angular';
 import { FormsModule } from '@angular/forms';
 import { ParticleComponent } from './components/cron/particle/particle.component';
 import { GlitchDirective } from './directives/glitch.directive';
+import { DnaSpinnerComponent } from './components/dna-spinner/dna-spinner.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -32,6 +33,7 @@ import { GlitchDirective } from './directives/glitch.directive';
         FightClubComponent,
         MissionsComponent,
         ParticleComponent,
+        DnaSpinnerComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         CommonModule,

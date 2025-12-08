@@ -775,6 +775,7 @@
     &__chart-pane {
         flex: 0 0 auto;
         overflow: visible;
+        padding-top: 5px !important;
     }
 
     &__list-view {
@@ -905,6 +906,17 @@
     margin-bottom: 15px;
     text-align: left;
     letter-spacing: 0.5px;
+    position: relative;
+}
+
+.synergy__dna-spinner {
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0.8;
+    
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .heading__hash {
@@ -1667,7 +1679,7 @@
     &__container {
         width: 100%;
         height: 100%;
-        min-height: 250px;
+        min-height: 230px;
         position: relative;
         display: flex;
         align-items: center;
@@ -1690,8 +1702,7 @@
     &__scene {
         position: relative;
         width: 100%;
-        min-height: 330px;
-        flex: 1;
+        min-height: 350px;
     }
     
     &__content {
@@ -1812,13 +1823,14 @@
         grid-template-columns: 1.85fr 1fr;
         gap: 10px;
         align-items: stretch;
+        margin-bottom: 2px;
     }
 
     &__card {
         flex: 1;
         background: var(--subheader-bg);
         border-radius: 8px;
-        padding: 20px;
+        padding: 15px 20px;
         display: flex;
         flex-direction: column;
         transition: all 0.3s ease;
@@ -1829,7 +1841,7 @@
         }
 
         &.profile-details-card {
-            padding-bottom: 0px;
+            padding-bottom: 15px;
             display: flex;
             flex-direction: column;
             
